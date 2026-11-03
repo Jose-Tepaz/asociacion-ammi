@@ -14,6 +14,19 @@ export const CallToAction: Block = {
   interfaceName: 'CallToActionBlock',
   fields: [
     {
+      name: 'backgroundImage',
+      label: 'Foto de fondo',
+      type: 'upload',
+      relationTo: 'media',
+      admin: { description: 'Opcional. Se muestra a la derecha del texto. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.' },
+    },
+    {
+      name: 'note',
+      label: 'Dato sobre la foto',
+      type: 'text',
+      admin: { placeholder: '18 organizaciones ya caminan juntas' },
+    },
+    {
       name: 'richText',
       type: 'richText',
       editor: lexicalEditor({

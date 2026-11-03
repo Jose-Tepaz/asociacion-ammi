@@ -54,11 +54,47 @@ const julianDay = (y: number, m: number, d: number) => {
   )
 }
 
+// Significado breve de cada nawal, en el mismo orden que NAWALES
+const SIGNIFICADOS = [
+  'Agua, lo oculto, la intuición.',
+  'Viento, aliento de vida, la palabra.',
+  'Amanecer, renovación, nuevos comienzos.',
+  'Red, abundancia, lo que une a la comunidad.',
+  'Serpiente, energía vital, sabiduría.',
+  'Muerte y renacimiento, las abuelas y los abuelos.',
+  'Venado, fuerza, equilibrio, autoridad.',
+  'Semilla, fertilidad, la siembra.',
+  'Ofrenda, gratitud, reciprocidad.',
+  'Perro, justicia, la ley y la autoridad.',
+  'Hilo, el tejido del tiempo, las artes.',
+  'Camino, el viaje, el destino.',
+  'Caña, el hogar, la familia.',
+  'Jaguar, la fuerza de la Madre Tierra.',
+  'Pájaro, libertad, visión, buena fortuna.',
+  'Perdón, reconciliación.',
+  'Pensamiento, sabiduría, el buen consejo.',
+  'Pedernal, sanación, la palabra que corta lo injusto.',
+  'Comunidad, la familia, la lluvia que renueva.',
+  'Sol, plenitud, la fuerza de las y los guerreros.',
+]
+
+// Glifos de Bluebalam (CC BY-SA 4.0, Wikimedia Commons): 01–10 en SVG original,
+// 11–20 como PNG de alta resolución. Se pueden reemplazar por SVG con el mismo número.
+const GLIFOS_PNG = new Set([11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+
 const mod = (n: number, m: number) => ((n % m) + m) % m
 
 export const cholqij = (date: Date) => {
   const n = julianDay(date.getFullYear(), date.getMonth() + 1, date.getDate()) - 584283
   const numero = mod(n + 3, 13)
-  const nawal = NAWALES[mod(n + 19, 20)]
-  return { numero: numero + 1, nawal, nombre: `${NUMEROS[numero]} ${nawal}` }
+  const indice = mod(n + 19, 20)
+  const nawal = NAWALES[indice]!
+  return {
+    numero: numero + 1,
+    nawal,
+    nombre: `${NUMEROS[numero]} ${nawal}`,
+    significado: SIGNIFICADOS[indice]!,
+    /** Glifo del día en /public/brand/nawales (01 = Imox … 20 = Ajpu) */
+    glifo: `/brand/nawales/${String(indice + 1).padStart(2, '0')}.${GLIFOS_PNG.has(indice + 1) ? 'png' : 'svg'}`,
+  }
 }

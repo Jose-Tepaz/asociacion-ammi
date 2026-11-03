@@ -24,7 +24,7 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ author, image, quote, ro
         )}
         <figure
           className={cn(
-            'container flex flex-col justify-center py-20 md:py-28',
+            'container flex flex-col justify-center py-[var(--section-y)]',
             hasImage ? 'lg:col-span-7 lg:max-w-none lg:ps-16 xl:ps-24' : 'lg:ps-[calc(var(--margin)+41.6%)]',
           )}
         >

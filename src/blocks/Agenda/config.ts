@@ -1,6 +1,6 @@
 import type { Block } from 'payload'
 
-import { link } from '@/fields/link'
+import { optionalLink } from '@/fields/optionalLink'
 
 export const Agenda: Block = {
   slug: 'agenda',
@@ -14,12 +14,7 @@ export const Agenda: Block = {
         { name: 'headingSecond', label: 'Título (segunda línea)', type: 'text' },
       ],
     },
-    {
-      name: 'action',
-      label: 'Botón (inscripción o transmisión)',
-      type: 'group',
-      fields: [link({ appearances: false })],
-    },
+    optionalLink('action', 'Botón (inscripción o transmisión)'),
     {
       name: 'events',
       label: 'Actividades',

@@ -160,8 +160,13 @@ export interface Page {
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    kicker?: string | null;
     /**
-     * Usa un Encabezado 1 corto (dos líneas como máximo) y, si quieres, un párrafo.
+     * Cada página interna puede tener su propio diseño de portada.
+     */
+    tone?: ('corinto' | 'calendario' | 'contacto') | null;
+    /**
+     * Usa un Encabezado 1 y, si quieres, un párrafo.
      */
     richText?: {
       root: {
@@ -206,10 +211,17 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    /**
+     * En la portada del inicio puedes subir un video MP4: horizontal, de 10 a 20 segundos y de menos de 8 MB. Se reproduce sin sonido y en bucle.
+     */
     media?: (number | null) | Media;
     /**
-     * Hasta tres imágenes más. Se combinan con bloques de color de la marca.
+     * Se muestra bajo los botones. Si no eliges una, aparece la más reciente.
      */
+    featured?: {
+      label?: string | null;
+      post?: (number | null) | Post;
+    };
     mosaic?:
       | {
           image: number | Media;
@@ -227,6 +239,7 @@ export interface Page {
     | MembersBlock
     | ArchiveBlock
     | MediaBlock
+    | SocialGalleryBlock
     | FormBlock
     | CallToActionBlock
   )[];
@@ -271,6 +284,26 @@ export interface Post {
     };
     [k: string]: unknown;
   };
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * PDF, Word, Excel u otros archivos.
+   */
+  documents?:
+    | {
+        file: number | Media;
+        /**
+         * Si lo dejas vacío se usa el nombre del archivo.
+         */
+        title?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   relatedPosts?: (number | Post)[] | null;
   categories?: (number | Category)[] | null;
   meta?: {
@@ -299,6 +332,8 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -418,6 +453,8 @@ export interface FolderInterface {
   createdAt: string;
 }
 /**
+ * Cada categoría con publicaciones aparece como una pestaña en Publicaciones (por ejemplo: Noticias, Galería, Incidencia).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
@@ -473,8 +510,13 @@ export interface User {
  * via the `definition` "IntroBlock".
  */
 export interface IntroBlock {
+  kicker?: string | null;
   heading: string;
   body: string;
+  /**
+   * Aparece con un ícono a la izquierda de las cifras.
+   */
+  highlight?: string | null;
   /**
    * Cifras o datos reales: un año, un número, un lugar.
    */
@@ -485,6 +527,9 @@ export interface IntroBlock {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   */
   image?: (number | null) | Media;
   id?: string | null;
   blockName?: string | null;
@@ -546,11 +591,35 @@ export interface ContentBlock {
  */
 export interface WorkAreasBlock {
   heading: string;
+  subheading?: string | null;
+  allLink?: {
+    enabled?: boolean | null;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+  };
   items?:
     | {
         title: string;
         summary: string;
+        /**
+         * Solo se muestra en la primera línea. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+         */
         image?: (number | null) | Media;
+        linkLabel?: string | null;
+        url?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -565,8 +634,9 @@ export interface WorkAreasBlock {
 export interface AgendaBlock {
   heading: string;
   headingSecond?: string | null;
-  action: {
-    link: {
+  action?: {
+    enabled?: boolean | null;
+    link?: {
       type?: ('reference' | 'custom') | null;
       newTab?: boolean | null;
       reference?:
@@ -612,6 +682,9 @@ export interface QuoteBlock {
   quote: string;
   author: string;
   role?: string | null;
+  /**
+   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   */
   image?: (number | null) | Media;
   tone?: ('corinto' | 'fucsia' | 'ocre') | null;
   id?: string | null;
@@ -677,6 +750,25 @@ export interface ArchiveBlock {
     };
     [k: string]: unknown;
   } | null;
+  display?: ('featured' | 'grid') | null;
+  allLink?: {
+    enabled?: boolean | null;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+  };
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
   categories?: (number | Category)[] | null;
@@ -696,10 +788,45 @@ export interface ArchiveBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
+  /**
+   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   */
   media: number | Media;
+  /**
+   * Ocupa todo el ancho de la pantalla, como una fotografía de grupo.
+   */
+  fullBleed?: boolean | null;
+  /**
+   * Una frase corta, por ejemplo una consigna de la Alianza.
+   */
+  overlayText?: string | null;
+  overlayAuthor?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SocialGalleryBlock".
+ */
+export interface SocialGalleryBlock {
+  heading: string;
+  handle?: string | null;
+  description?: string | null;
+  profileUrl?: string | null;
+  /**
+   * Sube las piezas que quieras mostrar y, si quieres, el enlace a cada publicación.
+   */
+  posts?:
+    | {
+        image: number | Media;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'socialGallery';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -897,6 +1024,11 @@ export interface Form {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
+  /**
+   * Opcional. Se muestra a la derecha del texto. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   */
+  backgroundImage?: (number | null) | Media;
+  note?: string | null;
   richText?: {
     root: {
       type: string;
@@ -1222,6 +1354,8 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         type?: T;
+        kicker?: T;
+        tone?: T;
         richText?: T;
         standfirst?: T;
         links?:
@@ -1240,6 +1374,12 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        featured?:
+          | T
+          | {
+              label?: T;
+              post?: T;
+            };
         mosaic?:
           | T
           | {
@@ -1259,6 +1399,7 @@ export interface PagesSelect<T extends boolean = true> {
         members?: T | MembersBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
+        socialGallery?: T | SocialGalleryBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
       };
@@ -1281,8 +1422,10 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "IntroBlock_select".
  */
 export interface IntroBlockSelect<T extends boolean = true> {
+  kicker?: T;
   heading?: T;
   body?: T;
+  highlight?: T;
   facts?:
     | T
     | {
@@ -1326,12 +1469,29 @@ export interface ContentBlockSelect<T extends boolean = true> {
  */
 export interface WorkAreasBlockSelect<T extends boolean = true> {
   heading?: T;
+  subheading?: T;
+  allLink?:
+    | T
+    | {
+        enabled?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+      };
   items?:
     | T
     | {
         title?: T;
         summary?: T;
         image?: T;
+        linkLabel?: T;
+        url?: T;
         id?: T;
       };
   id?: T;
@@ -1347,6 +1507,7 @@ export interface AgendaBlockSelect<T extends boolean = true> {
   action?:
     | T
     | {
+        enabled?: T;
         link?:
           | T
           | {
@@ -1428,6 +1589,21 @@ export interface MembersBlockSelect<T extends boolean = true> {
  */
 export interface ArchiveBlockSelect<T extends boolean = true> {
   introContent?: T;
+  display?: T;
+  allLink?:
+    | T
+    | {
+        enabled?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+      };
   populateBy?: T;
   relationTo?: T;
   categories?: T;
@@ -1442,6 +1618,28 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
  */
 export interface MediaBlockSelect<T extends boolean = true> {
   media?: T;
+  fullBleed?: T;
+  overlayText?: T;
+  overlayAuthor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SocialGalleryBlock_select".
+ */
+export interface SocialGalleryBlockSelect<T extends boolean = true> {
+  heading?: T;
+  handle?: T;
+  description?: T;
+  profileUrl?: T;
+  posts?:
+    | T
+    | {
+        image?: T;
+        url?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1461,6 +1659,8 @@ export interface FormBlockSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
+  backgroundImage?: T;
+  note?: T;
   richText?: T;
   links?:
     | T
@@ -1488,6 +1688,20 @@ export interface PostsSelect<T extends boolean = true> {
   title?: T;
   heroImage?: T;
   content?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  documents?:
+    | T
+    | {
+        file?: T;
+        title?: T;
+        id?: T;
+      };
   relatedPosts?: T;
   categories?: T;
   meta?:
@@ -1951,10 +2165,11 @@ export interface Header {
       }[]
     | null;
   /**
-   * El botón destacado a la derecha del encabezado (por ejemplo, «Súmate»).
+   * El botón destacado a la derecha del encabezado (por ejemplo, «Contáctanos»).
    */
-  action: {
-    link: {
+  action?: {
+    enabled?: boolean | null;
+    link?: {
       type?: ('reference' | 'custom') | null;
       newTab?: boolean | null;
       reference?:
@@ -2052,6 +2267,7 @@ export interface HeaderSelect<T extends boolean = true> {
   action?:
     | T
     | {
+        enabled?: T;
         link?:
           | T
           | {

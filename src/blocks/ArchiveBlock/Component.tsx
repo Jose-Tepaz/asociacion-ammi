@@ -6,13 +6,26 @@ import React from 'react'
 import RichText from '@/components/RichText'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
+import { CMSLink } from '@/components/Link'
+import { ArrowRight } from 'lucide-react'
+
+import { FeaturedPosts } from './Featured'
 
 export const ArchiveBlock: React.FC<
   ArchiveBlockProps & {
     id?: string
   }
 > = async (props) => {
-  const { id, categories, introContent, limit: limitFromProps, populateBy, selectedDocs } = props
+  const {
+    id,
+    allLink,
+    categories,
+    display,
+    introContent,
+    limit: limitFromProps,
+    populateBy,
+    selectedDocs,
+  } = props
 
   const limit = limitFromProps || 3
 
@@ -30,6 +43,7 @@ export const ArchiveBlock: React.FC<
       collection: 'posts',
       depth: 1,
       limit,
+      sort: '-publishedAt',
       ...(flattenedCategories && flattenedCategories.length > 0
         ? {
             where: {
@@ -54,17 +68,27 @@ export const ArchiveBlock: React.FC<
 
   return (
     <section id={`block-${id}`}>
-      {introContent && (
-        <div className="container mb-14 md:mb-20" data-reveal>
-          <RichText
-            className="[&_h2]:text-step-head [&_h2]:m-0 [&_h3]:text-step-lead [&_h3]:m-0 [&_p]:mt-6 [&_p]:text-step-body [&_p]:max-w-[52ch] lg:ps-[41.6%]"
-            data={introContent}
-            enableGutter={false}
-            enableProse={false}
-          />
+      {(introContent || allLink?.enabled && allLink.link?.label) && (
+        <div
+          className="container mb-10 md:mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
+          data-reveal
+        >
+          {introContent && (
+            <RichText
+              className="[&_h2]:text-step-head [&_h2]:m-0 [&_h3]:text-step-title [&_h3]:m-0 [&_p]:mt-3 [&_p]:text-step-body [&_p]:text-muted-foreground [&_p]:max-w-[52ch]"
+              data={introContent}
+              enableGutter={false}
+              enableProse={false}
+            />
+          )}
+          {allLink?.enabled && allLink.link?.label && (
+            <CMSLink appearance="outline" className="self-start md:self-auto shrink-0" {...allLink.link}>
+              <ArrowRight aria-hidden="true" />
+            </CMSLink>
+          )}
         </div>
       )}
-      <CollectionArchive posts={posts} />
+      {display === 'grid' ? <CollectionArchive posts={posts} /> : <FeaturedPosts posts={posts} />}
     </section>
   )
 }

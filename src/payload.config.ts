@@ -1,4 +1,6 @@
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
@@ -15,8 +17,15 @@ import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 
+import { migrations } from './migrations'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// En Vercel la base es Postgres (Neon) y los archivos van a Vercel Blob.
+// En la computadora se sigue usando SQLite (ammi.db) y la carpeta public/media.
+const databaseUrl = process.env.DATABASE_URL || ''
+const usePostgres = databaseUrl.startsWith('postgres')
 
 export default buildConfig({
   admin: {
@@ -57,15 +66,31 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URL || '',
-    },
-  }),
+  db: usePostgres
+    ? postgresAdapter({
+        pool: { connectionString: databaseUrl },
+        migrationDir: path.resolve(dirname, 'migrations'),
+        // Crea o actualiza las tablas al arrancar en producción
+        prodMigrations: migrations,
+      })
+    : sqliteAdapter({
+        client: {
+          url: databaseUrl,
+        },
+      }),
   collections: [Pages, Posts, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
-  plugins,
+  plugins: [
+    ...plugins,
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      collections: { media: true },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      // Sube directo desde el navegador: permite videos de más de 4,5 MB
+      clientUploads: true,
+    }),
+  ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {

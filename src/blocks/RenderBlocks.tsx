@@ -11,6 +11,7 @@ import { IntroBlock } from '@/blocks/Intro/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { MembersBlock } from '@/blocks/Members/Component'
 import { QuoteBlock } from '@/blocks/Quote/Component'
+import { SocialGalleryBlock } from '@/blocks/SocialGallery/Component'
 import { StripBlock } from '@/blocks/Strip/Component'
 import { WorkAreasBlock } from '@/blocks/WorkAreas/Component'
 import { cn } from '@/utilities/ui'
@@ -25,12 +26,22 @@ const blockComponents = {
   mediaBlock: MediaBlock,
   members: MembersBlock,
   quote: QuoteBlock,
+  socialGallery: SocialGalleryBlock,
   strip: StripBlock,
   workAreas: WorkAreasBlock,
 }
 
 /** Bloques que ocupan un campo de color de borde a borde. */
-const fieldBlocks = new Set(['cta', 'quote', 'workAreas'])
+const fieldBlocks = new Set(['quote', 'workAreas', 'socialGallery'])
+
+type AnyBlock = Page['layout'][0]
+
+// Una foto de borde a borde también es un campo: va pegada a lo que la rodea
+const isField = (block?: AnyBlock) =>
+  Boolean(
+    block &&
+      (fieldBlocks.has(block.blockType) || (block.blockType === 'mediaBlock' && block.fullBleed)),
+  )
 
 const toAnchor = (name: string) =>
   name
@@ -55,15 +66,12 @@ export const RenderBlocks: React.FC<{
 
           if (blockType && blockType in blockComponents) {
             const Block = blockComponents[blockType]
-            const isLast = index === blocks.length - 1
 
             if (Block) {
               return (
                 <div
-                  className={cn(
-                    'scroll-mt-8',
-                    !(isLast && fieldBlocks.has(blockType)) && 'mb-[var(--section-gap)]',
-                  )}
+                  // Los campos de color ya traen su propio espacio; el resto lleva 96px arriba y abajo
+                  className={cn('scroll-mt-8', !isField(block) && 'py-[var(--section-y)]')}
                   // El «nombre del bloque» en el admin sirve de ancla: /#agenda
                   id={blockName ? toAnchor(blockName) : undefined}
                   key={index}

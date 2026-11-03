@@ -27,10 +27,48 @@ export const MediaBlock: React.FC<Props> = (props) => {
     media,
     staticImage,
     disableInnerContainer,
+    fullBleed,
+    overlayAuthor,
+    overlayText,
   } = props
 
   let caption
   if (media && typeof media === 'object') caption = media.caption
+
+  if (fullBleed && media && typeof media === 'object') {
+    return (
+      <figure className={cn('relative isolate', className)} data-theme={overlayText ? 'dark' : undefined}>
+        <div className="relative h-[64svh] min-h-[22rem] md:h-[78svh] overflow-hidden bg-besh-oscuro">
+          <Media fill imgClassName="object-cover hero-drift" resource={media} size="100vw" />
+          {overlayText && (
+            // Velo neutro solo bajo el texto, para que se lea sobre cualquier foto
+            <div className="absolute inset-0 bg-linear-to-t from-corinto-terciario/90 via-corinto-terciario/35 to-transparent" />
+          )}
+        </div>
+        {overlayText && (
+          <blockquote className="absolute inset-x-0 bottom-0 text-besh-suave">
+            <div className="container pb-10 md:pb-16" data-reveal>
+              <p className="font-[family-name:var(--font-display)] text-step-head max-w-[22ch]">
+                {overlayText}
+              </p>
+              {overlayAuthor && (
+                <footer className="mt-5 flex items-center gap-3 text-step-body text-besh-fuerte">
+                  <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-ocre" />
+                  {overlayAuthor}
+                </footer>
+              )}
+            </div>
+          </blockquote>
+        )}
+        <span aria-hidden="true" className="tejido" />
+        {caption && (
+          <figcaption className="container mt-4 text-step-small text-muted-foreground">
+            <RichText data={caption} enableGutter={false} enableProse={false} />
+          </figcaption>
+        )}
+      </figure>
+    )
+  }
 
   return (
     <figure
@@ -44,7 +82,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
       data-reveal
     >
       {(media || staticImage) && (
-        <Media imgClassName={cn('w-full', imgClassName)} resource={media} src={staticImage} />
+        <Media imgClassName={cn('w-full rounded-card', imgClassName)} resource={media} src={staticImage} />
       )}
       {caption && (
         <figcaption

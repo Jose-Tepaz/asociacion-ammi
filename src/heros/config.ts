@@ -24,11 +24,11 @@ export const hero: Field = {
           value: 'none',
         },
         {
-          label: 'Mosaico (inicio)',
+          label: 'Pantalla completa con foto o video (inicio)',
           value: 'highImpact',
         },
         {
-          label: 'Título e imagen ancha',
+          label: 'Título con foto al lado',
           value: 'mediumImpact',
         },
         {
@@ -37,6 +37,31 @@ export const hero: Field = {
         },
       ],
       required: true,
+    },
+    {
+      name: 'kicker',
+      label: 'Etiqueta sobre el título',
+      type: 'text',
+      admin: {
+        condition: (_, { type } = {}) => type !== 'none',
+        placeholder: 'Guatemala · desde 2013',
+      },
+    },
+    {
+      // Se llama «tone» por una versión anterior; cambiarlo obligaría a migrar la base
+      name: 'tone',
+      label: 'Diseño',
+      type: 'select',
+      defaultValue: 'corinto',
+      options: [
+        { label: 'Banda corinto', value: 'corinto' },
+        { label: 'Calendario (fecha de hoy)', value: 'calendario' },
+        { label: 'Contacto (datos y redes)', value: 'contacto' },
+      ],
+      admin: {
+        condition: (_, { type } = {}) => type === 'lowImpact',
+        description: 'Cada página interna puede tener su propio diseño de portada.',
+      },
     },
     {
       name: 'richText',
@@ -53,7 +78,7 @@ export const hero: Field = {
       }),
       label: 'Título',
       admin: {
-        description: 'Usa un Encabezado 1 corto (dos líneas como máximo) y, si quieres, un párrafo.',
+        description: 'Usa un Encabezado 1 y, si quieres, un párrafo.',
       },
     },
     {
@@ -74,19 +99,50 @@ export const hero: Field = {
       type: 'upload',
       admin: {
         condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+        description:
+          'En la portada del inicio puedes subir un video MP4: horizontal, de 10 a 20 segundos y de menos de 8 MB. Se reproduce sin sonido y en bucle.',
       },
-      label: 'Imagen principal',
+      label: 'Imagen o video principal',
       relationTo: 'media',
+
       required: true,
     },
     {
-      name: 'mosaic',
-      label: 'Imágenes del mosaico',
-      type: 'array',
-      maxRows: 3,
+      name: 'featured',
+      label: 'Publicación destacada',
+      type: 'group',
       admin: {
         condition: (_, { type } = {}) => type === 'highImpact',
-        description: 'Hasta tres imágenes más. Se combinan con bloques de color de la marca.',
+        description: 'Se muestra bajo los botones. Si no eliges una, aparece la más reciente.',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'label',
+              label: 'Etiqueta',
+              type: 'text',
+              defaultValue: 'Nuevo pronunciamiento',
+            },
+            {
+              name: 'post',
+              label: 'Publicación',
+              type: 'relationship',
+              relationTo: 'posts',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'mosaic',
+      label: 'Imagen secundaria',
+      type: 'array',
+      maxRows: 1,
+      admin: {
+        // Ya no se muestra en la portada; se conserva oculto para no migrar la base
+        hidden: true,
       },
       fields: [
         {

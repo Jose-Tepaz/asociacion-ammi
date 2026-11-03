@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
 import { link } from '@/fields/link'
+import { optionalLink } from '@/fields/optionalLink'
 import { revalidateHeader } from './hooks/revalidateHeader'
 
 export const Header: GlobalConfig = {
@@ -27,20 +28,11 @@ export const Header: GlobalConfig = {
         },
       },
     },
-    {
-      name: 'action',
-      label: 'Botón de acción',
-      type: 'group',
-      admin: {
-        description: 'El botón destacado a la derecha del encabezado (por ejemplo, «Súmate»).',
-      },
-      fields: [
-        link({
-          appearances: false,
-          overrides: { label: false },
-        }),
-      ],
-    },
+    optionalLink(
+      'action',
+      'Botón de acción',
+      'El botón destacado a la derecha del encabezado (por ejemplo, «Contáctanos»).',
+    ),
   ],
   hooks: {
     afterChange: [revalidateHeader],

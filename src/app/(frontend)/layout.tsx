@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 
 import { cn } from '@/utilities/ui'
-import { Hanken_Grotesk } from 'next/font/google'
+import { Hanken_Grotesk, Source_Serif_4 } from 'next/font/google'
 import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
+import { FloatingCholqij } from '@/components/MayaDate/FloatingCholqij'
 import { RevealObserver } from '@/components/RevealObserver'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
@@ -22,18 +23,25 @@ const hanken = Hanken_Grotesk({
   variable: '--font-hanken',
   display: 'swap',
 })
+const sourceSerif = Source_Serif_4({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['600', '700'],
+  variable: '--font-source-serif',
+  display: 'swap',
+})
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
   return (
-    <html className={cn(hanken.variable)} lang="es" suppressHydrationWarning>
+    <html className={cn(hanken.variable, sourceSerif.variable)} lang="es" suppressHydrationWarning>
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
-      <body id="top">
+      {/* Algunas extensiones del navegador agregan atributos al body; no son un error del sitio */}
+      <body id="top" suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
         />
@@ -47,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Header />
           {children}
           <Footer />
+          <FloatingCholqij />
           <RevealObserver />
         </Providers>
       </body>
@@ -55,10 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 
 export const metadata: Metadata = {
-  title: {
-    default: 'AMMI · Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia',
-    template: '%s · AMMI',
-  },
+  title: 'AMMI · Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia',
   metadataBase: new URL(getServerSideURL()),
   openGraph: mergeOpenGraph(),
   twitter: {

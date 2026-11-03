@@ -27,8 +27,9 @@ const config = {
                 textUnderlineOffset: '4px',
               },
               'h1, h2, h3, h4': {
-                fontWeight: '500',
-                letterSpacing: '-0.035em',
+                fontFamily: 'var(--font-display)',
+                fontWeight: '600',
+                letterSpacing: '-0.02em',
               },
               h1: {
                 fontSize: 'var(--step-head)',

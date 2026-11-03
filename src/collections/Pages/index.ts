@@ -11,6 +11,7 @@ import { Intro } from '../../blocks/Intro/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { Members } from '../../blocks/Members/config'
 import { Quote } from '../../blocks/Quote/config'
+import { SocialGallery } from '../../blocks/SocialGallery/config'
 import { Strip } from '../../blocks/Strip/config'
 import { WorkAreas } from '../../blocks/WorkAreas/config'
 import { hero } from '@/heros/config'
@@ -88,6 +89,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Members,
                 Archive,
                 MediaBlock,
+                SocialGallery,
                 FormBlock,
                 CallToAction,
               ],

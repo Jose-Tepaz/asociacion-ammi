@@ -44,7 +44,7 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-source-serif), ui-serif, Georgia, serif;
 }
 
 /* Un solo par de márgenes para todo el sitio */
@@ -78,21 +78,37 @@
   letter-spacing: -0.01em;
 }
 @utility text-step-title {
+  font-family: var(--font-display);
   font-size: var(--step-title);
+  font-weight: 600;
   line-height: 1.12;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
 }
 @utility text-step-head {
+  font-family: var(--font-display);
   font-size: var(--step-head);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
 }
 @utility text-step-display {
+  font-family: var(--font-display);
   font-size: var(--step-display);
-  line-height: 0.9;
-  letter-spacing: -0.055em;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* Etiqueta breve sobre un título de sección */
+@utility kicker {
+  font-size: var(--step-small);
   font-weight: 500;
+  color: var(--fucsia-primario);
+}
+
+/* Superficie redondeada: tarjetas, fotos y paneles */
+@utility rounded-card {
+  border-radius: var(--radius-card);
 }
 
 :root {
@@ -109,13 +125,15 @@
   --texto-secundario: #625056;
 
   --margin: clamp(1rem, 2.6vw, 2.5rem);
-  --section-gap: clamp(6rem, 12vw, 11rem);
+  /* Espacio vertical de cada sección: 64px en celular, 96px desde tablet */
+  --section-y: 4rem;
   --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
   --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
   --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
   --step-title: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
-  --step-head: clamp(2.5rem, 1.4rem + 4.2vw, 5.5rem);
-  --step-display: clamp(3.5rem, 1rem + 8.3vw, 8rem);
+  --step-head: clamp(2.125rem, 1.4rem + 2.4vw, 3.5rem);
+  --step-display: clamp(2.5rem, 1.3rem + 3.6vw, 4.5rem);
+  --radius-card: clamp(1rem, 0.8rem + 0.6vw, 1.5rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
   --background: var(--besh-suave);
@@ -142,7 +160,7 @@
   --chart-3: var(--ocre-primario);
   --chart-4: var(--corinto-terciario);
   --chart-5: var(--texto-secundario);
-  --radius: 0rem;
+  --radius: 0.75rem;
   --sidebar: var(--besh-fuerte);
   --sidebar-foreground: var(--texto-primario);
   --sidebar-primary: var(--corinto-primario);
@@ -154,6 +172,12 @@
   --success: oklch(78% 0.08 200deg);
   --warning: var(--ocre-primario);
   --error: oklch(75% 0.15 25deg);
+}
+
+@media (width >= 48rem) {
+  :root {
+    --section-y: 6rem;
+  }
 }
 
 [data-theme='dark'] {
@@ -252,8 +276,8 @@
   h3,
   .prose :where(h1, h2, h3, h4) {
     font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.035em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
   body {
@@ -341,4 +365,67 @@ html[data-theme='light'] {
   to {
     transform: scale(1.06) translate3d(-1%, -1%, 0);
   }
+}
+
+/* Entrada de la tarjeta flotante del Cholq'ij */
+@media (prefers-reduced-motion: no-preference) {
+  .cholqij-float {
+    animation: float-in 600ms var(--ease-out) both;
+  }
+}
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.97);
+  }
+}
+
+/* Visor de imágenes: la pieza aparece con una escala suave */
+@media (prefers-reduced-motion: no-preference) {
+  .lightbox-in {
+    animation: lightbox-in 280ms var(--ease-out) both;
+  }
+}
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* La banda del encabezado toma el color de la portada que tiene debajo */
+.site-header {
+  background: var(--besh-suave);
+}
+body:has([data-hero='dark']) .site-header {
+  background: var(--corinto-secundario);
+}
+/* Portada de pantalla completa: la barra flota sobre la foto o el video, sin banda detrás.
+   La portada sube por debajo de la barra la misma altura que ocupa el encabezado. */
+:root {
+  --header-h: 5rem;
+}
+@media (width >= 48rem) {
+  :root {
+    --header-h: 5.75rem;
+  }
+}
+body:has([data-hero='overlay']) .site-header {
+  background: transparent;
+}
+[data-hero='overlay'] {
+  margin-top: calc(var(--header-h) * -1);
+}
+body:has([data-hero='beige']) .site-header {
+  background: var(--besh-fuerte);
+}
+
+/* Si la página ya muestra el calendario grande, la tarjeta flotante sobra */
+body:has([data-calendar-tile]) .cholqij-float {
+  display: none;
+}
+
+/* En Actividades (portada con calendario) la barra va en blanco para distinguirse del fondo */
+body:has([data-calendar-tile]) .site-header-bar {
+  background: #ffffff;
 }

@@ -13,7 +13,13 @@ export const Quote: Block = {
         { name: 'role', label: 'Cargo u organización', type: 'text' },
       ],
     },
-    { name: 'image', label: 'Retrato', type: 'upload', relationTo: 'media' },
+    {
+      name: 'image',
+      label: 'Retrato',
+      type: 'upload',
+      relationTo: 'media',
+      admin: { description: 'Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.' },
+    },
     {
       name: 'tone',
       label: 'Color de fondo',

@@ -16,6 +16,11 @@ const dirname = path.dirname(filename)
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  labels: { singular: 'Imagen o archivo', plural: 'Imágenes y archivos' },
+  admin: {
+    description:
+      'Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección.',
+  },
   folders: true,
   access: {
     create: authenticated,

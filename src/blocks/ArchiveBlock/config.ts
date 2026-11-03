@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { optionalLink } from '@/fields/optionalLink'
+
 import {
   FixedToolbarFeature,
   HeadingFeature,
@@ -10,6 +12,7 @@ import {
 export const Archive: Block = {
   slug: 'archive',
   interfaceName: 'ArchiveBlock',
+  labels: { singular: 'Publicaciones', plural: 'Publicaciones' },
   fields: [
     {
       name: 'introContent',
@@ -24,8 +27,19 @@ export const Archive: Block = {
           ]
         },
       }),
-      label: 'Intro Content',
+      label: 'Introducción',
     },
+    {
+      name: 'display',
+      label: 'Presentación',
+      type: 'select',
+      defaultValue: 'featured',
+      options: [
+        { label: 'Una destacada y lista al lado', value: 'featured' },
+        { label: 'Cuadrícula de tarjetas', value: 'grid' },
+      ],
+    },
+    optionalLink('allLink', 'Botón «ver todas»'),
     {
       name: 'populateBy',
       type: 'select',
@@ -87,8 +101,4 @@ export const Archive: Block = {
       relationTo: ['posts'],
     },
   ],
-  labels: {
-    plural: 'Archives',
-    singular: 'Archive',
-  },
 }

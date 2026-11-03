@@ -6,6 +6,7 @@ import { slugField } from 'payload'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
+  labels: { singular: 'Categoría', plural: 'Categorías' },
   access: {
     create: authenticated,
     delete: authenticated,
@@ -14,10 +15,13 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    description:
+      'Cada categoría con publicaciones aparece como una pestaña en Publicaciones (por ejemplo: Noticias, Galería, Incidencia).',
   },
   fields: [
     {
       name: 'title',
+      label: 'Nombre',
       type: 'text',
       required: true,
     },

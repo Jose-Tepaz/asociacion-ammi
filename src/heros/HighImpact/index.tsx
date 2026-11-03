@@ -1,69 +1,85 @@
+import configPromise from '@payload-config'
+import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { getPayload } from 'payload'
 import React from 'react'
 
-import type { Media as MediaType, Page } from '@/payload-types'
+import type { Page, Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
-import { MayaDate } from '@/components/MayaDate'
 import RichText from '@/components/RichText'
+import { formatDateLong } from '@/utilities/formatDateTime'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 import { cn } from '@/utilities/ui'
 
 import { HeroLinks, heroTitleClasses } from '../HeroLinks'
+import { HeroVideo } from './HeroVideo'
 
-const Photo: React.FC<{ className?: string; resource?: MediaType | number | null; priority?: boolean }> = ({
-  className,
-  priority,
-  resource,
-}) => {
-  if (!resource || typeof resource !== 'object') return <div className={cn('bg-besh-oscuro', className)} />
-  return (
-    <div className={cn('relative overflow-hidden bg-besh-oscuro', className)}>
-      <Media
-        fill
-        imgClassName="object-cover grayscale contrast-[1.05] hero-drift"
-        priority={priority}
-        resource={resource}
-        size="(max-width: 768px) 66vw, 33vw"
-      />
-    </div>
-  )
+const latestPost = async (): Promise<Post | null> => {
+  const payload = await getPayload({ config: configPromise })
+  const { docs } = await payload.find({
+    collection: 'posts',
+    depth: 1,
+    limit: 1,
+    sort: '-publishedAt',
+  })
+  return docs[0] || null
 }
 
-export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, mosaic, richText, standfirst }) => {
-  const [b, c, d] = (mosaic || []).map((row) => row?.image)
+/**
+ * Portada del inicio: la foto o el video ocupan todo el fondo, con un velo corinto
+ * para leer el texto. El contenido va abajo a la izquierda y el último pronunciamiento a la derecha.
+ */
+export const HighImpactHero: React.FC<Page['hero']> = async ({
+  featured,
+  kicker,
+  links,
+  media,
+  richText,
+  standfirst,
+}) => {
+  const post =
+    featured?.post && typeof featured.post === 'object' ? featured.post : await latestPost()
+  const thumb = post?.meta?.image && typeof post.meta.image === 'object' ? post.meta.image : null
+  const resource = media && typeof media === 'object' ? media : null
+  const isVideo = Boolean(resource?.mimeType?.startsWith('video/'))
 
   return (
-    <section className="relative">
-      {/* Masthead: mosaico sin separaciones de imágenes y bloques planos de color */}
-      <div
-        className="grid h-[38svh] md:h-[52svh] min-h-[16rem] grid-cols-3 grid-rows-2 md:grid-cols-6 [grid-template-areas:'a_a_t''y_d_z'] md:[grid-template-areas:'a_a_t_b_y_c''k_d_t_z_z_c']"
-      >
-        <Photo className="[grid-area:a]" priority resource={media} />
-        <div className="[grid-area:t] bg-fucsia" />
-        <Photo className="hidden md:block [grid-area:b]" resource={b} />
-        <div className="[grid-area:y] bg-ocre" />
-        <Photo className="hidden md:block [grid-area:c]" resource={c} />
-        <div className="hidden md:block [grid-area:k] bg-corinto" />
-        <Photo className="[grid-area:d]" resource={d ?? b} />
-        <div className="[grid-area:z] bg-corinto-terciario text-besh-suave flex items-end p-4 md:p-6">
-          <div className="hidden md:block">
-            <p className="text-step-small text-besh-oscuro">Hoy en el Cholq&apos;ij</p>
-            <MayaDate className="text-step-lead leading-tight mt-1 max-w-[22ch]" />
-          </div>
-        </div>
+    <section
+      className="relative isolate flex min-h-svh flex-col overflow-hidden bg-corinto-secundario text-besh-suave"
+      data-hero="overlay"
+      data-theme="dark"
+    >
+      {/* Fondo: video o foto a todo el ancho */}
+      <div aria-hidden={!isVideo} className="absolute inset-0 -z-10">
+        {resource &&
+          (isVideo ? (
+            <HeroVideo src={getMediaUrl(resource.url, resource.updatedAt)} type={resource.mimeType} />
+          ) : (
+            <Media fill imgClassName="object-cover hero-drift" priority resource={resource} size="100vw" />
+          ))}
+        {/* Velo corinto: más denso abajo y a la izquierda, donde va el texto */}
+        <div className="absolute inset-0 bg-linear-to-t from-corinto-secundario/90 via-corinto-secundario/25 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-corinto-secundario/90 via-corinto-secundario/40 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-corinto-terciario/45 to-transparent" />
       </div>
 
-      <div className="container grid grid-cols-1 gap-y-8 pt-12 pb-[var(--section-gap)] md:pt-[6.5rem] lg:grid-cols-12 lg:gap-x-8">
-        {standfirst && (
-          <p className="order-2 lg:order-1 lg:row-span-2 lg:col-span-4 text-step-lead max-w-[30ch] fade-up">
-            {standfirst}
-          </p>
-        )}
-        <div className="order-1 lg:order-2 lg:col-span-7 lg:col-start-6">
+      <div className="container relative mt-auto grid gap-10 pt-40 pb-[var(--section-y)] lg:grid-cols-12 lg:items-end lg:gap-8">
+        <div className="lg:col-span-7">
+          {kicker && (
+            <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-besh-suave/15 px-4 py-1.5 text-step-small font-medium text-ocre backdrop-blur-sm">
+              <span aria-hidden="true" className="size-1.5 rounded-full bg-ocre" />
+              {kicker}
+            </p>
+          )}
           {richText && (
             <div className="mask-line">
               <div>
                 <RichText
-                  className={heroTitleClasses}
+                  className={cn(
+                    heroTitleClasses,
+                    '[&_h1]:text-[clamp(2.5rem,1.2rem+3.6vw,4.75rem)] [&_h1]:leading-[1.02] [&_h1]:max-w-[18ch]',
+                  )}
                   data={richText}
                   enableGutter={false}
                   enableProse={false}
@@ -71,9 +87,44 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, mosaic, r
               </div>
             </div>
           )}
+          {standfirst && (
+            <p className="mt-6 text-step-lead text-besh-fuerte max-w-[40ch] fade-up">{standfirst}</p>
+          )}
+          <HeroLinks className="mt-10 fade-up" links={links} onDark />
         </div>
-        <HeroLinks className="order-3 lg:col-span-7 lg:col-start-6 lg:mt-2 fade-up" links={links} />
+
+        {post && (
+          <div className="lg:col-span-5 lg:flex lg:justify-end">
+            <Link
+              className="group fade-up flex w-full max-w-[26rem] items-center gap-4 rounded-2xl bg-besh-suave p-3 pe-5 text-texto-primario shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-1"
+              href={`/posts/${post.slug}`}
+            >
+              {thumb && (
+                <span className="relative block h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-besh-fuerte">
+                  <Media fill imgClassName="object-cover object-top" resource={thumb} size="64px" />
+                </span>
+              )}
+              <span className="min-w-0 flex-1">
+                <span className="block text-step-small font-medium text-fucsia">
+                  {featured?.label || 'Nuevo pronunciamiento'}
+                </span>
+                <span className="mt-0.5 block font-[family-name:var(--font-display)] text-step-body font-semibold leading-snug line-clamp-2">
+                  {post.title}
+                </span>
+                {post.publishedAt && (
+                  <span className="mt-1 block text-step-small text-texto-secundario">
+                    {formatDateLong(post.publishedAt)}
+                  </span>
+                )}
+              </span>
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-corinto text-besh-suave transition-colors group-hover:bg-fucsia">
+                <ArrowRight aria-hidden="true" className="size-4" />
+              </span>
+            </Link>
+          </div>
+        )}
       </div>
+      <span aria-hidden="true" className="tejido relative" />
     </section>
   )
 }

@@ -18,3 +18,13 @@ export const formatDateTime = (timestamp: string): string => {
 
   return `${MM}/${DD}/${YYYY}`
 }
+
+const longDate = new Intl.DateTimeFormat('es-GT', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'America/Guatemala',
+})
+
+/** «25 de noviembre de 2025», en hora de Guatemala. */
+export const formatDateLong = (timestamp: string): string => longDate.format(new Date(timestamp))

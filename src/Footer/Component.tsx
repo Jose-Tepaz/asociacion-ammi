@@ -1,10 +1,14 @@
 import { getCachedGlobal } from '@/utilities/getGlobals'
+import { ArrowUp } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
-import { MayaDate } from '@/components/MayaDate'
+import { SocialIcon } from '@/components/SocialIcon'
+
+const columnTitle = 'font-sans text-step-small font-medium tracking-normal text-ocre'
+const columnLink = 'text-step-small text-besh-suave/85 underline-offset-4 transition-colors hover:text-besh-suave hover:underline'
 
 export async function Footer() {
   const footerData = await getCachedGlobal('footer', 1)()
@@ -14,79 +18,107 @@ export async function Footer() {
   const socialLinks = footerData?.socialLinks || []
 
   return (
-    <footer className="mt-auto bg-corinto-terciario text-besh-suave" data-theme="dark">
+    <footer className="mt-auto bg-corinto-secundario text-besh-suave" data-theme="dark">
       <span aria-hidden="true" className="tejido" />
-      <div className="container pt-20 md:pt-28 pb-10">
-        <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
-          <Link aria-label="Ir al inicio" className="block lg:col-span-6" href="/">
-            <Logo className="w-full max-w-[38rem]" tone="white" variant="full" />
+      <div className="container grid gap-12 py-[var(--section-y)] sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+        <div className="sm:col-span-2 lg:col-span-5">
+          <Link aria-label="Ir al inicio" className="inline-block" href="/">
+            <Logo className="w-[13rem] md:w-[15rem]" tone="white" variant="full" />
           </Link>
           {footerData?.statement && (
-            <p className="lg:col-span-5 lg:col-start-8 text-step-lead text-besh-fuerte max-w-[30ch]">
-              {footerData.statement}
-            </p>
+            <p className="mt-6 text-step-body text-besh-fuerte max-w-[34ch]">{footerData.statement}</p>
           )}
         </div>
 
-        <div className="mt-20 md:mt-28 grid gap-12 lg:grid-cols-12">
-          {contacts.length > 0 && (
-            <ul className="lg:col-span-5 flex flex-col gap-2">
-              {contacts.map(({ href, label, id }) => (
-                <li className="text-step-title" key={id}>
-                  {href ? (
-                    <a
-                      className="text-ocre underline-offset-[6px] decoration-2 hover:underline break-words"
-                      href={href}
-                    >
-                      {label}
-                    </a>
-                  ) : (
-                    <span className="text-ocre">{label}</span>
-                  )}
+        {navItems.length > 0 && (
+          <nav aria-labelledby="pie-navegacion" className="lg:col-span-3 lg:col-start-7">
+            <h2 className={columnTitle} id="pie-navegacion">
+              Navegación
+            </h2>
+            <ul className="mt-5 flex flex-col gap-3">
+              {navItems.map(({ link }, i) => (
+                <li key={i}>
+                  <CMSLink className={columnLink} {...link} />
                 </li>
               ))}
             </ul>
-          )}
+          </nav>
+        )}
 
-          <div className="lg:col-span-6 lg:col-start-7 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3">
-            {navItems.length > 0 && (
-              <nav aria-label="Sitio" className="flex flex-col gap-3 sm:col-span-2 sm:grid sm:grid-cols-2 sm:gap-x-8 sm:content-start">
-                {navItems.map(({ link }, i) => (
-                  <CMSLink
-                    className="text-step-body text-besh-suave underline-offset-4 hover:text-ocre hover:underline"
-                    key={i}
-                    {...link}
-                  />
-                ))}
-              </nav>
-            )}
-            {socialLinks.length > 0 && (
-              <ul className="flex flex-col gap-3">
-                {socialLinks.map(({ label, url, id }) => (
+        <div className="flex flex-col gap-10 lg:col-span-3 lg:col-start-10">
+          <div>
+            <h2 className={columnTitle}>Contáctanos</h2>
+            {contacts.length > 0 && (
+              <ul className="mt-5 flex flex-col gap-3">
+                {contacts.map(({ href, label, id }) => (
                   <li key={id}>
-                    <a
-                      className="text-step-body text-besh-suave underline-offset-4 hover:text-ocre hover:underline"
-                      href={url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {label}
-                    </a>
+                    {href ? (
+                      <a className={`${columnLink} break-words`} href={href}>
+                        {label}
+                      </a>
+                    ) : (
+                      <span className="text-step-small text-besh-suave/85">{label}</span>
+                    )}
                   </li>
                 ))}
               </ul>
             )}
           </div>
-        </div>
 
-        <div className="mt-24 flex flex-col gap-4 text-step-small text-besh-oscuro md:flex-row md:items-baseline md:justify-between">
-          <div className="flex flex-col gap-1">
-            <MayaDate />
-            {footerData?.legal && <p>{footerData.legal}</p>}
+          {socialLinks.length > 0 && (
+            <div>
+              <h2 className={columnTitle}>Síguenos</h2>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {socialLinks.map(({ label, url, id }) => (
+                  <li key={id}>
+                    <a
+                      aria-label={label}
+                      className="grid size-10 place-items-center rounded-full bg-besh-suave/10 transition-colors hover:bg-ocre hover:text-texto-primario"
+                      href={url}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <SocialIcon className="size-4" name={label} url={url} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="border-t border-besh-suave/10">
+        <div className="container flex flex-col gap-3 py-6 text-step-small text-besh-oscuro md:flex-row md:items-center md:justify-between">
+          <p>
+            © {new Date().getFullYear()} AMMI.{footerData?.legal ? ` ${footerData.legal}` : ''}
+          </p>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <p className="text-[0.8125rem] opacity-80">
+              Glifos mayas:{' '}
+              <a
+                className="underline underline-offset-2 hover:text-besh-suave"
+                href="https://commons.wikimedia.org/wiki/User:Bluebalam"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Bluebalam
+              </a>
+              ,{' '}
+              <a
+                className="underline underline-offset-2 hover:text-besh-suave"
+                href="https://creativecommons.org/licenses/by-sa/4.0/deed.es"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                CC BY-SA 4.0
+              </a>
+            </p>
+            <a className="inline-flex items-center gap-1.5 text-besh-suave underline-offset-4 hover:underline" href="#top">
+              Volver arriba
+              <ArrowUp aria-hidden="true" className="size-4" />
+            </a>
           </div>
-          <a className="text-besh-suave underline-offset-4 hover:underline" href="#top">
-            Volver arriba
-          </a>
         </div>
       </div>
     </footer>

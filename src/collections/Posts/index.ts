@@ -103,6 +103,39 @@ export const Posts: CollectionConfig<'posts'> = {
           label: 'Content',
         },
         {
+          label: 'Galería y documentos',
+          description: 'La página se adapta sola: si hay fotos aparece la galería, y si hay archivos aparecen para descargar.',
+          fields: [
+            {
+              name: 'gallery',
+              label: 'Galería de fotos',
+              type: 'array',
+              labels: { singular: 'Foto', plural: 'Fotos' },
+              admin: { initCollapsed: true },
+              fields: [
+                { name: 'image', label: 'Foto', type: 'upload', relationTo: 'media', required: true },
+                { name: 'caption', label: 'Descripción (opcional)', type: 'text' },
+              ],
+            },
+            {
+              name: 'documents',
+              label: 'Documentos para descargar',
+              type: 'array',
+              labels: { singular: 'Documento', plural: 'Documentos' },
+              admin: { description: 'PDF, Word, Excel u otros archivos.' },
+              fields: [
+                { name: 'file', label: 'Archivo', type: 'upload', relationTo: 'media', required: true },
+                {
+                  name: 'title',
+                  label: 'Nombre visible',
+                  type: 'text',
+                  admin: { description: 'Si lo dejas vacío se usa el nombre del archivo.' },
+                },
+              ],
+            },
+          ],
+        },
+        {
           fields: [
             {
               name: 'relatedPosts',

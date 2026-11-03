@@ -1,9 +1,10 @@
 /**
  * Contenido inicial de AMMI, tomado de sus piezas publicadas.
  * Ejecutar con: pnpm seed:ammi
- * Crea la página de inicio, contacto, los pronunciamientos de ejemplo
- * y los globales de encabezado y pie. No borra nada: si ya existe una
- * página de inicio, no hace cambios.
+ *
+ * No borra ni sobrescribe nada. Reutiliza las imágenes, categorías, publicaciones y
+ * páginas que ya existan (por nombre de archivo, título o slug) y solo crea lo que falta.
+ * El encabezado y el pie se llenan únicamente si todavía están vacíos.
  */
 import fs from 'fs'
 import path from 'path'
@@ -39,58 +40,33 @@ const doc = (...children: unknown[]) =>
     root: { type: 'root', children, direction: 'ltr', format: '', indent: 0, version: 1 },
   }) as any
 
+const custom = (url: string, label: string, appearance?: 'default' | 'outline') => ({
+  link: { type: 'custom', url, label, ...(appearance ? { appearance } : {}) },
+})
+
 const run = async () => {
   const payload = await getPayload({ config })
   const ctx = { disableRevalidate: true }
 
-  const existing = await payload.count({ collection: 'pages', where: { slug: { equals: 'home' } } })
-  if (existing.totalDocs > 0) {
-    console.log('Ya existe una página de inicio; no se cargó nada.')
-    process.exit(0)
-  }
-
-  // --- Imágenes ----------------------------------------------------------------
-  const upload = async (file: string, alt: string) => {
-    const filePath = path.join(dirname, file)
-    const data = fs.readFileSync(filePath)
+  // --- Ayudas para crear o reutilizar ---------------------------------------------
+  // `name` permite subir el mismo archivo como otra imagen: cada sección tiene la suya
+  const media = async (file: string, alt: string, name = file) => {
+    const found = await payload.find({ collection: 'media', where: { filename: { equals: name } }, limit: 1 })
+    if (found.docs[0]) return found.docs[0]
+    const data = fs.readFileSync(path.join(dirname, file))
     return payload.create({
       collection: 'media',
       data: { alt },
-      file: { data, mimetype: 'image/jpeg', name: file, size: data.length },
+      file: { data, mimetype: 'image/jpeg', name, size: data.length },
     })
   }
 
-  console.log('Subiendo imágenes…')
-  const img = {
-    defensores: await upload(
-      'ilustracion-defensores.jpg',
-      'Ilustración de Luis Pacheco, Héctor Chaclán, Basilio Puac y Esteban Toc entre claveles rojos',
-    ),
-    ponentes: await upload(
-      'conversatorio-ponentes.jpg',
-      'Marta Juana López y Carmen Aida Ibarra frente a la Corte de Constitucionalidad dibujada',
-    ),
-    mujeres: await upload(
-      'ilustracion-mujeres.jpg',
-      'Ilustración de cuatro mujeres frente al Tribunal Supremo Electoral, campaña «En la justicia nuestras voces cuentan»',
-    ),
-    magistrada: await upload('magistrada-lemus.jpg', 'Retrato de la magistrada Astrid Lemus Rodríguez'),
-    postNiUnaMenos: await upload('post-ni-una-menos.jpg', 'Pronunciamiento «Ni una menos, vivas, libres y con derechos»'),
-    postJusticia: await upload('post-justicia-prevalecio.jpg', 'Pieza «La justicia prevaleció»'),
-    postConversatorio: await upload('post-conversatorio-cc.jpg', 'Afiche del conversatorio sobre la Corte de Constitucionalidad'),
-    postEncuentro: await upload('post-encuentro-nacional.jpg', 'Afiche del Encuentro Nacional sobre elecciones de segundo grado'),
-    postMagistrada: await upload('post-magistrada-lemus.jpg', 'Cita de la magistrada Astrid Lemus Rodríguez'),
+  const category = async (title: string) => {
+    const found = await payload.find({ collection: 'categories', where: { title: { equals: title } }, limit: 1 })
+    return found.docs[0] || payload.create({ collection: 'categories', data: { title, slug: title.toLowerCase() } })
   }
 
-  // --- Categorías y pronunciamientos -------------------------------------------
-  console.log('Creando pronunciamientos…')
-  const [pronunciamientos, actividades, voces] = await Promise.all(
-    ['Pronunciamientos', 'Actividades', 'Voces'].map((title) =>
-      payload.create({ collection: 'categories', data: { title, slug: title.toLowerCase() } }),
-    ),
-  )
-
-  const post = (data: {
+  const post = async (data: {
     slug: string
     title: string
     description: string
@@ -98,8 +74,10 @@ const run = async () => {
     category: number
     publishedAt: string
     content: unknown[]
-  }) =>
-    payload.create({
+  }) => {
+    const found = await payload.find({ collection: 'posts', where: { slug: { equals: data.slug } }, limit: 1 })
+    if (found.docs[0]) return found.docs[0]
+    return payload.create({
       collection: 'posts',
       context: ctx,
       data: {
@@ -113,8 +91,58 @@ const run = async () => {
         meta: { title: data.title, description: data.description, image: data.image },
       },
     })
+  }
 
-  await post({
+  // Las páginas que ya existen no se tocan: pueden tener cambios hechos desde el admin
+  const page = async (slug: string, data: Record<string, unknown>) => {
+    const found = await payload.find({ collection: 'pages', where: { slug: { equals: slug } }, limit: 1 })
+    if (found.docs[0]) {
+      console.log(`  «${slug}» ya existe; se conserva como está.`)
+      return found.docs[0]
+    }
+    return payload.create({
+      collection: 'pages',
+      context: ctx,
+      data: { slug, _status: 'published', ...data } as any,
+    })
+  }
+
+  // --- Imágenes ----------------------------------------------------------------
+  console.log('Imágenes…')
+  const img = {
+    defensores: await media(
+      'ilustracion-defensores.jpg',
+      'Ilustración de Luis Pacheco, Héctor Chaclán, Basilio Puac y Esteban Toc entre claveles rojos',
+    ),
+    ponentes: await media(
+      'conversatorio-ponentes.jpg',
+      'Marta Juana López y Carmen Aida Ibarra frente a la Corte de Constitucionalidad dibujada',
+    ),
+    mujeres: await media(
+      'ilustracion-mujeres.jpg',
+      'Ilustración de cuatro mujeres frente al Tribunal Supremo Electoral, campaña «En la justicia nuestras voces cuentan»',
+    ),
+    magistrada: await media('magistrada-lemus.jpg', 'Retrato de la magistrada Astrid Lemus Rodríguez'),
+    logoRojo: await media('pieza-logo-rojo.jpg', 'Logotipo de AMMI sobre fondo rojo'),
+    // Copias para que cada sección pueda cambiar su imagen sin afectar a otras
+    eje: await media('ilustracion-mujeres.jpg', 'Ilustración de la campaña «En la justicia nuestras voces cuentan»', 'eje-incidencia.jpg'),
+    franja: await media('ilustracion-mujeres.jpg', 'Ilustración de la campaña «En la justicia nuestras voces cuentan»', 'franja-ni-una-menos.jpg'),
+    sumarse: await media('conversatorio-ponentes.jpg', 'Marta Juana López y Carmen Aida Ibarra', 'sumarse.jpg'),
+    quienes: await media('conversatorio-ponentes.jpg', 'Marta Juana López y Carmen Aida Ibarra', 'quienes-somos.jpg'),
+    postNiUnaMenos: await media('post-ni-una-menos.jpg', 'Pronunciamiento «Ni una menos, vivas, libres y con derechos»'),
+    postJusticia: await media('post-justicia-prevalecio.jpg', 'Pieza «La justicia prevaleció»'),
+    postConversatorio: await media('post-conversatorio-cc.jpg', 'Afiche del conversatorio sobre la Corte de Constitucionalidad'),
+    postEncuentro: await media('post-encuentro-nacional.jpg', 'Afiche del Encuentro Nacional sobre elecciones de segundo grado'),
+    postMagistrada: await media('post-magistrada-lemus.jpg', 'Cita de la magistrada Astrid Lemus Rodríguez'),
+  }
+
+  // --- Categorías y publicaciones ----------------------------------------------
+  console.log('Publicaciones…')
+  const pronunciamientos = await category('Pronunciamientos')
+  const actividades = await category('Actividades')
+  const voces = await category('Voces')
+
+  const niUnaMenos = await post({
     slug: 'ni-una-menos-vivas-libres-y-con-derechos',
     title: 'Ni una menos, vivas, libres y con derechos',
     description:
@@ -169,6 +197,24 @@ const run = async () => {
   })
 
   await post({
+    slug: 'encuentro-nacional-participacion-politica',
+    title: 'Aprendizajes y desafíos de la participación política de mujeres',
+    description:
+      'Encuentro Nacional sobre las elecciones de segundo grado en Guatemala, el 28 y 29 de mayo.',
+    image: img.postEncuentro.id,
+    category: actividades.id,
+    publishedAt: '2026-05-15T12:00:00.000Z',
+    content: [
+      p(
+        'Encuentro Nacional «Aprendizajes y desafíos de la participación política de mujeres y mujeres indígenas: elecciones de segundo grado en Guatemala».',
+      ),
+      p(
+        '28 de mayo de 8:00 a 17:00 horas y 29 de mayo de 8:30 a 13:00 horas, en el Hotel Royal Palace, 6a avenida 12-66, zona 1.',
+      ),
+    ],
+  })
+
+  await post({
     slug: 'mujeres-deben-ocupar-liderazgos-a-la-par',
     title: 'Las mujeres deben ocupar liderazgos a la par',
     description: 'La magistrada Astrid Lemus Rodríguez en el VI Encuentro Virtual Mujeres y Poder.',
@@ -182,49 +228,90 @@ const run = async () => {
     ],
   })
 
-  // --- Formulario y página de contacto ------------------------------------------
-  console.log('Creando contacto…')
-  const form = await payload.create({
-    collection: 'forms',
-    data: {
-      title: 'Contacto',
-      submitButtonLabel: 'Enviar mensaje',
-      confirmationType: 'message',
-      confirmationMessage: doc(h('h2', 'Gracias. Recibimos tu mensaje y te responderemos pronto.')),
-      fields: [
-        { name: 'nombre', blockType: 'text', label: 'Nombre completo', required: true, width: 100 },
-        { name: 'organizacion', blockType: 'text', label: 'Organización (opcional)', required: false, width: 100 },
-        { name: 'email', blockType: 'email', label: 'Correo electrónico', required: true, width: 100 },
-        { name: 'mensaje', blockType: 'textarea', label: 'Mensaje', required: true, width: 100 },
-      ],
-    } as any,
+  // --- Contacto ----------------------------------------------------------------
+  console.log('Contacto…')
+  const existingForm = await payload.find({ collection: 'forms', where: { title: { equals: 'Contacto' } }, limit: 1 })
+  const form =
+    existingForm.docs[0] ||
+    (await payload.create({
+      collection: 'forms',
+      data: {
+        title: 'Contacto',
+        submitButtonLabel: 'Enviar mensaje',
+        confirmationType: 'message',
+        confirmationMessage: doc(h('h2', 'Gracias. Recibimos tu mensaje y te responderemos pronto.')),
+        fields: [
+          { name: 'nombre', blockType: 'text', label: 'Nombre completo', required: true, width: 100 },
+          { name: 'organizacion', blockType: 'text', label: 'Organización (opcional)', required: false, width: 100 },
+          { name: 'email', blockType: 'email', label: 'Correo electrónico', required: true, width: 100 },
+          { name: 'mensaje', blockType: 'textarea', label: 'Mensaje', required: true, width: 100 },
+        ],
+      } as any,
+    }))
+
+  const contacto = await page('contacto', {
+    title: 'Contacto',
+    hero: {
+      type: 'lowImpact',
+      tone: 'contacto',
+      kicker: 'Contacto',
+      richText: doc(h('h1', 'Escríbenos')),
+      standfirst:
+        'Para sumarte a la Alianza, invitarnos a un espacio o pedir información sobre nuestras actividades.',
+    },
+    layout: [{ blockType: 'formBlock', form: form.id, enableIntro: false }],
+  })
+  const toContacto = (label: string) => ({
+    link: { type: 'reference', reference: { relationTo: 'pages', value: contacto.id }, label },
   })
 
-  const contacto = await payload.create({
-    collection: 'pages',
-    context: ctx,
-    data: {
-      title: 'Contacto',
-      slug: 'contacto',
-      _status: 'published',
-      hero: {
-        type: 'lowImpact',
-        richText: doc(h('h1', 'Escríbenos')),
-        standfirst:
-          'Para sumarte a la Alianza, invitarnos a un espacio o pedir información sobre nuestras actividades.',
+  // --- Quiénes somos --------------------------------------------------------------
+  console.log('Quiénes somos…')
+  await page('quienes-somos', {
+    title: 'Quiénes somos',
+    hero: {
+      type: 'mediumImpact',
+      kicker: 'Quiénes somos',
+      media: img.quienes.id,
+      richText: doc(h('h1', 'Una alianza de 18 organizaciones')),
+      standfirst:
+        'Mujeres mayas, garífunas, afrodescendientes, xinkas, mestizas y ladinas que, desde 2013, defendemos la participación política y el acceso a la justicia.',
+    },
+    layout: [
+      {
+        blockType: 'quote',
+        quote:
+          'Las mujeres deben ocupar liderazgos a la par, en igualdad de condiciones y sin conformarse con impulsar solo a otros.',
+        author: 'Magistrada Astrid Lemus Rodríguez',
+        role: 'VI Encuentro Virtual Mujeres y Poder',
+        image: img.magistrada.id,
+        tone: 'corinto',
       },
-      layout: [
-        {
-          blockType: 'formBlock',
-          form: form.id,
-          enableIntro: false,
-        },
-      ],
-    } as any,
+      {
+        blockType: 'members',
+        blockName: 'Organizaciones',
+        heading: 'Organizaciones',
+        headingSecond: 'que caminan juntas',
+        intro:
+          'La Alianza articula 18 organizaciones de mujeres y mujeres indígenas. Este listado se completa desde el administrador del sitio.',
+        organizations: [
+          { name: 'Asociación Política de Mujeres Mayas, Moloj', focus: 'Administra la Alianza' },
+          { name: 'Unión Nacional de Mujeres Guatemaltecas, UNAMG' },
+          { name: 'Asociación de Mujeres Alas de Mariposas' },
+          { name: "Ixoqib' Miriam" },
+          { name: 'Poder Constituyente' },
+          { name: 'Convergencia Cívico Política de Mujeres' },
+          { name: 'Mujeres Transformando el Mundo' },
+          { name: 'Crisálidas' },
+          { name: "Asociación de Abogadas Indígenas Chomija'" },
+          { name: 'Impunity Watch' },
+        ],
+      },
+    ],
   })
 
-  // --- Página de inicio --------------------------------------------------------
-  console.log('Creando la página de inicio…')
+  // --- Actividades -------------------------------------------------------------
+  console.log('Actividades…')
   const evento = (date: string, time: string, kind: string, title: string, place: string, people?: string) => ({
     date,
     time,
@@ -233,204 +320,190 @@ const run = async () => {
     place,
     people,
   })
-
-  await payload.create({
-    collection: 'pages',
-    context: ctx,
-    data: {
-      title: 'Inicio',
-      slug: 'home',
-      _status: 'published',
-      hero: {
-        type: 'highImpact',
-        media: img.mujeres.id,
-        mosaic: [{ image: img.ponentes.id }, { image: img.defensores.id }, { image: img.magistrada.id }],
-        richText: doc(h('h1', 'Nuestras voces cuentan')),
-        standfirst:
-          'La Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia articula 18 organizaciones de Guatemala por la participación política de las mujeres.',
-        links: [
-          { link: { type: 'custom', url: '/#nosotras', label: 'Conoce la Alianza', appearance: 'default' } },
-          { link: { type: 'custom', url: '/posts', label: 'Pronunciamientos', appearance: 'outline' } },
+  await page('actividades', {
+    title: 'Actividades',
+    hero: {
+      type: 'lowImpact',
+      tone: 'calendario',
+      kicker: 'Agenda de la Alianza',
+      richText: doc(h('h1', 'Conversatorios y encuentros')),
+      standfirst: 'Espacios de diálogo, formación e incidencia que convoca la Alianza.',
+    },
+    layout: [
+      {
+        blockType: 'agenda',
+        heading: 'Agenda',
+        headingSecond: 'de la Alianza',
+        action: { enabled: true, ...toContacto('Pide información') },
+        events: [
+          evento(
+            '2026-03-17T12:00:00.000Z',
+            '9:30 a 12:00',
+            'Conversatorio',
+            'Integración de la Corte de Constitucionalidad: desafíos para la democracia en Guatemala',
+            'Restaurante El Adobe, 7a avenida 9-45, zona 1',
+            'Marta Juana López, Carmen Aida Ibarra · modera Nanci Sinto',
+          ),
+          evento(
+            '2026-05-28T12:00:00.000Z',
+            '8:00 a 17:00',
+            'Encuentro Nacional',
+            'Aprendizajes y desafíos de la participación política de mujeres y mujeres indígenas',
+            'Hotel Royal Palace, 6a avenida 12-66, zona 1',
+          ),
+          evento(
+            '2026-05-29T12:00:00.000Z',
+            '8:30 a 13:00',
+            'Encuentro Nacional',
+            'Elecciones de segundo grado en Guatemala: segunda jornada',
+            'Hotel Royal Palace, 6a avenida 12-66, zona 1',
+          ),
         ],
       },
-      layout: [
-        {
-          blockType: 'intro',
-          blockName: 'Nosotras',
-          heading: 'Una alianza de 18 voces',
-          body: 'Somos mujeres mayas, garífunas, afrodescendientes, xinkas, mestizas y ladinas. Desde 2013 fortalecemos la participación, el liderazgo y la representación política de las mujeres en los espacios de toma de decisiones y en el sistema de justicia.',
-          facts: [
-            { value: '18', label: 'organizaciones de la sociedad civil' },
-            { value: '2013', label: 'año en que se formó la Alianza' },
-            { value: 'Moloj', label: 'Asociación Política de Mujeres Mayas, que administra la Alianza' },
-            { value: '2026', label: 'elecciones de segundo grado que vigilamos' },
-          ],
-        },
-        {
-          blockType: 'workAreas',
-          blockName: 'Lineas de trabajo',
-          heading: 'Lo que defendemos',
-          items: [
-            {
-              title: 'Participación política',
-              summary:
-                'Formamos y acompañamos a mujeres y mujeres indígenas para que participen, sean electas y ejerzan sus cargos sin violencia política.',
-              image: img.mujeres.id,
-            },
-            {
-              title: 'Elecciones de segundo grado',
-              summary:
-                'Observamos la integración de cortes, tribunales y comisiones de postulación para exigir idoneidad, paridad e independencia.',
-              image: img.ponentes.id,
-            },
-            {
-              title: 'Acceso a la justicia',
-              summary:
-                'Exigimos un sistema de justicia que reconozca a las mujeres indígenas, su idioma y su cultura, y que no criminalice a defensoras.',
-              image: img.defensores.id,
-            },
-            {
-              title: 'Liderazgo de mujeres',
-              summary:
-                'Impulsamos que las mujeres ocupen liderazgos a la par, en igualdad de condiciones, en organizaciones, comunidades e instituciones.',
-              image: img.magistrada.id,
-            },
-          ],
-        },
-        {
-          blockType: 'agenda',
-          blockName: 'Agenda',
-          heading: 'Conversatorios',
-          headingSecond: 'y encuentros',
-          action: {
-            link: { type: 'custom', url: '/contacto', label: 'Pide información' },
-          },
-          events: [
-            evento(
-              '2026-03-17T12:00:00.000Z',
-              '9:30 a 12:00',
-              'Conversatorio',
-              'Integración de la Corte de Constitucionalidad: desafíos para la democracia en Guatemala',
-              'Restaurante El Adobe, 7a avenida 9-45, zona 1',
-              'Marta Juana López, Carmen Aida Ibarra · modera Nanci Sinto',
-            ),
-            evento(
-              '2026-05-28T12:00:00.000Z',
-              '8:00 a 17:00',
-              'Encuentro Nacional',
-              'Aprendizajes y desafíos de la participación política de mujeres y mujeres indígenas',
-              'Hotel Royal Palace, 6a avenida 12-66, zona 1',
-            ),
-            evento(
-              '2026-05-29T12:00:00.000Z',
-              '8:30 a 13:00',
-              'Encuentro Nacional',
-              'Elecciones de segundo grado en Guatemala: segunda jornada',
-              'Hotel Royal Palace, 6a avenida 12-66, zona 1',
-            ),
-          ],
-        },
-        {
-          blockType: 'quote',
-          quote:
-            'Las mujeres deben ocupar liderazgos a la par, en igualdad de condiciones y sin conformarse con impulsar solo a otros.',
-          author: 'Magistrada Astrid Lemus Rodríguez',
-          role: 'VI Encuentro Virtual Mujeres y Poder',
-          image: img.magistrada.id,
-          tone: 'corinto',
-        },
-        {
-          blockType: 'archive',
-          blockName: 'Pronunciamientos',
-          populateBy: 'collection',
-          relationTo: 'posts',
-          limit: 3,
-          introContent: doc(
-            h('h2', 'Lo que decimos'),
-            p('Pronunciamientos, posicionamientos y voces de la Alianza frente a la coyuntura del país.'),
-          ),
-        },
-        {
-          blockType: 'strip',
-          heading: 'En la justicia, nuestras voces cuentan',
-          panelTitle: 'Memoria, organización y sororidad',
-          images: [
-            { image: img.mujeres.id },
-            { image: img.magistrada.id },
-            { image: img.defensores.id },
-            { image: img.ponentes.id },
-          ],
-          caption: 'Ilustraciones y retratos de las campañas y actividades de la Alianza.',
-        },
-        {
-          blockType: 'members',
-          blockName: 'Organizaciones',
-          heading: 'Organizaciones',
-          headingSecond: 'que caminan juntas',
-          intro:
-            'La Alianza articula 18 organizaciones de mujeres y mujeres indígenas. Este listado se completa desde el administrador del sitio.',
-          organizations: [
-            { name: 'Asociación Política de Mujeres Mayas, Moloj', focus: 'Administra la Alianza' },
-            { name: 'Unión Nacional de Mujeres Guatemaltecas, UNAMG' },
-            { name: 'Asociación de Mujeres Alas de Mariposas' },
-            { name: "Ixoqib' Miriam" },
-            { name: 'Poder Constituyente' },
-            { name: 'Convergencia Cívico Política de Mujeres' },
-            { name: 'Mujeres Transformando el Mundo' },
-            { name: 'Crisálidas' },
-            { name: "Asociación de Abogadas Indígenas Chomija'" },
-            { name: 'Impunity Watch' },
-          ],
-        },
-        {
-          blockType: 'cta',
-          richText: doc(
-            h('h2', 'Sin justicia no hay democracia'),
-            p(
-              'Súmate a la Alianza: organizaciones, colectivas y mujeres a lo individual que defienden la participación política y el acceso a la justicia.',
-            ),
-          ),
-          links: [
-            { link: { type: 'reference', reference: { relationTo: 'pages', value: contacto.id }, label: 'Escríbenos', appearance: 'default' } },
-          ],
-        },
+    ],
+  })
+
+  // --- Inicio ------------------------------------------------------------------
+  console.log('Inicio…')
+  await page('home', {
+    title: 'Inicio',
+    hero: {
+      type: 'highImpact',
+      kicker: 'Guatemala · desde 2013',
+      media: img.ponentes.id,
+      richText: doc(h('h1', 'Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia')),
+      standfirst:
+        'Articulamos 18 organizaciones para que las mujeres participen, decidan y accedan a la justicia en Guatemala.',
+      links: [
+        custom('/quienes-somos', 'Conoce la Alianza', 'default'),
+        custom('/posts', 'Lee nuestros pronunciamientos', 'outline'),
       ],
-    } as any,
+      featured: { label: 'Nuevo pronunciamiento', post: niUnaMenos.id },
+    },
+    layout: [
+      {
+        blockType: 'intro',
+        blockName: 'Quienes somos',
+        kicker: 'Quiénes somos',
+        heading: 'Luchando por el acceso a la justicia',
+        body: 'Trabajamos para que las mujeres y las mujeres indígenas de Guatemala accedan a la justicia y participen, con voz propia, en las decisiones que definen el país.',
+        highlight: 'Mujeres mayas, garífunas, xinkas, mestizas y ladinas en una sola alianza.',
+        facts: [
+          { value: '18', label: 'organizaciones de la sociedad civil' },
+          { value: '2013', label: 'año en que se formó la Alianza' },
+          { value: '6', label: 'ediciones del Encuentro Virtual Mujeres y Poder' },
+        ],
+      },
+      {
+        blockType: 'workAreas',
+        blockName: 'Ejes',
+        heading: 'Cuatro ejes',
+        subheading: 'Trabajamos por la justicia de todas.',
+        allLink: { enabled: false },
+        items: [
+          {
+            title: 'Incidencia y acciones políticas',
+            summary:
+              'Llevamos la voz de las mujeres indígenas al Congreso, a las cortes y a las instituciones del Estado.',
+            image: img.eje.id,
+          },
+          {
+            title: 'Participación política de mujeres',
+            summary:
+              'Acompañamos a mujeres para que sean candidatas, ocupen cargos de decisión y los ejerzan sin violencia política.',
+          },
+          {
+            title: 'Formación y fortalecimiento',
+            summary:
+              'Talleres, diálogos y materiales para que cada mujer conozca y defienda sus derechos.',
+          },
+          {
+            title: 'Alianzas',
+            summary:
+              'Organizaciones, mujeres a lo individual y cooperantes que caminan con nosotras.',
+          },
+        ],
+      },
+      {
+        blockType: 'archive',
+        blockName: 'Publicaciones',
+        populateBy: 'collection',
+        relationTo: 'posts',
+        limit: 4,
+        display: 'featured',
+        introContent: doc(
+          h('h2', 'Últimas publicaciones'),
+          p('Pronunciamientos, actividades y voces de la Alianza frente a la coyuntura del país.'),
+        ),
+        allLink: { enabled: true, ...custom('/posts', 'Ver todas las publicaciones') },
+      },
+      {
+        blockType: 'mediaBlock',
+        media: img.franja.id,
+        fullBleed: true,
+        overlayText: 'Ni una menos, vivas, libres y con derechos.',
+        overlayAuthor: 'Pronunciamiento de la AMMI, 25 de noviembre de 2025'
+      },
+      {
+        blockType: 'socialGallery',
+        heading: 'Síguenos en Instagram',
+        description: 'Campañas, conversatorios y transmisiones en vivo.',
+        posts: [
+          { image: img.postNiUnaMenos.id },
+          { image: img.postMagistrada.id },
+          { image: img.postConversatorio.id },
+          { image: img.logoRojo.id },
+          { image: img.postEncuentro.id },
+          { image: img.postJusticia.id },
+        ],
+      },
+      {
+        blockType: 'cta',
+        backgroundImage: img.sumarse.id,
+        note: '18 organizaciones ya caminan juntas',
+        richText: doc(
+          h('h2', '¿Tu organización quiere sumarse?'),
+          p(
+            'Si trabajas por los derechos de las mujeres y las mujeres indígenas, escríbenos y conversemos sobre cómo caminar juntas.',
+          ),
+        ),
+        links: [
+          { link: { ...toContacto('Contáctanos').link, appearance: 'default' } },
+          custom('/quienes-somos#organizaciones', 'Conoce a las organizaciones', 'outline'),
+        ],
+      },
+    ],
   })
 
   // --- Globales ----------------------------------------------------------------
-  console.log('Actualizando encabezado y pie…')
+  console.log('Encabezado y pie…')
+  const nav = [
+    custom('/', 'Inicio'),
+    custom('/quienes-somos', 'Quiénes somos'),
+    custom('/#ejes', 'Ejes estratégicos'),
+    custom('/posts', 'Publicaciones'),
+    custom('/actividades', 'Actividades'),
+  ]
+  const header = await payload.findGlobal({ slug: 'header' })
+  const footer = await payload.findGlobal({ slug: 'footer' })
+  if (header.navItems?.length || footer.navItems?.length) {
+    console.log('  El encabezado o el pie ya tienen contenido; se conservan.')
+    console.log('Listo.')
+    process.exit(0)
+  }
   await payload.updateGlobal({
     slug: 'header',
     context: ctx,
-    data: {
-      navItems: [
-        { link: { type: 'custom', url: '/#nosotras', label: 'Nosotras' } },
-        { link: { type: 'custom', url: '/#lineas-de-trabajo', label: 'Lo que hacemos' } },
-        { link: { type: 'custom', url: '/#agenda', label: 'Agenda' } },
-        { link: { type: 'custom', url: '/posts', label: 'Pronunciamientos' } },
-      ],
-      action: {
-        link: { type: 'reference', reference: { relationTo: 'pages', value: contacto.id }, label: 'Escríbenos' },
-      },
-    } as any,
+    data: { navItems: nav, action: { enabled: true, ...toContacto('Contáctanos') } } as any,
   })
 
   await payload.updateGlobal({
     slug: 'footer',
     context: ctx,
     data: {
-      statement:
-        'Seguiremos avanzando con memoria, organización y sororidad, hasta que la justicia sea costumbre.',
+      statement: 'Para que ninguna mujer quede sola frente a la justicia.',
       contacts: [{ label: 'Escríbenos', href: '/contacto' }, { label: 'Paxil Kayala, Guatemala' }],
-      navItems: [
-        { link: { type: 'custom', url: '/#nosotras', label: 'Nosotras' } },
-        { link: { type: 'custom', url: '/#lineas-de-trabajo', label: 'Lo que hacemos' } },
-        { link: { type: 'custom', url: '/#agenda', label: 'Agenda' } },
-        { link: { type: 'custom', url: '/posts', label: 'Pronunciamientos' } },
-        { link: { type: 'custom', url: '/#organizaciones', label: 'Organizaciones' } },
-        { link: { type: 'reference', reference: { relationTo: 'pages', value: contacto.id }, label: 'Contacto' } },
-      ],
+      navItems: [...nav, toContacto('Contacto')],
       legal: 'Alianza administrada por la Asociación Política de Mujeres Mayas, Moloj.',
     } as any,
   })

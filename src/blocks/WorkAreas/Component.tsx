@@ -1,93 +1,118 @@
-'use client'
-
-import React, { useState } from 'react'
+import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
 
 import type { WorkAreasBlock as WorkAreasBlockProps } from '@/payload-types'
 
+import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import { cn } from '@/utilities/ui'
 
-export const WorkAreasBlock: React.FC<WorkAreasBlockProps & { id?: string | null }> = ({
-  heading,
-  id,
-  items,
-}) => {
-  const [active, setActive] = useState(0)
+// Cada eje toma un color de la marca según su posición en el mosaico
+const tones = [
+  'bg-corinto text-besh-suave',
+  'bg-corinto-secundario text-besh-suave',
+  'bg-besh-oscuro text-corinto-terciario',
+  'bg-ocre text-texto-primario',
+  'bg-fucsia text-besh-suave',
+  'bg-corinto-terciario text-besh-suave',
+]
+const layout = [
+  'md:row-span-2',
+  '',
+  '',
+  'md:col-span-2',
+  '',
+  'md:col-span-2',
+]
+
+type Item = NonNullable<WorkAreasBlockProps['items']>[number]
+
+const Number_: React.FC<{ n: number }> = ({ n }) => (
+  <span
+    aria-hidden="true"
+    className="absolute right-0 top-0 grid size-20 md:size-24 place-items-start justify-end rounded-bl-full bg-current/10 pe-5 pt-4 font-[family-name:var(--font-display)] text-step-title"
+  >
+    {String(n).padStart(2, '0')}
+  </span>
+)
+
+const CardBody: React.FC<{ item: Item }> = ({ item }) => (
+  <>
+    <h3 className="text-step-title max-w-[22ch] pe-14">{item.title}</h3>
+    <p className="mt-3 text-step-body opacity-90 max-w-[48ch]">{item.summary}</p>
+    {item.url && (
+      <span className="mt-6 inline-flex items-center gap-2 text-step-small font-medium">
+        {item.linkLabel || 'Conocer más'}
+        <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1" />
+      </span>
+    )}
+  </>
+)
+
+export const WorkAreasBlock: React.FC<WorkAreasBlockProps> = ({ allLink, heading, items, subheading }) => {
   const list = items || []
-  const current = list[active]
 
   return (
-    <section className="bg-besh-fuerte">
-      <div className="grid lg:grid-cols-[38fr_62fr] lg:min-h-[100svh]">
-        <div className="container lg:max-w-none flex flex-col py-16 lg:py-20">
-          <h2 className="text-step-head max-w-[12ch]" data-reveal>
-            {heading}
-          </h2>
-
-          <ul className="mt-12 lg:mt-auto flex flex-col" role="list">
-            {list.map((item, i) => {
-              const isActive = i === active
-              const panelId = `linea-${id}-${i}`
-              return (
-                <li key={item.id || i}>
-                  <button
-                    aria-controls={panelId}
-                    aria-expanded={isActive}
-                    className={cn(
-                      'group w-full flex items-baseline justify-between gap-6 py-3 text-left transition-colors',
-                      isActive ? 'text-corinto' : 'text-foreground hover:text-corinto',
-                    )}
-                    onClick={() => setActive(i)}
-                    onFocus={() => setActive(i)}
-                    onMouseEnter={() => setActive(i)}
-                    type="button"
-                  >
-                    <span className="text-step-title font-medium">
-                      {item.title}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        'shrink-0 h-3 w-3 transition-transform duration-300',
-                        isActive ? 'bg-fucsia scale-100' : 'bg-besh-oscuro scale-75',
-                      )}
-                    />
-                  </button>
-                  <div
-                    className={cn('grid transition-[grid-template-rows] duration-500', isActive ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}
-                    id={panelId}
-                  >
-                    <p className="overflow-hidden text-step-body max-w-[46ch]">
-                      <span className="block pb-5">{item.summary}</span>
-                    </p>
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
+    <section className="bg-besh-fuerte/60 py-[var(--section-y)]">
+      <div className="container">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between" data-reveal>
+          <div>
+            <h2 className="text-step-head">{heading}</h2>
+            {subheading && <p className="mt-3 text-step-body text-muted-foreground">{subheading}</p>}
+          </div>
+          {allLink?.enabled && allLink.link?.label && (
+            <CMSLink appearance="default" className="self-start md:self-auto" {...allLink.link}>
+              <ArrowRight aria-hidden="true" />
+            </CMSLink>
+          )}
         </div>
 
-        <div className="relative min-h-[60svh] lg:min-h-0 overflow-hidden bg-corinto">
-          {list.map((item, i) =>
-            item.image && typeof item.image === 'object' ? (
-              <div
-                aria-hidden={i !== active}
-                className={cn(
-                  'absolute inset-0 transition-[clip-path] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]',
-                  i === active ? '[clip-path:inset(0)]' : '[clip-path:inset(100%_0_0_0)]',
-                )}
+        <ul className="mt-10 md:mt-14 grid gap-4 md:gap-5 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-[minmax(15rem,auto)]" role="list">
+          {list.map((item, i) => {
+            const hasImage = i === 0 && item.image && typeof item.image === 'object'
+            const Wrapper: React.ElementType = item.url ? Link : 'div'
+            return (
+              <li
+                className={cn(layout[i % layout.length])}
+                data-reveal
                 key={item.id || i}
+                style={{ '--i': i + 1 } as React.CSSProperties}
               >
-                <Media fill imgClassName="object-cover" resource={item.image} size="(max-width: 1024px) 100vw, 62vw" />
-              </div>
-            ) : null,
-          )}
-          {current && !(current.image && typeof current.image === 'object') && (
-            <p className="absolute inset-x-0 bottom-0 p-[var(--margin)] text-step-head text-besh-suave max-w-[14ch]">
-              {current.title}
-            </p>
-          )}
-        </div>
+                <Wrapper
+                  {...(item.url ? { href: item.url } : {})}
+                  className={cn(
+                    'group relative flex h-full flex-col overflow-hidden rounded-card transition-transform duration-300',
+                    item.url && 'hover:-translate-y-1',
+                    hasImage ? 'min-h-[28rem] bg-corinto text-besh-suave' : cn('justify-end p-6 md:p-8', tones[i % tones.length]),
+                  )}
+                >
+                  {hasImage ? (
+                    <>
+                      <div className="relative flex-1 min-h-[14rem]">
+                        <Media
+                          fill
+                          imgClassName="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                          resource={item.image}
+                          size="(max-width: 768px) 100vw, 33vw"
+                        />
+                      </div>
+                      <div className="relative p-6 md:p-8">
+                        <Number_ n={i + 1} />
+                        <CardBody item={item} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Number_ n={i + 1} />
+                      <CardBody item={item} />
+                    </>
+                  )}
+                </Wrapper>
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </section>
   )

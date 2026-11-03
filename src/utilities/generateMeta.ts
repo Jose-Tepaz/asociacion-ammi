@@ -27,8 +27,8 @@ export const generateMeta = async (args: {
   const ogImage = getImageURL(doc?.meta?.image)
 
   const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+    ? doc?.meta?.title + ' · AMMI'
+    : 'AMMI · Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia'
 
   return {
     description: doc?.meta?.description,
