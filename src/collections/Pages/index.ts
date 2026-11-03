@@ -2,11 +2,17 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
+import { Agenda } from '../../blocks/Agenda/config'
 import { Archive } from '../../blocks/ArchiveBlock/config'
 import { CallToAction } from '../../blocks/CallToAction/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
+import { Intro } from '../../blocks/Intro/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { Members } from '../../blocks/Members/config'
+import { Quote } from '../../blocks/Quote/config'
+import { Strip } from '../../blocks/Strip/config'
+import { WorkAreas } from '../../blocks/WorkAreas/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -65,21 +71,33 @@ export const Pages: CollectionConfig<'pages'> = {
       tabs: [
         {
           fields: [hero],
-          label: 'Hero',
+          label: 'Portada',
         },
         {
           fields: [
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              blocks: [
+                Intro,
+                Content,
+                WorkAreas,
+                Agenda,
+                Quote,
+                Strip,
+                Members,
+                Archive,
+                MediaBlock,
+                FormBlock,
+                CallToAction,
+              ],
               required: true,
               admin: {
                 initCollapsed: true,
               },
             },
           ],
-          label: 'Content',
+          label: 'Secciones',
         },
         {
           name: 'meta',

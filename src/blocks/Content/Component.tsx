@@ -6,19 +6,23 @@ import type { ContentBlock as ContentBlockProps } from '@/payload-types'
 
 import { CMSLink } from '../../components/Link'
 
+/**
+ * Página de texto: los títulos empiezan en el eje (42 % del ancho)
+ * y el cuerpo cuelga de él a una medida de lectura.
+ */
 export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   const { columns } = props
 
   const colsSpanClasses = {
-    full: '12',
-    half: '6',
-    oneThird: '4',
-    twoThirds: '8',
+    full: 'lg:col-span-7 lg:col-start-6',
+    half: 'lg:col-span-6',
+    oneThird: 'lg:col-span-4',
+    twoThirds: 'lg:col-span-8',
   }
 
   return (
-    <div className="container my-16">
-      <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 gap-x-16">
+    <section className="container">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-y-12 gap-x-8">
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
@@ -26,18 +30,20 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
 
             return (
               <div
-                className={cn(`col-span-4 lg:col-span-${colsSpanClasses[size!]}`, {
-                  'md:col-span-2': size !== 'full',
-                })}
+                className={cn(colsSpanClasses[size!], { 'md:col-span-2': size === 'full' })}
+                data-reveal
                 key={index}
+                style={{ '--i': index } as React.CSSProperties}
               >
-                {richText && <RichText data={richText} enableGutter={false} />}
+                {richText && (
+                  <RichText data={richText} enableGutter={false} />
+                )}
 
-                {enableLink && <CMSLink {...link} />}
+                {enableLink && <CMSLink className="mt-8" size="lg" {...link} />}
               </div>
             )
           })}
       </div>
-    </div>
+    </section>
   )
 }

@@ -30,25 +30,29 @@ export const Card: React.FC<{
   const href = `/${relationTo}/${slug}`
 
   return (
-    <article
-      className={cn(
-        'border border-border rounded-lg overflow-hidden bg-card hover:cursor-pointer',
-        className,
-      )}
-      ref={card.ref}
-    >
-      <div className="relative w-full ">
-        {!metaImage && <div className="">No image</div>}
-        {metaImage && typeof metaImage !== 'string' && <Media resource={metaImage} size="33vw" />}
+    <article className={cn('group flex flex-col hover:cursor-pointer', className)} ref={card.ref}>
+      <div className="relative w-full aspect-[4/5] overflow-hidden bg-besh-fuerte">
+        {metaImage && typeof metaImage !== 'string' ? (
+          <Media
+            fill
+            imgClassName="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+            resource={metaImage}
+            size="(max-width: 768px) 100vw, 33vw"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-end bg-corinto p-6">
+            <span className="text-step-lead text-besh-suave">{titleToUse}</span>
+          </div>
+        )}
       </div>
-      <div className="p-4">
+      <div className="pt-5">
         {showCategories && hasCategories && (
-          <div className="uppercase text-sm mb-4">
+          <p className="mb-2 text-step-small text-corinto">
             {categories?.map((category, index) => {
               if (typeof category === 'object') {
                 const { title: titleFromCategory } = category
 
-                const categoryTitle = titleFromCategory || 'Untitled category'
+                const categoryTitle = titleFromCategory || 'Sin categoría'
 
                 const isLast = index === categories.length - 1
 
@@ -62,18 +66,20 @@ export const Card: React.FC<{
 
               return null
             })}
-          </div>
+          </p>
         )}
         {titleToUse && (
-          <div className="prose">
-            <h3>
-              <Link className="not-prose" href={href} ref={link.ref}>
-                {titleToUse}
-              </Link>
-            </h3>
-          </div>
+          <h3 className="text-step-lead">
+            <Link
+              className="underline-offset-4 decoration-2 decoration-fucsia group-hover:underline"
+              href={href}
+              ref={link.ref}
+            >
+              {titleToUse}
+            </Link>
+          </h3>
         )}
-        {description && <div className="mt-2">{description && <p>{sanitizedDescription}</p>}</div>}
+        {description && <p className="mt-3 text-step-body text-muted-foreground line-clamp-3">{sanitizedDescription}</p>}
       </div>
     </article>
   )

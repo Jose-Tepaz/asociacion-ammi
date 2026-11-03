@@ -5,7 +5,16 @@
  */
 
 import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from 'tailwind-merge'
+
+// Los pasos tipográficos propios (text-step-*) son tamaños, no colores
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [{ 'text-step': ['small', 'body', 'lead', 'title', 'head', 'display'] }],
+    },
+  },
+})
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

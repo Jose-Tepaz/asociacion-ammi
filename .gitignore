@@ -20,3 +20,9 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Local: base de datos, caché de TypeScript y capturas de inspección
+ammi.db
+tsconfig.tsbuildinfo
+.playwright-mcp/
+.taste-skill/

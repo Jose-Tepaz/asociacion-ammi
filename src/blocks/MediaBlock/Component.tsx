@@ -33,7 +33,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
   if (media && typeof media === 'object') caption = media.caption
 
   return (
-    <div
+    <figure
       className={cn(
         '',
         {
@@ -41,27 +41,24 @@ export const MediaBlock: React.FC<Props> = (props) => {
         },
         className,
       )}
+      data-reveal
     >
       {(media || staticImage) && (
-        <Media
-          imgClassName={cn('border border-border rounded-[0.8rem]', imgClassName)}
-          resource={media}
-          src={staticImage}
-        />
+        <Media imgClassName={cn('w-full', imgClassName)} resource={media} src={staticImage} />
       )}
       {caption && (
-        <div
+        <figcaption
           className={cn(
-            'mt-6',
+            'mt-4 text-step-small text-muted-foreground',
             {
               container: !disableInnerContainer,
             },
             captionClassName,
           )}
         >
-          <RichText data={caption} enableGutter={false} />
-        </div>
+          <RichText data={caption} enableGutter={false} enableProse={false} />
+        </figcaption>
       )}
-    </div>
+    </figure>
   )
 }

@@ -5,25 +5,38 @@ interface Props {
   className?: string
   loading?: 'lazy' | 'eager'
   priority?: 'auto' | 'high' | 'low'
+  /** `mark`: glifo, AMMI y tejido. `full`: incluye el nombre completo de la Alianza. */
+  variant?: 'mark' | 'full'
+  /** Color del logo según el fondo sobre el que se coloca. */
+  tone?: 'ink' | 'white'
 }
 
-export const Logo = (props: Props) => {
-  const { loading: loadingFromProps, priority: priorityFromProps, className } = props
+const sizes = {
+  full: { width: 1199, height: 674 },
+  mark: { width: 1199, height: 300 },
+}
 
-  const loading = loadingFromProps || 'lazy'
-  const priority = priorityFromProps || 'low'
+export const Logo = ({
+  className,
+  loading = 'lazy',
+  priority = 'low',
+  tone = 'ink',
+  variant = 'mark',
+}: Props) => {
+  const { width, height } = sizes[variant]
+  const file = variant === 'full' ? 'ammi-logo' : 'ammi-mark'
 
   return (
-    /* eslint-disable @next/next/no-img-element */
+    /* eslint-disable-next-line @next/next/no-img-element */
     <img
-      alt="Payload Logo"
-      width={193}
-      height={34}
-      loading={loading}
-      fetchPriority={priority}
+      alt="AMMI, Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia"
+      className={clsx('block h-auto', className)}
       decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-logo-light.svg"
+      fetchPriority={priority}
+      height={height}
+      loading={loading}
+      src={`/brand/${file}-${tone}.png`}
+      width={width}
     />
   )
 }

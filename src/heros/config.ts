@@ -17,22 +17,22 @@ export const hero: Field = {
       name: 'type',
       type: 'select',
       defaultValue: 'lowImpact',
-      label: 'Type',
+      label: 'Tipo de portada',
       options: [
         {
-          label: 'None',
+          label: 'Ninguna',
           value: 'none',
         },
         {
-          label: 'High Impact',
+          label: 'Mosaico (inicio)',
           value: 'highImpact',
         },
         {
-          label: 'Medium Impact',
+          label: 'Título e imagen ancha',
           value: 'mediumImpact',
         },
         {
-          label: 'Low Impact',
+          label: 'Solo título',
           value: 'lowImpact',
         },
       ],
@@ -51,7 +51,18 @@ export const hero: Field = {
           ]
         },
       }),
-      label: false,
+      label: 'Título',
+      admin: {
+        description: 'Usa un Encabezado 1 corto (dos líneas como máximo) y, si quieres, un párrafo.',
+      },
+    },
+    {
+      name: 'standfirst',
+      label: 'Entradilla',
+      type: 'textarea',
+      admin: {
+        description: 'Una frase que explica qué es esta página. Se muestra junto al título.',
+      },
     },
     linkGroup({
       overrides: {
@@ -64,8 +75,28 @@ export const hero: Field = {
       admin: {
         condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
       },
+      label: 'Imagen principal',
       relationTo: 'media',
       required: true,
+    },
+    {
+      name: 'mosaic',
+      label: 'Imágenes del mosaico',
+      type: 'array',
+      maxRows: 3,
+      admin: {
+        condition: (_, { type } = {}) => type === 'highImpact',
+        description: 'Hasta tres imágenes más. Se combinan con bloques de color de la marca.',
+      },
+      fields: [
+        {
+          name: 'image',
+          label: 'Imagen',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+        },
+      ],
     },
   ],
   label: false,
