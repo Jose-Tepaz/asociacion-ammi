@@ -69,6 +69,8 @@ export default buildConfig({
   db: usePostgres
     ? postgresAdapter({
         pool: { connectionString: databaseUrl },
+        // Permite conservar los IDs al copiar contenido de una base a otra
+        allowIDOnCreate: true,
         migrationDir: path.resolve(dirname, 'migrations'),
         // Crea o actualiza las tablas al arrancar en producción
         prodMigrations: migrations,
