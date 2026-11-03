@@ -22,6 +22,9 @@ const latestPost = async (): Promise<Post | null> => {
     depth: 1,
     limit: 1,
     sort: '-publishedAt',
+    // Solo publicaciones publicadas: nunca mostrar borradores en la portada
+    overrideAccess: false,
+    where: { _status: { equals: 'published' } },
   })
   return docs[0] || null
 }

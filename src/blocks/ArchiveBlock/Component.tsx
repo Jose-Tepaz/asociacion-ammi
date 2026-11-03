@@ -44,6 +44,8 @@ export const ArchiveBlock: React.FC<
       depth: 1,
       limit,
       sort: '-publishedAt',
+      // Respeta los permisos públicos: los borradores no aparecen en el sitio
+      overrideAccess: false,
       ...(flattenedCategories && flattenedCategories.length > 0
         ? {
             where: {
