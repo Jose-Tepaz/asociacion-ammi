@@ -26,3 +26,4 @@ ammi.db
 tsconfig.tsbuildinfo
 .playwright-mcp/
 .taste-skill/
+.env*
