@@ -45,13 +45,13 @@ const OrgCell: React.FC<{ org: Org }> = ({ org }) => {
         className="group flex h-full flex-col gap-3"
         title={org.focus ? `${org.name} · ${org.focus}` : org.name}
       >
-        <span className="relative flex h-14 w-full max-w-[10rem] items-center md:h-16">
+        <span className="relative flex h-20 w-full max-w-[12rem] items-center md:h-24 lg:h-28">
           {hasLogo ? (
             <Media
               fill
               imgClassName="object-contain object-left transition-transform duration-300 group-hover:scale-[1.04]"
               resource={org.logo}
-              size="(max-width: 768px) 40vw, 10rem"
+              size="(max-width: 768px) 40vw, 12rem"
             />
           ) : (
             <span
@@ -96,7 +96,7 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
         <div className="mt-10 space-y-10 md:mt-12 md:space-y-12 lg:mt-16 lg:space-y-14">
           {groups.map((group, gi) => (
             <div
-              className={cn('grid gap-5', hasCategories && 'lg:grid-cols-12 lg:gap-10')}
+              className={cn('grid gap-5', hasCategories && 'lg:grid-cols-12 lg:gap-12')}
               data-reveal
               key={group.label || gi}
               style={{ '--i': gi + 2 } as React.CSSProperties}
@@ -106,9 +106,6 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
                   <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold leading-tight text-corinto md:text-2xl">
                     {group.label || 'Otras organizaciones'}
                   </h3>
-                  <p className="mt-1 text-step-small text-texto-secundario">
-                    {group.items.length} {group.items.length === 1 ? 'organización' : 'organizaciones'}
-                  </p>
                 </div>
               )}
               <ul
