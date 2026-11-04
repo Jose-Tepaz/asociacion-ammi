@@ -45,11 +45,11 @@ const OrgCell: React.FC<{ org: Org }> = ({ org }) => {
         className="group flex h-full flex-col gap-3"
         title={org.focus ? `${org.name} · ${org.focus}` : org.name}
       >
-        <span className="relative flex h-20 w-full max-w-[12rem] items-center md:h-24 lg:h-28">
+        <span className="relative flex h-[72px] w-full max-w-[12rem] items-center md:h-20 lg:h-[90px]">
           {hasLogo ? (
             <Media
               fill
-              imgClassName="object-contain object-left transition-transform duration-300 group-hover:scale-[1.04]"
+              imgClassName="object-contain object-left transition-transform duration-700 group-hover:scale-[1.04]"
               resource={org.logo}
               size="(max-width: 768px) 40vw, 12rem"
             />
@@ -62,7 +62,7 @@ const OrgCell: React.FC<{ org: Org }> = ({ org }) => {
             </span>
           )}
         </span>
-        <span className="line-clamp-2 max-w-[26ch] text-xs leading-snug text-texto-secundario">{org.name}</span>
+        <span className="sr-only">{org.name}</span>
       </Wrapper>
     </li>
   )
@@ -103,7 +103,7 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
             >
               {hasCategories && (
                 <div className="lg:col-span-3">
-                  <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold leading-tight text-corinto md:text-2xl">
+                  <h3 className="font-[family-name:var(--font-display)] text-[18px] font-semibold leading-tight text-corinto">
                     {group.label || 'Otras organizaciones'}
                   </h3>
                 </div>

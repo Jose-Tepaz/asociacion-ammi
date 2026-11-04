@@ -84,7 +84,7 @@ const Circle: React.FC<{ image: StructureBlockProps['image']; ring?: boolean; cl
 }) => {
   const hasImage = image && typeof image === 'object'
   return (
-    <figure className={cn('relative', className)} data-reveal>
+    <figure className={cn('group relative', className)} data-reveal>
       <span
         aria-hidden="true"
         className="absolute -inset-2 rounded-full border-2 border-dashed border-ocre/60 md:-inset-3"
@@ -92,7 +92,10 @@ const Circle: React.FC<{ image: StructureBlockProps['image']; ring?: boolean; cl
       />
       <div className="relative aspect-square overflow-hidden rounded-full bg-besh-fuerte">
         {hasImage ? (
-          <Media fill imgClassName="object-cover" resource={image} size="(max-width: 1024px) 14rem, 22rem" />
+          <Media
+            fill
+            imgClassName="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            resource={image} size="(max-width: 1024px) 14rem, 22rem" />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img alt="" className="absolute inset-0 m-auto w-1/2" src="/brand/ammi-mark-ink.png" />
