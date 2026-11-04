@@ -69,13 +69,11 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
     <div className="pb-[var(--section-y)]">
       <section className="bg-corinto-secundario text-besh-suave" data-hero="dark" data-theme="dark">
         <div className="container py-[calc(var(--section-y)*2.25)] text-center">
-          <h1 className="text-step-display">
-            {category ? category.title : 'Publicaciones'}
-          </h1>
+          <h1 className="text-step-display">Publicaciones</h1>
           <p className="mx-auto mt-5 text-step-lead text-besh-fuerte max-w-[64ch]">
-            {category
-              ? `Todo lo que la Alianza ha publicado en ${category.title.toLowerCase()}.`
-              : 'Pronunciamientos, actividades, noticias y voces de la Alianza.'}
+            Pronunciamientos, actividades, noticias y voces de la Alianza. Aquí reunimos lo que
+            decimos y hacemos por el acceso a la justicia y la participación política de las mujeres
+            y las mujeres indígenas de Guatemala.
           </p>
         </div>
         <span aria-hidden="true" className="tejido" />
@@ -92,13 +90,13 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
                 <Link
                   aria-current={tab.active ? 'page' : undefined}
                   className={cn(
-                    'inline-flex h-11 items-center gap-1.5 rounded-full px-5 text-step-small font-medium transition-colors',
+                    'inline-flex h-12 items-center gap-2 rounded-full px-5 text-step-lead font-medium whitespace-nowrap transition-colors',
                     tab.active ? 'bg-corinto text-besh-suave' : 'text-texto-primario hover:text-corinto',
                   )}
                   href={tab.href}
                 >
                   {tab.label}
-                  <span className={cn('text-step-small', tab.active ? 'text-besh-fuerte' : 'text-texto-secundario')}>
+                  <span className={cn('text-step-regular', tab.active ? 'text-besh-fuerte' : 'text-texto-secundario')}>
                     {tab.count}
                   </span>
                 </Link>

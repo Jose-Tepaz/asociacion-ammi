@@ -64,9 +64,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             {navItems.map(({ link }, i) => (
               <CMSLink
                 className={cn(
-                  'relative px-3 py-2 text-step-regular font-medium whitespace-nowrap transition-colors hover:text-corinto xl:px-4',
+                  'relative px-2 py-2 text-step-body font-medium whitespace-nowrap transition-colors hover:text-corinto xl:px-4',
                   isActive(link) &&
-                    'text-corinto after:absolute after:inset-x-3 after:bottom-0.5 after:h-0.5 after:rounded-full after:bg-corinto xl:after:inset-x-4',
+                    'text-corinto after:absolute after:inset-x-2 after:bottom-0.5 after:h-0.5 after:rounded-full after:bg-corinto xl:after:inset-x-4',
                 )}
                 key={i}
                 {...link}
@@ -79,7 +79,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               <CMSLink
                 {...action}
                 appearance="inline"
-                className="hidden h-full items-center rounded-full bg-corinto px-6 text-step-regular font-medium whitespace-nowrap text-besh-suave transition-colors hover:bg-corinto-secundario sm:flex"
+                className="hidden h-full items-center rounded-full bg-corinto px-6 lg:px-5 xl:px-6 text-step-body font-medium whitespace-nowrap text-besh-suave transition-colors hover:bg-corinto-secundario sm:flex"
               />
             )}
             <button

@@ -7,6 +7,7 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
 
+import { FormBlock, type FormBlockType } from '@/blocks/Form/Component'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -66,6 +67,12 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   const { hero, layout } = page
 
+  // En la portada de contacto el formulario va al lado del título, no debajo
+  const contactForm =
+    hero.type === 'lowImpact' && hero.tone === 'contacto'
+      ? layout.find((block) => block.blockType === 'formBlock')
+      : undefined
+
   return (
     <article>
       <PageClient />
@@ -74,8 +81,11 @@ export default async function Page({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
-      <RenderHero {...hero} />
-      <RenderBlocks blocks={layout} />
+      <RenderHero
+        {...hero}
+        aside={contactForm && <FormBlock {...(contactForm as unknown as FormBlockType)} embedded />}
+      />
+      <RenderBlocks blocks={layout.filter((block) => block !== contactForm)} />
     </article>
   )
 }

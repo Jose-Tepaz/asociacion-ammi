@@ -21,10 +21,13 @@ export type FormBlockType = {
 
 export const FormBlock: React.FC<
   {
+    /** Dentro de otra sección: sin contenedor propio y con fondo de tarjeta. */
+    embedded?: boolean
     id?: string
   } & FormBlockType
 > = (props) => {
   const {
+    embedded,
     enableIntro,
     form: formFromProps,
     form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
@@ -114,11 +117,17 @@ export const FormBlock: React.FC<
   )
 
   return (
-    <div className="container lg:max-w-[48rem]">
+    <div className={embedded ? undefined : 'container lg:max-w-[48rem]'}>
       {enableIntro && introContent && !hasSubmitted && (
         <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
       )}
-      <div className="p-4 lg:p-6 border border-border rounded-[0.8rem]">
+      <div
+        className={
+          embedded
+            ? 'rounded-[2rem] bg-background p-6 md:p-8'
+            : 'p-4 lg:p-6 border border-border rounded-[0.8rem]'
+        }
+      >
         <FormProvider {...formMethods}>
           {!isLoading && hasSubmitted && confirmationType === 'message' && (
             <RichText data={confirmationMessage} />

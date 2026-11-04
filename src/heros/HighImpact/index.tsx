@@ -77,7 +77,7 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
           )}
         </div>
 
-        <div className="lg:col-span-5 lg:pt-14">
+        <div className="lg:col-span-5 lg:self-center lg:pt-14">
           {standfirst && <p className="text-step-lead max-w-[36ch] fade-up">{standfirst}</p>}
           <HeroLinks className="mt-6 fade-up" links={links} />
         </div>

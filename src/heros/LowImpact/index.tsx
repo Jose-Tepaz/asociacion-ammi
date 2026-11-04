@@ -13,6 +13,7 @@ import { HeroLinks, heroTitleClasses } from '../HeroLinks'
 
 type LowImpactHeroType =
   | {
+      aside?: never
       children?: React.ReactNode
       richText?: never
       standfirst?: never
@@ -21,6 +22,7 @@ type LowImpactHeroType =
       tone?: never
     }
   | (Omit<Page['hero'], 'richText'> & {
+      aside?: React.ReactNode
       children?: never
       richText?: Page['hero']['richText']
     })
@@ -97,6 +99,7 @@ const ContactCard = async () => {
  * banda corinto, calendario con el día de hoy, o contacto con los datos de la Alianza.
  */
 export const LowImpactHero: React.FC<LowImpactHeroType> = ({
+  aside,
   children,
   kicker,
   links,
@@ -106,13 +109,30 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
 }) => {
   const title = children || (richText && <RichText data={richText} enableGutter={false} enableProse={false} />)
 
-  if (tone === 'calendario' || tone === 'contacto') {
-    const isCalendar = tone === 'calendario'
+  if (tone === 'contacto') {
     return (
-      <section
-        className={cn('overflow-hidden', isCalendar ? 'bg-background' : 'bg-besh-fuerte')}
-        data-hero={isCalendar ? 'light' : 'beige'}
-      >
+      <section className="overflow-hidden bg-besh-fuerte" data-hero="beige">
+        <div className="container grid items-start gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-6">
+            {kicker && <Kicker className="bg-corinto/10 text-fucsia" dot="bg-fucsia" text={kicker} />}
+            <div className="mask-line">
+              <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
+            </div>
+            {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
+            {links && <HeroLinks className="fade-up mt-8" links={links} />}
+            <div className="mt-8">
+              <ContactCard />
+            </div>
+          </div>
+          {aside && <div className="lg:col-span-6">{aside}</div>}
+        </div>
+      </section>
+    )
+  }
+
+  if (tone === 'calendario') {
+    return (
+      <section className="overflow-hidden bg-besh-fuerte" data-hero="beige">
         <div className="container grid items-center gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
             {kicker && <Kicker className="bg-corinto/10 text-fucsia" dot="bg-fucsia" text={kicker} />}
@@ -123,7 +143,7 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
             {links && <HeroLinks className="fade-up mt-8" links={links} />}
           </div>
           <div className="flex justify-center lg:col-span-5 lg:justify-end">
-            {isCalendar ? <CalendarTile /> : <ContactCard />}
+            <CalendarTile />
           </div>
         </div>
       </section>

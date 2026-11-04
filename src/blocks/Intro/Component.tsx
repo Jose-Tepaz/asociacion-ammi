@@ -53,7 +53,7 @@ const IntroPanel: React.FC<IntroBlockProps & { position: number }> = ({
             {list.length > 0 && (
               <dl className="mt-3 grid gap-3 sm:grid-cols-3">
                 {list.map(({ id, label, value }) => (
-                  <div className={cn('flex flex-col-reverse rounded-2xl p-4', tone.soft)} key={id}>
+                  <div className={cn('flex flex-col-reverse justify-end rounded-2xl p-4', tone.soft)} key={id}>
                     <dt className="mt-1 text-step-small opacity-90">{label}</dt>
                     <dd className="font-[family-name:var(--font-display)] text-step-head font-semibold leading-none">
                       {value}
@@ -80,7 +80,7 @@ const IntroPanel: React.FC<IntroBlockProps & { position: number }> = ({
   )
 }
 
-/** Presentación: foto vertical a un lado y, al otro, el texto con las cifras en una fila. */
+/** Presentación: el texto con las cifras en una fila y, a la derecha, la foto vertical. */
 export const IntroBlock: React.FC<IntroBlockProps & { panelPosition?: number }> = ({
   panelPosition,
   ...props
@@ -96,7 +96,7 @@ export const IntroBlock: React.FC<IntroBlockProps & { panelPosition?: number }> 
     <section className="container">
       <div className={cn('grid items-center gap-12 lg:gap-16', hasImage && 'lg:grid-cols-12')}>
         {hasImage && (
-          <figure className="relative lg:col-span-5" data-reveal>
+          <figure className="relative lg:order-last lg:col-span-5" data-reveal>
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-besh-oscuro">
               <Media fill imgClassName="object-cover" resource={image} size="(max-width: 1024px) 100vw, 40vw" />
               <span aria-hidden="true" className="tejido absolute inset-x-0 bottom-0" />
@@ -141,7 +141,7 @@ export const IntroBlock: React.FC<IntroBlockProps & { panelPosition?: number }> 
               style={{ '--i': 3 } as React.CSSProperties}
             >
               {list.map(({ id, label, value }) => (
-                <div className="flex flex-col-reverse border-s-2 border-ocre ps-5" key={id}>
+                <div className="flex flex-col-reverse justify-end border-s-2 border-ocre ps-5" key={id}>
                   <dt className="mt-2 text-step-small text-texto-secundario max-w-[20ch]">{label}</dt>
                   <dd className="font-[family-name:var(--font-display)] text-step-head font-semibold leading-none text-corinto">
                     {value}

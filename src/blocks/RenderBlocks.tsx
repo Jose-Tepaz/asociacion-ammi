@@ -32,7 +32,7 @@ const blockComponents = {
 }
 
 /** Bloques que ocupan un campo de color de borde a borde. */
-const fieldBlocks = new Set(['quote', 'workAreas', 'socialGallery'])
+const fieldBlocks = new Set(['agenda', 'quote', 'workAreas', 'socialGallery'])
 
 type AnyBlock = Page['layout'][0]
 
