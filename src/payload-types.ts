@@ -550,7 +550,7 @@ export interface StatementBlock {
    */
   statement: string;
   /**
-   * Se muestran como etiquetas debajo de la declaración.
+   * Se unen en una frase bajo la declaración: «Somos mayas, garífunas… en una sola alianza».
    */
   peoples?:
     | {

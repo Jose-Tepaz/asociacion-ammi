@@ -19,7 +19,7 @@ export const Statement: Block = {
       name: 'peoples',
       label: 'Pueblos y orígenes',
       type: 'array',
-      admin: { description: 'Se muestran como etiquetas debajo de la declaración.' },
+      admin: { description: 'Se unen en una frase bajo la declaración: «Somos mayas, garífunas… en una sola alianza».' },
       defaultValue: [
         { name: 'Mayas' },
         { name: 'Garífunas' },

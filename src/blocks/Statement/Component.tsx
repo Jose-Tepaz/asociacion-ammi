@@ -4,10 +4,14 @@ import type { StatementBlock as StatementBlockProps } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 
-/** Qué somos: una declaración en letra grande, los pueblos que la integran y una foto panorámica. */
+/** Qué somos: una declaración en letra grande, una frase con los pueblos que la integran y una foto panorámica. */
 export const StatementBlock: React.FC<StatementBlockProps> = ({ heading, image, peoples, statement }) => {
   const list = peoples || []
   const hasImage = image && typeof image === 'object'
+  // «mayas, garífunas, xinkas, afrodescendientes, mestizas y ladinas»
+  const peoplesLine = new Intl.ListFormat('es', { type: 'conjunction' }).format(
+    list.map((p) => p.name.trim().toLocaleLowerCase('es')).filter(Boolean),
+  )
 
   return (
     <section className="container section-pad">
@@ -26,23 +30,13 @@ export const StatementBlock: React.FC<StatementBlockProps> = ({ heading, image, 
           >
             {statement}
           </p>
-          {list.length > 0 && (
-            <ul
-              aria-label="Pueblos y orígenes de las mujeres de la Alianza"
-              className="mt-8 flex flex-wrap gap-2 md:mt-10"
-              data-reveal
-              role="list"
-              style={{ '--i': 2 } as React.CSSProperties}
-            >
-              {list.map((p, i) => (
-                <li
-                  className="rounded-full border border-besh-oscuro bg-white/60 px-4 py-1.5 text-step-small font-medium text-corinto"
-                  key={p.id || i}
-                >
-                  {p.name}
-                </li>
-              ))}
-            </ul>
+          {peoplesLine && (
+            <div className="mt-8 flex gap-5 md:mt-10" data-reveal style={{ '--i': 2 } as React.CSSProperties}>
+              <span aria-hidden="true" className="mt-[0.8em] h-0.5 w-10 shrink-0 bg-ocre md:w-14" />
+              <p className="max-w-[40ch] font-[family-name:var(--font-display)] text-[clamp(1.25rem,1rem+0.8vw,1.75rem)] leading-snug text-corinto">
+                Somos {peoplesLine}, en una sola alianza.
+              </p>
+            </div>
           )}
         </div>
       </div>
