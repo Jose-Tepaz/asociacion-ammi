@@ -7,6 +7,7 @@ import type { Header } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 import { cn } from '@/utilities/ui'
 
 interface HeaderClientProps {
@@ -28,6 +29,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const pathname = usePathname()
   const navItems = data?.navItems || []
   const action = data?.action?.enabled ? data.action.link : undefined
+  const logo = data?.logo && typeof data.logo === 'object' ? data.logo : null
 
   useEffect(() => setOpen(false), [pathname])
 
@@ -46,14 +48,23 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             className="shrink-0"
             href="/"
           >
-            <Logo className="w-[6.5rem] md:w-[7.5rem]" loading="eager" priority="high" variant="mark" />
+            {logo ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                alt={logo.alt || 'AMMI, ir al inicio'}
+                className="block h-9 w-auto max-w-[10rem] object-contain md:h-10 md:max-w-[12rem]"
+                src={getMediaUrl(logo.url, logo.updatedAt)}
+              />
+            ) : (
+              <Logo className="w-[6.5rem] md:w-[7.5rem]" loading="eager" priority="high" variant="mark" />
+            )}
           </Link>
 
           <nav aria-label="Principal" className="hidden lg:flex items-center xl:gap-1">
             {navItems.map(({ link }, i) => (
               <CMSLink
                 className={cn(
-                  'relative px-3 py-2 text-base font-medium whitespace-nowrap transition-colors hover:text-corinto xl:px-4',
+                  'relative px-3 py-2 text-step-regular font-medium whitespace-nowrap transition-colors hover:text-corinto xl:px-4',
                   isActive(link) &&
                     'text-corinto after:absolute after:inset-x-3 after:bottom-0.5 after:h-0.5 after:rounded-full after:bg-corinto xl:after:inset-x-4',
                 )}
@@ -65,19 +76,16 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
           <div className="flex h-full items-center gap-2">
             {action?.label && (
-              // Borde con los colores de la marca
-              <span className="hidden h-full rounded-full bg-linear-to-r from-fucsia via-ocre to-corinto p-0.5 sm:block">
-                <CMSLink
-                  {...action}
-                  appearance="inline"
-                  className="flex h-full items-center rounded-full bg-white px-4 text-base font-medium whitespace-nowrap text-corinto xl:px-5 transition-colors hover:bg-corinto hover:text-besh-suave"
-                />
-              </span>
+              <CMSLink
+                {...action}
+                appearance="inline"
+                className="hidden h-full items-center rounded-full bg-corinto px-6 text-step-regular font-medium whitespace-nowrap text-besh-suave transition-colors hover:bg-corinto-secundario sm:flex"
+              />
             )}
             <button
               aria-controls="menu-movil"
               aria-expanded={open}
-              className="lg:hidden h-full rounded-full px-5 text-base font-medium bg-besh-fuerte transition-colors hover:bg-besh-oscuro"
+              className="lg:hidden h-full rounded-full px-5 text-step-regular font-medium bg-besh-fuerte transition-colors hover:bg-besh-oscuro"
               onClick={() => setOpen((v) => !v)}
               type="button"
             >

@@ -12,6 +12,15 @@ export const Header: GlobalConfig = {
   },
   fields: [
     {
+      name: 'logo',
+      label: 'Logo',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Opcional. Sube un logo horizontal, de preferencia con fondo transparente. Si lo dejas vacío se usa el logo de AMMI.',
+      },
+    },
+    {
       name: 'navItems',
       label: 'Enlaces del menú',
       type: 'array',

@@ -68,9 +68,11 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
   return (
     <div className="pb-[var(--section-y)]">
       <section className="bg-corinto-secundario text-besh-suave" data-hero="dark" data-theme="dark">
-        <div className="container py-[var(--section-y)]">
-          <h1 className="text-step-display">{category ? category.title : 'Publicaciones'}</h1>
-          <p className="mt-4 text-step-lead text-besh-fuerte max-w-[44ch]">
+        <div className="container py-[calc(var(--section-y)*2.25)] text-center">
+          <h1 className="text-step-display">
+            {category ? category.title : 'Publicaciones'}
+          </h1>
+          <p className="mx-auto mt-5 text-step-lead text-besh-fuerte max-w-[64ch]">
             {category
               ? `Todo lo que la Alianza ha publicado en ${category.title.toLowerCase()}.`
               : 'Pronunciamientos, actividades, noticias y voces de la Alianza.'}
@@ -80,27 +82,23 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
       </section>
 
       <div className="container pt-[var(--section-y)]">
-        <nav aria-label="Categorías de publicaciones" className="-mx-[var(--margin)] overflow-x-auto px-[var(--margin)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <ul className="flex w-max gap-2 md:w-auto md:flex-wrap">
+        <nav
+          aria-label="Categorías de publicaciones"
+          className="mx-auto w-fit max-w-full overflow-x-auto rounded-full bg-white p-1.5 shadow-[0_16px_32px_-16px_rgb(36_15_22/0.4)] ring-1 ring-texto-primario/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <ul className="flex w-max gap-1">
             {tabs.map((tab) => (
               <li key={tab.href}>
                 <Link
                   aria-current={tab.active ? 'page' : undefined}
                   className={cn(
-                    'inline-flex h-11 items-center gap-2 rounded-full px-5 text-step-small font-medium transition-colors',
-                    tab.active
-                      ? 'bg-corinto text-besh-suave'
-                      : 'bg-besh-fuerte text-texto-primario hover:bg-besh-oscuro',
+                    'inline-flex h-11 items-center gap-1.5 rounded-full px-5 text-step-small font-medium transition-colors',
+                    tab.active ? 'bg-corinto text-besh-suave' : 'text-texto-primario hover:text-corinto',
                   )}
                   href={tab.href}
                 >
                   {tab.label}
-                  <span
-                    className={cn(
-                      'rounded-full px-2 py-0.5 text-[0.75rem] leading-none',
-                      tab.active ? 'bg-besh-suave/20' : 'bg-besh-suave text-texto-secundario',
-                    )}
-                  >
+                  <span className={cn('text-step-small', tab.active ? 'text-besh-fuerte' : 'text-texto-secundario')}>
                     {tab.count}
                   </span>
                 </Link>

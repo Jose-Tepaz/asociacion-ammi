@@ -30,8 +30,8 @@ const latestPost = async (): Promise<Post | null> => {
 }
 
 /**
- * Portada del inicio: la foto o el video ocupan todo el fondo, con un velo oscuro
- * para leer el texto. El contenido va centrado y el último pronunciamiento en la esquina derecha.
+ * Portada del inicio: título a la izquierda, texto y botones a la derecha y, debajo, la foto o
+ * el video a todo el ancho. El último pronunciamiento va en la esquina inferior derecha.
  */
 export const HighImpactHero: React.FC<Page['hero']> = async ({
   featured,
@@ -49,26 +49,13 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
 
   return (
     <section
-      className="relative isolate flex min-h-svh flex-col overflow-hidden bg-corinto-secundario text-besh-suave"
-      data-hero="overlay"
-      data-theme="dark"
+      className="relative flex min-h-[calc(100svh-var(--header-h))] flex-col overflow-hidden bg-background"
+      data-hero="light"
     >
-      {/* Fondo: video o foto a todo el ancho */}
-      <div aria-hidden={!isVideo} className="absolute inset-0 -z-10">
-        {resource &&
-          (isVideo ? (
-            <HeroVideo src={getMediaUrl(resource.url, resource.updatedAt)} type={resource.mimeType} />
-          ) : (
-            <Media fill imgClassName="object-cover hero-drift" priority resource={resource} size="100vw" />
-          ))}
-        {/* Velo oscuro neutro y parejo: no tiñe los colores de la foto */}
-        <div className="absolute inset-0 bg-texto-primario/55" />
-      </div>
-
-      <div className="container flex flex-1 flex-col items-center justify-center gap-10 pt-36 pb-[var(--section-y)] text-center">
-        <div className="flex flex-col items-center">
+      <div className="container grid gap-6 pt-10 md:pt-14 lg:grid-cols-12 lg:gap-8">
+        <div className="lg:col-span-7">
           {kicker && (
-            <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-besh-suave px-4 py-1.5 text-step-small font-semibold text-corinto">
+            <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-corinto/10 px-4 py-1.5 text-step-small font-medium text-fucsia">
               <span aria-hidden="true" className="size-1.5 rounded-full bg-fucsia" />
               {kicker}
             </p>
@@ -79,7 +66,7 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
                 <RichText
                   className={cn(
                     heroTitleClasses,
-                    '[&_h1]:text-[clamp(2.5rem,1.2rem+3.6vw,4.75rem)] [&_h1]:leading-[1.04] [&_h1]:max-w-[24ch]',
+                    '[&_h1]:leading-[1.04] [&_h1]:max-w-[20ch] [&_h1]:text-corinto',
                   )}
                   data={richText}
                   enableGutter={false}
@@ -88,43 +75,65 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
               </div>
             </div>
           )}
-          {standfirst && (
-            <p className="mt-6 text-step-lead text-besh-fuerte max-w-[52ch] fade-up">{standfirst}</p>
-          )}
-          <HeroLinks className="mt-10 justify-center fade-up" links={links} onDark />
         </div>
 
-        {post && (
-          <div className="flex w-full justify-center lg:absolute lg:right-6 lg:bottom-6 lg:w-80">
-            <Link
-              className="group fade-up flex w-full max-w-[20rem] items-center gap-3 rounded-xl bg-besh-suave p-2 pe-3 text-left text-texto-primario shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-1"
-              href={`/posts/${post.slug}`}
-            >
-              {thumb && (
-                <span className="relative block h-14 w-11 shrink-0 overflow-hidden rounded-md bg-besh-fuerte">
-                  <Media fill imgClassName="object-cover object-top" resource={thumb} size="44px" />
+        <div className="lg:col-span-5 lg:pt-14">
+          {standfirst && <p className="text-step-lead max-w-[36ch] fade-up">{standfirst}</p>}
+          <HeroLinks className="mt-6 fade-up" links={links} />
+        </div>
+      </div>
+
+      {/* Escena a todo el ancho: la foto o el video sube fundiéndose con el fondo */}
+      <div className="relative mt-6 min-h-[22rem] flex-1 [mask-image:linear-gradient(to_bottom,transparent,black_28%)] md:min-h-[26rem]">
+        {resource &&
+          (isVideo ? (
+            <HeroVideo
+              className="object-[50%_35%]"
+              controlClassName="md:bottom-6 md:top-auto"
+              src={getMediaUrl(resource.url, resource.updatedAt)}
+              type={resource.mimeType}
+            />
+          ) : (
+            <Media
+              fill
+              imgClassName="object-cover object-[50%_35%]"
+              priority
+              resource={resource}
+              size="100vw"
+            />
+          ))}
+      </div>
+
+      {post && (
+        <div className="container relative -mt-24 pb-6 lg:absolute lg:bottom-0 lg:right-0 lg:mt-0 lg:flex lg:w-auto lg:justify-end lg:p-6">
+          <Link
+            className="group fade-up flex w-full max-w-[20rem] items-center gap-3 rounded-xl bg-besh-suave p-2 pe-3 text-left text-texto-primario shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-1"
+            href={`/posts/${post.slug}`}
+          >
+            {thumb && (
+              <span className="relative block h-14 w-11 shrink-0 overflow-hidden rounded-md bg-besh-fuerte">
+                <Media fill imgClassName="object-cover object-top" resource={thumb} size="44px" />
+              </span>
+            )}
+            <span className="min-w-0 flex-1">
+              <span className="block text-step-small font-medium text-fucsia">
+                {featured?.label || 'Nuevo pronunciamiento'}
+              </span>
+              <span className="mt-0.5 block font-[family-name:var(--font-display)] text-step-small font-semibold leading-snug line-clamp-2">
+                {post.title}
+              </span>
+              {post.publishedAt && (
+                <span className="mt-0.5 block text-step-small text-texto-secundario">
+                  {formatDateLong(post.publishedAt)}
                 </span>
               )}
-              <span className="min-w-0 flex-1">
-                <span className="block text-[0.75rem] font-medium text-fucsia">
-                  {featured?.label || 'Nuevo pronunciamiento'}
-                </span>
-                <span className="mt-0.5 block font-[family-name:var(--font-display)] text-step-small font-semibold leading-snug line-clamp-2">
-                  {post.title}
-                </span>
-                {post.publishedAt && (
-                  <span className="mt-0.5 block text-[0.75rem] text-texto-secundario">
-                    {formatDateLong(post.publishedAt)}
-                  </span>
-                )}
-              </span>
-              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-corinto text-besh-suave transition-colors group-hover:bg-fucsia">
-                <ArrowRight aria-hidden="true" className="size-3.5" />
-              </span>
-            </Link>
-          </div>
-        )}
-      </div>
+            </span>
+            <span className="grid size-7 shrink-0 place-items-center rounded-full bg-corinto text-besh-suave transition-colors group-hover:bg-fucsia">
+              <ArrowRight aria-hidden="true" className="size-3.5" />
+            </span>
+          </Link>
+        </div>
+      )}
     </section>
   )
 }

@@ -2149,6 +2149,10 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
+  /**
+   * Opcional. Sube un logo horizontal, de preferencia con fondo transparente. Si lo dejas vacío se usa el logo de AMMI.
+   */
+  logo?: (number | null) | Media;
   navItems?:
     | {
         link: {
@@ -2199,6 +2203,10 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  /**
+   * Opcional. Usa una versión clara del logo, porque el fondo es corinto. Si lo dejas vacío se usa el logo de AMMI.
+   */
+  logo?: (number | null) | Media;
   /**
    * Una o dos líneas que acompañan al logo.
    */
@@ -2255,6 +2263,7 @@ export interface Footer {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
+  logo?: T;
   navItems?:
     | T
     | {
@@ -2292,6 +2301,7 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  logo?: T;
   statement?: T;
   contacts?:
     | T

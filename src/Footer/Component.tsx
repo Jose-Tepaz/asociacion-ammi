@@ -6,6 +6,7 @@ import React from 'react'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { SocialIcon } from '@/components/SocialIcon'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 const columnTitle = 'font-sans text-step-body font-medium tracking-normal text-ocre'
 const columnLink = 'text-step-body text-besh-suave/85 underline-offset-4 transition-colors hover:text-besh-suave hover:underline'
@@ -16,6 +17,7 @@ export async function Footer() {
   const navItems = footerData?.navItems || []
   const contacts = footerData?.contacts || []
   const socialLinks = footerData?.socialLinks || []
+  const logo = footerData?.logo && typeof footerData.logo === 'object' ? footerData.logo : null
 
   return (
     <footer className="mt-auto bg-corinto-secundario text-besh-suave" data-theme="dark">
@@ -23,7 +25,16 @@ export async function Footer() {
       <div className="container grid gap-12 py-[var(--section-y)] sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
         <div className="sm:col-span-2 lg:col-span-5">
           <Link aria-label="Ir al inicio" className="inline-block" href="/">
-            <Logo className="w-[13rem] md:w-[15rem]" tone="white" variant="full" />
+            {logo ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                alt={logo.alt || 'AMMI'}
+                className="block h-auto max-h-32 w-auto max-w-[13rem] object-contain md:max-w-[15rem]"
+                src={getMediaUrl(logo.url, logo.updatedAt)}
+              />
+            ) : (
+              <Logo className="w-[13rem] md:w-[15rem]" tone="white" variant="full" />
+            )}
           </Link>
           {footerData?.statement && (
             <p className="mt-6 text-step-body text-besh-fuerte max-w-[34ch]">{footerData.statement}</p>
@@ -94,7 +105,7 @@ export async function Footer() {
             © {new Date().getFullYear()} AMMI.{footerData?.legal ? ` ${footerData.legal}` : ''}
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <p className="text-[0.8125rem] opacity-80">
+            <p className="text-step-small opacity-80">
               Glifos mayas:{' '}
               <a
                 className="underline underline-offset-2 hover:text-besh-suave"

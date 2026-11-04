@@ -25,7 +25,7 @@ type LowImpactHeroType =
       richText?: Page['hero']['richText']
     })
 
-const titleSize = '[&_h1]:text-[clamp(2.5rem,1.3rem+3.4vw,4.5rem)] [&_h1]:leading-[1.02]'
+const titleSize = '[&_h1]:leading-[1.02]'
 
 const Kicker: React.FC<{ className?: string; dot: string; text: string }> = ({ className, dot, text }) => (
   <p className={cn('fade-up mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-step-small font-medium', className)}>

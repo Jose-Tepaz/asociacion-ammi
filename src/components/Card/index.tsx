@@ -55,13 +55,13 @@ export const Card: React.FC<{
         {(photos > 0 || fileLabel) && (
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
             {photos > 0 && (
-              <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-corinto-secundario/90 px-2.5 text-[0.75rem] font-medium text-besh-suave">
+              <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-corinto-secundario/90 px-2.5 text-step-small font-medium text-besh-suave">
                 <Images aria-hidden="true" className="size-3.5" />
                 Galería · {photos} {photos === 1 ? 'foto' : 'fotos'}
               </span>
             )}
             {fileLabel && (
-              <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-corinto-secundario/90 px-2.5 text-[0.75rem] font-medium text-besh-suave">
+              <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-corinto-secundario/90 px-2.5 text-step-small font-medium text-besh-suave">
                 <FileText aria-hidden="true" className="size-3.5" />
                 {fileLabel}
               </span>
@@ -83,7 +83,7 @@ export const Card: React.FC<{
       </div>
       <div className="flex-1 p-5">
         {showCategories && hasCategories && (
-          <p className="mb-3 inline-block rounded-md bg-besh-fuerte px-2 py-0.5 text-[0.75rem] font-medium text-corinto">
+          <p className="mb-3 inline-block rounded-md bg-besh-fuerte px-2 py-0.5 text-step-small font-medium text-corinto">
             {categories?.map((category, index) => {
               if (typeof category === 'object') {
                 const { title: titleFromCategory } = category

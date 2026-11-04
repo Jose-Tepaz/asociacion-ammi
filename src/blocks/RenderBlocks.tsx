@@ -62,34 +62,54 @@ export const RenderBlocks: React.FC<{
   const introCount = hasBlocks ? blocks.filter(isIntro).length : 0
 
   if (hasBlocks) {
+    const items = blocks.map((block, index) => {
+      const { blockName, blockType } = block
+      const Block = blockType && blockType in blockComponents ? blockComponents[blockType] : null
+      const panelPosition =
+        introCount > 1 && isIntro(block) ? blocks.slice(0, index).filter(isIntro).length : undefined
+      const isPanel = panelPosition !== undefined
+      // El «nombre del bloque» en el admin sirve de ancla: /#agenda
+      const anchor = blockName ? toAnchor(blockName) : undefined
+
+      return {
+        isPanel,
+        node: Block ? (
+          <Fragment key={index}>
+            {/* Un panel fijo no marca su lugar en la página: el ancla va en un punto aparte */}
+            {isPanel && <span className="scroll-mt-8" id={anchor} />}
+            <div
+              // Los campos de color ya traen su propio espacio; el resto lleva 96px arriba y abajo
+              className={cn('scroll-mt-8', !isField(block) && !isPanel && 'py-[var(--section-y)]')}
+              id={isPanel ? undefined : anchor}
+              style={isPanel ? ({ '--stack': panelPosition } as React.CSSProperties) : undefined}
+            >
+              {/* @ts-expect-error there may be some mismatch between the expected types here */}
+              <Block {...block} disableInnerContainer panelPosition={panelPosition} />
+            </div>
+          </Fragment>
+        ) : null,
+      }
+    })
+
+    // Los paneles seguidos van juntos: se quedan fijos y se sobreponen al hacer scroll
+    const runs = items.reduce<(typeof items)[]>((acc, item) => {
+      const last = acc[acc.length - 1]
+      if (item.isPanel && last?.[0]?.isPanel) last.push(item)
+      else acc.push([item])
+      return acc
+    }, [])
+
     return (
       <Fragment>
-        {blocks.map((block, index) => {
-          const { blockName, blockType } = block
-
-          if (blockType && blockType in blockComponents) {
-            const Block = blockComponents[blockType]
-
-            if (Block) {
-              const panelPosition =
-                introCount > 1 && isIntro(block) ? blocks.slice(0, index).filter(isIntro).length : undefined
-
-              return (
-                <div
-                  // Los campos de color ya traen su propio espacio; el resto lleva 96px arriba y abajo
-                  className={cn('scroll-mt-8', !isField(block) && 'py-[var(--section-y)]')}
-                  // El «nombre del bloque» en el admin sirve de ancla: /#agenda
-                  id={blockName ? toAnchor(blockName) : undefined}
-                  key={index}
-                >
-                  {/* @ts-expect-error there may be some mismatch between the expected types here */}
-                  <Block {...block} disableInnerContainer panelPosition={panelPosition} />
-                </div>
-              )
-            }
-          }
-          return null
-        })}
+        {runs.map((run, i) =>
+          run[0]?.isPanel ? (
+            <div className="panel-stack" key={`paneles-${i}`}>
+              {run.map((item) => item.node)}
+            </div>
+          ) : (
+            run.map((item) => item.node)
+          ),
+        )}
       </Fragment>
     )
   }

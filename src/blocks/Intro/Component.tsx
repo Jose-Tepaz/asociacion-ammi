@@ -6,7 +6,7 @@ import type { IntroBlock as IntroBlockProps } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { cn } from '@/utilities/ui'
 
-// Colores de los paneles, en el mismo orden que las tarjetas de ejes del inicio
+// Colores de los paneles, uno por eje
 const panels = [
   { panel: 'bg-corinto text-besh-suave', soft: 'bg-besh-suave/12', accent: 'text-ocre', dark: true },
   { panel: 'bg-besh-oscuro text-corinto-terciario', soft: 'bg-besh-suave/60', accent: 'text-fucsia', dark: false },
@@ -31,8 +31,10 @@ const IntroPanel: React.FC<IntroBlockProps & { position: number }> = ({
   return (
     <section className="container">
       <div
-        className={cn('relative rounded-[2.5rem] p-6 sm:p-10 lg:flex lg:min-h-[47.5rem] lg:items-center lg:p-14', tone.panel)}
-        data-reveal
+        className={cn(
+          'relative rounded-[2.5rem] p-6 shadow-[0_-16px_48px_-24px_rgb(36_15_22/0.5)] sm:p-10 lg:flex lg:min-h-[47.5rem] lg:items-center lg:p-14',
+          tone.panel,
+        )}
         data-theme={tone.dark ? 'dark' : undefined}
       >
         <div className="relative grid w-full items-center gap-8 lg:grid-cols-12 lg:gap-12">

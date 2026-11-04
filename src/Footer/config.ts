@@ -11,6 +11,15 @@ export const Footer: GlobalConfig = {
   },
   fields: [
     {
+      name: 'logo',
+      label: 'Logo',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Opcional. Usa una versión clara del logo, porque el fondo es corinto. Si lo dejas vacío se usa el logo de AMMI.',
+      },
+    },
+    {
       name: 'statement',
       label: 'Frase de cierre',
       type: 'textarea',

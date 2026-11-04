@@ -10,15 +10,15 @@ import { cn } from '@/utilities/ui'
 import { HeroVideo } from '../HighImpact/HeroVideo'
 import { HeroLinks, heroTitleClasses } from '../HeroLinks'
 
-/** Portada corinto: la foto entra por la derecha y se funde con el fondo. */
+/** Portada a toda la pantalla: la foto o el video ocupa todo el fondo, con un degradado suave bajo el texto. */
 const DarkHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, standfirst }) => (
   <section
-    className="relative isolate flex min-h-[34rem] items-center overflow-hidden bg-corinto-secundario md:min-h-[38rem] text-besh-suave"
+    className="relative isolate flex min-h-svh items-center overflow-hidden bg-corinto-terciario text-besh-suave"
     data-hero="overlay"
     data-theme="dark"
   >
     {media && typeof media === 'object' && (
-      <div className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[72%] lg:[mask-image:linear-gradient(to_right,transparent,black_42%)]">
+      <div className="absolute inset-0 -z-10">
         {media.mimeType?.startsWith('video/') ? (
           <HeroVideo
             className="object-top"
@@ -27,10 +27,9 @@ const DarkHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, stan
             type={media.mimeType}
           />
         ) : (
-          <Media fill imgClassName="object-cover" priority resource={media} size="(max-width: 1024px) 100vw, 72vw" />
+          <Media fill imgClassName="object-cover" priority resource={media} size="100vw" />
         )}
-        {/* En celular la foto ocupa todo el fondo: el velo mantiene el texto legible */}
-        <div className="absolute inset-0 bg-corinto-secundario/75 lg:hidden" />
+        <div className="absolute inset-0 bg-linear-to-r from-texto-primario/70 via-texto-primario/35 via-40% to-transparent to-70% max-lg:from-texto-primario/60 max-lg:via-texto-primario/50 max-lg:to-texto-primario/35 max-lg:to-100%" />
       </div>
     )}
     <div className="container pointer-events-none pt-32 pb-16 md:pt-36">
@@ -47,7 +46,7 @@ const DarkHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, stan
               <RichText
                 className={cn(
                   heroTitleClasses,
-                  '[&_h1]:text-[clamp(2.5rem,1.3rem+3.2vw,4.25rem)] [&_h1]:leading-[1.02] [&_em]:text-ocre',
+                  '[&_h1]:leading-[1.02] [&_em]:text-ocre',
                 )}
                 data={richText}
                 enableGutter={false}
@@ -85,7 +84,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
                 <RichText
                   className={cn(
                     heroTitleClasses,
-                    '[&_h1]:text-[clamp(2.5rem,1.3rem+3.2vw,4.25rem)] [&_h1]:leading-[1.02] [&_h1]:text-corinto',
+                    '[&_h1]:leading-[1.02] [&_h1]:text-corinto',
                   )}
                   data={richText}
                   enableGutter={false}

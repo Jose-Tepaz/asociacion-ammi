@@ -68,6 +68,10 @@
   font-size: var(--step-small);
   line-height: 1.45;
 }
+@utility text-step-regular {
+  font-size: var(--step-regular);
+  line-height: 1.5;
+}
 @utility text-step-body {
   font-size: var(--step-body);
   line-height: 1.55;
@@ -125,14 +129,15 @@
   --texto-secundario: #625056;
 
   --margin: clamp(1rem, 2.6vw, 2.5rem);
-  /* Espacio vertical de cada sección: 64px en celular, 96px desde tablet */
-  --section-y: 4rem;
-  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
-  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --step-title: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
-  --step-head: clamp(2.125rem, 1.4rem + 2.4vw, 3.5rem);
-  --step-display: clamp(2.5rem, 1.3rem + 3.6vw, 4.5rem);
+  /* Escala general en celular; tablet y computadora se definen más abajo */
+  --section-y: 3rem;
+  --step-small: 0.75rem;
+  --step-regular: 0.875rem;
+  --step-body: 0.875rem;
+  --step-lead: 1rem;
+  --step-title: 1.25rem;
+  --step-head: 1.5rem;
+  --step-display: 2rem;
   --radius-card: clamp(1rem, 0.8rem + 0.6vw, 1.5rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -174,9 +179,31 @@
   --error: oklch(75% 0.15 25deg);
 }
 
+/* Tablet */
 @media (width >= 48rem) {
   :root {
+    --section-y: 3.875rem;
+    --step-small: 0.75rem;
+    --step-regular: 0.875rem;
+    --step-body: 1rem;
+    --step-lead: 1.125rem;
+    --step-title: 1.5rem;
+    --step-head: 2rem;
+    --step-display: 3rem;
+  }
+}
+
+/* Computadora */
+@media (width >= 64rem) {
+  :root {
     --section-y: 6rem;
+    --step-small: 0.875rem;
+    --step-regular: 1rem;
+    --step-body: 1.125rem;
+    --step-lead: 1.25rem;
+    --step-title: 2rem;
+    --step-head: 3rem;
+    --step-display: 3.875rem;
   }
 }
 
@@ -280,8 +307,23 @@
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  body {
+  h1,
+  .prose :where(h1) {
+    font-size: var(--step-display);
+  }
+  h2,
+  .prose :where(h2) {
+    font-size: var(--step-head);
+  }
+  h3,
+  .prose :where(h3) {
+    font-size: var(--step-title);
+  }
+  .prose {
     font-size: var(--step-body);
+  }
+  body {
+    font-size: var(--step-regular);
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
@@ -436,3 +478,19 @@ body:has([data-calendar-tile]) .cholqij-float {
   display: none;
 }
 
+/* Paneles apilados: cada uno se queda fijo y el siguiente se sobrepone al hacer scroll */
+.panel-stack {
+  padding-block: var(--section-y);
+}
+.panel-stack > span {
+  display: block;
+}
+.panel-stack > div:not(:nth-child(2)) {
+  margin-top: 1.5rem;
+}
+@media (width >= 64rem) {
+  .panel-stack > div {
+    position: sticky;
+    top: calc(min(1rem, 100svh - 52rem) + var(--stack, 0) * 1rem);
+  }
+}
