@@ -10,10 +10,13 @@ import { FormBlock } from '../../blocks/Form/config'
 import { Intro } from '../../blocks/Intro/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { Members } from '../../blocks/Members/config'
+import { Mission } from '../../blocks/Mission/config'
 import { Quote } from '../../blocks/Quote/config'
 import { SocialGallery } from '../../blocks/SocialGallery/config'
+import { Statement } from '../../blocks/Statement/config'
 import { Strip } from '../../blocks/Strip/config'
 import { Structure } from '../../blocks/Structure/config'
+import { Timeline } from '../../blocks/Timeline/config'
 import { WorkAreas } from '../../blocks/WorkAreas/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
@@ -82,12 +85,15 @@ export const Pages: CollectionConfig<'pages'> = {
               type: 'blocks',
               blocks: [
                 Intro,
+                Statement,
                 Content,
                 WorkAreas,
                 Agenda,
                 Quote,
                 Strip,
                 Structure,
+                Mission,
+                Timeline,
                 Members,
                 Archive,
                 MediaBlock,

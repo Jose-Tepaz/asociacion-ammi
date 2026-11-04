@@ -10,10 +10,13 @@ import { FormBlock } from '@/blocks/Form/Component'
 import { IntroBlock } from '@/blocks/Intro/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { MembersBlock } from '@/blocks/Members/Component'
+import { MissionBlock } from '@/blocks/Mission/Component'
 import { QuoteBlock } from '@/blocks/Quote/Component'
 import { SocialGalleryBlock } from '@/blocks/SocialGallery/Component'
+import { StatementBlock } from '@/blocks/Statement/Component'
 import { StripBlock } from '@/blocks/Strip/Component'
 import { StructureBlock } from '@/blocks/Structure/Component'
+import { TimelineBlock } from '@/blocks/Timeline/Component'
 import { WorkAreasBlock } from '@/blocks/WorkAreas/Component'
 import { cn } from '@/utilities/ui'
 
@@ -26,10 +29,13 @@ const blockComponents = {
   intro: IntroBlock,
   mediaBlock: MediaBlock,
   members: MembersBlock,
+  mission: MissionBlock,
   quote: QuoteBlock,
   socialGallery: SocialGalleryBlock,
+  statement: StatementBlock,
   strip: StripBlock,
   structure: StructureBlock,
+  timeline: TimelineBlock,
   workAreas: WorkAreasBlock,
 }
 
@@ -37,7 +43,7 @@ const blockComponents = {
 const fieldBlocks = new Set(['quote', 'workAreas', 'socialGallery'])
 
 /** Bloques que ya traen su propio espacio (clase section-pad). */
-const selfPadded = new Set(['structure', 'members'])
+const selfPadded = new Set(['structure', 'members', 'mission', 'timeline', 'statement'])
 
 type AnyBlock = Page['layout'][0]
 
