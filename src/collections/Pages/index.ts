@@ -13,6 +13,7 @@ import { Members } from '../../blocks/Members/config'
 import { Quote } from '../../blocks/Quote/config'
 import { SocialGallery } from '../../blocks/SocialGallery/config'
 import { Strip } from '../../blocks/Strip/config'
+import { Structure } from '../../blocks/Structure/config'
 import { WorkAreas } from '../../blocks/WorkAreas/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
@@ -86,6 +87,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Agenda,
                 Quote,
                 Strip,
+                Structure,
                 Members,
                 Archive,
                 MediaBlock,

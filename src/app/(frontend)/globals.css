@@ -106,6 +106,19 @@
   color: var(--fucsia-primario);
 }
 
+/* Espacio de sección (Quiénes somos): 48px en celular, 62px en tablet y 96px en escritorio, arriba/abajo y a los lados */
+@utility section-pad {
+  --pad: 48px;
+  --margin: var(--pad);
+  padding-block: var(--pad);
+  @media (width >= 48rem) {
+    --pad: 62px;
+  }
+  @media (width >= 64rem) {
+    --pad: 96px;
+  }
+}
+
 /* Superficie redondeada: tarjetas, fotos y paneles */
 @utility rounded-card {
   border-radius: var(--radius-card);

@@ -13,6 +13,7 @@ import { MembersBlock } from '@/blocks/Members/Component'
 import { QuoteBlock } from '@/blocks/Quote/Component'
 import { SocialGalleryBlock } from '@/blocks/SocialGallery/Component'
 import { StripBlock } from '@/blocks/Strip/Component'
+import { StructureBlock } from '@/blocks/Structure/Component'
 import { WorkAreasBlock } from '@/blocks/WorkAreas/Component'
 import { cn } from '@/utilities/ui'
 
@@ -28,11 +29,15 @@ const blockComponents = {
   quote: QuoteBlock,
   socialGallery: SocialGalleryBlock,
   strip: StripBlock,
+  structure: StructureBlock,
   workAreas: WorkAreasBlock,
 }
 
 /** Bloques que ocupan un campo de color de borde a borde. */
 const fieldBlocks = new Set(['quote', 'workAreas', 'socialGallery'])
+
+/** Bloques que ya traen su propio espacio (clase section-pad). */
+const selfPadded = new Set(['structure', 'members'])
 
 type AnyBlock = Page['layout'][0]
 
@@ -40,7 +45,7 @@ type AnyBlock = Page['layout'][0]
 const isField = (block?: AnyBlock) =>
   Boolean(
     block &&
-      (fieldBlocks.has(block.blockType) || (block.blockType === 'mediaBlock' && block.fullBleed)),
+      (fieldBlocks.has(block.blockType) || selfPadded.has(block.blockType) || (block.blockType === 'mediaBlock' && block.fullBleed)),
   )
 
 const toAnchor = (name: string) =>

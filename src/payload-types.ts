@@ -236,6 +236,7 @@ export interface Page {
     | AgendaBlock
     | QuoteBlock
     | StripBlock
+    | StructureBlock
     | MembersBlock
     | ArchiveBlock
     | MediaBlock
@@ -711,15 +712,64 @@ export interface StripBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StructureBlock".
+ */
+export interface StructureBlock {
+  kicker?: string | null;
+  heading: string;
+  /**
+   * Dos o tres líneas como máximo.
+   */
+  intro?: string | null;
+  /**
+   * Se recorta en círculo. Si no eliges una, se muestra el símbolo de AMMI.
+   */
+  image?: (number | null) | Media;
+  /**
+   * Los primeros tres van a la izquierda y los siguientes a la derecha.
+   */
+  items?:
+    | {
+        icon:
+          'users' | 'flag' | 'network' | 'laptop' | 'handshake' | 'user' | 'scale' | 'megaphone' | 'book' | 'sprout';
+        title: string;
+        /**
+         * Una sola frase, unas 15 palabras.
+         */
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'structure';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MembersBlock".
  */
 export interface MembersBlock {
   heading: string;
   headingSecond?: string | null;
   intro?: string | null;
+  /**
+   * Se agrupan por «Categoría», en el orden en que aparece cada categoría por primera vez. Sin logo, se muestran las siglas.
+   */
   organizations?:
     | {
         name: string;
+        /**
+         * Se muestran si no hay logo. Ej.: UNAMG, Moloj.
+         */
+        acronym?: string | null;
+        /**
+         * Ej.: Participación política. Escríbela igual en cada organización del grupo.
+         */
+        category?: string | null;
+        /**
+         * PNG con fondo transparente, de preferencia horizontal.
+         */
+        logo?: (number | null) | Media;
         focus?: string | null;
         place?: string | null;
         url?: string | null;
@@ -1396,6 +1446,7 @@ export interface PagesSelect<T extends boolean = true> {
         agenda?: T | AgendaBlockSelect<T>;
         quote?: T | QuoteBlockSelect<T>;
         strip?: T | StripBlockSelect<T>;
+        structure?: T | StructureBlockSelect<T>;
         members?: T | MembersBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
@@ -1565,6 +1616,26 @@ export interface StripBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StructureBlock_select".
+ */
+export interface StructureBlockSelect<T extends boolean = true> {
+  kicker?: T;
+  heading?: T;
+  intro?: T;
+  image?: T;
+  items?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MembersBlock_select".
  */
 export interface MembersBlockSelect<T extends boolean = true> {
@@ -1575,6 +1646,9 @@ export interface MembersBlockSelect<T extends boolean = true> {
     | T
     | {
         name?: T;
+        acronym?: T;
+        category?: T;
+        logo?: T;
         focus?: T;
         place?: T;
         url?: T;
