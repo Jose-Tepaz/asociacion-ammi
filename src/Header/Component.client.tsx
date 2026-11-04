@@ -40,18 +40,22 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   return (
     <header className="site-header relative z-30 pt-4 md:pt-5">
       <div className="container">
-        <div className="site-header-bar relative flex h-16 md:h-[4.5rem] items-center gap-4 rounded-card bg-besh-suave ps-4 pe-2.5 ring-1 ring-texto-primario/8 md:ps-6 md:pe-3">
-          <Link aria-label="AMMI, ir al inicio" className="shrink-0" href="/">
+        <div className="site-header-bar relative flex h-16 w-full items-center justify-between gap-2 rounded-full bg-white/95 p-2 ps-5 text-texto-primario shadow-[0_20px_40px_-20px_rgb(36_15_22/0.45)] ring-1 ring-texto-primario/8 backdrop-blur-md md:h-[4.5rem] md:ps-7">
+          <Link
+            aria-label="AMMI, ir al inicio"
+            className="shrink-0"
+            href="/"
+          >
             <Logo className="w-[6.5rem] md:w-[7.5rem]" loading="eager" priority="high" variant="mark" />
           </Link>
 
-          <nav aria-label="Principal" className="ms-auto hidden lg:flex items-center gap-1">
+          <nav aria-label="Principal" className="hidden lg:flex items-center xl:gap-1">
             {navItems.map(({ link }, i) => (
               <CMSLink
                 className={cn(
-                  'relative rounded-full px-4 py-2 text-step-small font-medium transition-colors hover:bg-besh-fuerte',
+                  'relative px-3 py-2 text-base font-medium whitespace-nowrap transition-colors hover:text-corinto xl:px-4',
                   isActive(link) &&
-                    'text-fucsia after:absolute after:inset-x-4 after:bottom-1 after:h-0.5 after:rounded-full after:bg-fucsia',
+                    'text-corinto after:absolute after:inset-x-3 after:bottom-0.5 after:h-0.5 after:rounded-full after:bg-corinto xl:after:inset-x-4',
                 )}
                 key={i}
                 {...link}
@@ -59,14 +63,21 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             ))}
           </nav>
 
-          <div className="ms-auto lg:ms-2 flex items-center gap-2">
+          <div className="flex h-full items-center gap-2">
             {action?.label && (
-              <CMSLink appearance="default" className="hidden sm:inline-flex" {...action} />
+              // Borde con los colores de la marca
+              <span className="hidden h-full rounded-full bg-linear-to-r from-fucsia via-ocre to-corinto p-0.5 sm:block">
+                <CMSLink
+                  {...action}
+                  appearance="inline"
+                  className="flex h-full items-center rounded-full bg-white px-4 text-base font-medium whitespace-nowrap text-corinto xl:px-5 transition-colors hover:bg-corinto hover:text-besh-suave"
+                />
+              </span>
             )}
             <button
               aria-controls="menu-movil"
               aria-expanded={open}
-              className="lg:hidden h-11 rounded-full px-5 text-step-small font-medium bg-besh-fuerte transition-colors hover:bg-besh-oscuro"
+              className="lg:hidden h-full rounded-full px-5 text-base font-medium bg-besh-fuerte transition-colors hover:bg-besh-oscuro"
               onClick={() => setOpen((v) => !v)}
               type="button"
             >
@@ -76,7 +87,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
           <div
             className={cn(
-              'lg:hidden absolute inset-x-0 top-[calc(100%+0.5rem)] rounded-card bg-besh-suave p-3 shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)]',
+              'lg:hidden absolute inset-x-0 top-[calc(100%+0.5rem)] rounded-card bg-besh-suave p-3 text-texto-primario shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)]',
               open ? 'block' : 'hidden',
             )}
             id="menu-movil"

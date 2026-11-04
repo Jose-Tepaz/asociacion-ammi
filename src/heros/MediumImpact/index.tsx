@@ -4,12 +4,71 @@ import type { Page } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
+import { getMediaUrl } from '@/utilities/getMediaUrl'
 import { cn } from '@/utilities/ui'
 
+import { HeroVideo } from '../HighImpact/HeroVideo'
 import { HeroLinks, heroTitleClasses } from '../HeroLinks'
 
+/** Portada corinto: la foto entra por la derecha y se funde con el fondo. */
+const DarkHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, standfirst }) => (
+  <section
+    className="relative isolate flex min-h-[34rem] items-center overflow-hidden bg-corinto-secundario md:min-h-[38rem] text-besh-suave"
+    data-hero="overlay"
+    data-theme="dark"
+  >
+    {media && typeof media === 'object' && (
+      <div className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[72%] lg:[mask-image:linear-gradient(to_right,transparent,black_42%)]">
+        {media.mimeType?.startsWith('video/') ? (
+          <HeroVideo
+            className="object-top"
+            controlClassName="right-6 md:bottom-6 md:top-auto"
+            src={getMediaUrl(media.url, media.updatedAt)}
+            type={media.mimeType}
+          />
+        ) : (
+          <Media fill imgClassName="object-cover" priority resource={media} size="(max-width: 1024px) 100vw, 72vw" />
+        )}
+        {/* En celular la foto ocupa todo el fondo: el velo mantiene el texto legible */}
+        <div className="absolute inset-0 bg-corinto-secundario/75 lg:hidden" />
+      </div>
+    )}
+    <div className="container pointer-events-none pt-32 pb-16 md:pt-36">
+      <div className="pointer-events-auto max-w-[38rem]">
+        {kicker && (
+          <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-besh-suave px-4 py-1.5 text-step-small font-medium text-corinto">
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-fucsia" />
+            {kicker}
+          </p>
+        )}
+        {richText && (
+          <div className="mask-line">
+            <div>
+              <RichText
+                className={cn(
+                  heroTitleClasses,
+                  '[&_h1]:text-[clamp(2.5rem,1.3rem+3.2vw,4.25rem)] [&_h1]:leading-[1.02] [&_em]:text-ocre',
+                )}
+                data={richText}
+                enableGutter={false}
+                enableProse={false}
+              />
+            </div>
+          </div>
+        )}
+        {standfirst && <p className="fade-up mt-6 text-step-lead text-besh-fuerte max-w-[40ch]">{standfirst}</p>}
+        <HeroLinks className="fade-up mt-8" links={links} onDark />
+      </div>
+    </div>
+  </section>
+)
+
 /** Portada clara: el título a un lado y la foto al otro, montada sobre un bloque ocre. */
-export const MediumImpactHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, standfirst }) => {
+export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
+  if (props.dark) return <DarkHero {...props} />
+
+  const { kicker, links, media, richText, standfirst } = props
+
   return (
     <section className="overflow-hidden bg-background" data-hero="light">
       <div className="container grid items-center gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">

@@ -160,6 +160,10 @@ export interface Page {
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    /**
+     * Cambia el fondo claro de la portada por corinto.
+     */
+    dark?: boolean | null;
     kicker?: string | null;
     /**
      * Cada página interna puede tener su propio diseño de portada.
@@ -1354,6 +1358,7 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         type?: T;
+        dark?: T;
         kicker?: T;
         tone?: T;
         richText?: T;

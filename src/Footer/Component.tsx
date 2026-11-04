@@ -7,8 +7,8 @@ import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { SocialIcon } from '@/components/SocialIcon'
 
-const columnTitle = 'font-sans text-step-small font-medium tracking-normal text-ocre'
-const columnLink = 'text-step-small text-besh-suave/85 underline-offset-4 transition-colors hover:text-besh-suave hover:underline'
+const columnTitle = 'font-sans text-step-body font-medium tracking-normal text-ocre'
+const columnLink = 'text-step-body text-besh-suave/85 underline-offset-4 transition-colors hover:text-besh-suave hover:underline'
 
 export async function Footer() {
   const footerData = await getCachedGlobal('footer', 1)()
@@ -57,7 +57,7 @@ export async function Footer() {
                         {label}
                       </a>
                     ) : (
-                      <span className="text-step-small text-besh-suave/85">{label}</span>
+                      <span className="text-step-body text-besh-suave/85">{label}</span>
                     )}
                   </li>
                 ))}

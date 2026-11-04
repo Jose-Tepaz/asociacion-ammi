@@ -316,6 +316,17 @@
     transform: none;
   }
 
+  /* Foto de borde a borde: se abre desde un círculo central hasta cubrir toda la sección */
+  .js [data-reveal='circle'] {
+    opacity: 1;
+    transform: none;
+    clip-path: circle(28% at 50% 50%);
+    transition: clip-path 1600ms var(--ease-out);
+  }
+  .js [data-reveal='circle'].is-in {
+    clip-path: circle(75% at 50% 50%);
+  }
+
   /* Titular enmascarado: cada línea sube desde su línea base */
   .mask-line {
     display: block;
@@ -425,7 +436,3 @@ body:has([data-calendar-tile]) .cholqij-float {
   display: none;
 }
 
-/* En Actividades (portada con calendario) la barra va en blanco para distinguirse del fondo */
-body:has([data-calendar-tile]) .site-header-bar {
-  background: #ffffff;
-}

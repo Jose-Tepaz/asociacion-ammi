@@ -3,11 +3,18 @@
 import { Pause, Play } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
+import { cn } from '@/utilities/ui'
+
 /**
  * Video de fondo de la portada: sin sonido, en bucle y con botón para pausarlo.
  * Si la persona pidió reducir el movimiento, empieza en pausa.
  */
-export const HeroVideo: React.FC<{ src: string; type?: string | null }> = ({ src, type }) => {
+export const HeroVideo: React.FC<{
+  className?: string
+  controlClassName?: string
+  src: string
+  type?: string | null
+}> = ({ className, controlClassName, src, type }) => {
   const video = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
 
@@ -35,7 +42,7 @@ export const HeroVideo: React.FC<{ src: string; type?: string | null }> = ({ src
     <>
       <video
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover"
+        className={cn('absolute inset-0 h-full w-full object-cover', className)}
         loop
         muted
         playsInline
@@ -46,7 +53,10 @@ export const HeroVideo: React.FC<{ src: string; type?: string | null }> = ({ src
       </video>
       <button
         aria-label={playing ? 'Pausar el video' : 'Reproducir el video'}
-        className="absolute bottom-6 right-[var(--margin)] z-20 grid size-11 place-items-center rounded-full bg-besh-suave/15 text-besh-suave backdrop-blur-sm transition-colors hover:bg-besh-suave hover:text-corinto-secundario md:bottom-auto md:top-6"
+        className={cn(
+          'absolute bottom-6 right-[var(--margin)] z-20 grid size-11 place-items-center rounded-full bg-besh-suave/15 text-besh-suave backdrop-blur-sm transition-colors hover:bg-besh-suave hover:text-corinto-secundario md:bottom-auto md:top-6',
+          controlClassName,
+        )}
         onClick={toggle}
         type="button"
       >

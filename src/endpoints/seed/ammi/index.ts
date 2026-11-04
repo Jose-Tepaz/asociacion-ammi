@@ -480,7 +480,7 @@ const run = async () => {
   const nav = [
     custom('/', 'Inicio'),
     custom('/quienes-somos', 'Quiénes somos'),
-    custom('/#ejes', 'Ejes estratégicos'),
+    custom('/ejes', 'Ejes estratégicos'),
     custom('/posts', 'Publicaciones'),
     custom('/actividades', 'Actividades'),
   ]

@@ -1,7 +1,7 @@
 'use client'
 import { cn } from '@/utilities/ui'
 import useClickableCard from '@/utilities/useClickableCard'
-import { FileText, Images } from 'lucide-react'
+import { FileText, Images, SquareArrowOutUpRight } from 'lucide-react'
 import Link from 'next/link'
 import React, { Fragment } from 'react'
 
@@ -44,19 +44,25 @@ export const Card: React.FC<{
   const href = `/${relationTo}/${slug}`
 
   return (
-    <article className={cn('group flex flex-col hover:cursor-pointer', className)} ref={card.ref}>
-      <div className="relative w-full aspect-[4/5] overflow-hidden bg-besh-fuerte">
+    <article
+      className={cn(
+        'group flex flex-col overflow-hidden rounded-card bg-white ring-1 ring-texto-primario/5 hover:cursor-pointer',
+        className,
+      )}
+      ref={card.ref}
+    >
+      <div className="relative w-full aspect-[16/10] overflow-hidden bg-besh-fuerte">
         {(photos > 0 || fileLabel) && (
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
             {photos > 0 && (
-              <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-corinto-secundario/90 px-3 text-step-small font-medium text-besh-suave">
-                <Images aria-hidden="true" className="size-4" />
+              <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-corinto-secundario/90 px-2.5 text-[0.75rem] font-medium text-besh-suave">
+                <Images aria-hidden="true" className="size-3.5" />
                 Galería · {photos} {photos === 1 ? 'foto' : 'fotos'}
               </span>
             )}
             {fileLabel && (
-              <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-besh-suave/95 px-3 text-step-small font-medium text-corinto">
-                <FileText aria-hidden="true" className="size-4" />
+              <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-corinto-secundario/90 px-2.5 text-[0.75rem] font-medium text-besh-suave">
+                <FileText aria-hidden="true" className="size-3.5" />
                 {fileLabel}
               </span>
             )}
@@ -65,19 +71,19 @@ export const Card: React.FC<{
         {metaImage && typeof metaImage !== 'string' ? (
           <Media
             fill
-            imgClassName="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+            imgClassName="object-cover object-top transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
             resource={metaImage}
             size="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
-          <div className="absolute inset-0 flex items-end bg-corinto p-6">
-            <span className="text-step-lead text-besh-suave">{titleToUse}</span>
+          <div className="absolute inset-0 flex items-end bg-corinto p-5">
+            <span className="text-step-body text-besh-suave">{titleToUse}</span>
           </div>
         )}
       </div>
-      <div className="pt-5">
+      <div className="flex-1 p-5">
         {showCategories && hasCategories && (
-          <p className="mb-2 text-step-small text-corinto">
+          <p className="mb-3 inline-block rounded-md bg-besh-fuerte px-2 py-0.5 text-[0.75rem] font-medium text-corinto">
             {categories?.map((category, index) => {
               if (typeof category === 'object') {
                 const { title: titleFromCategory } = category
@@ -99,17 +105,19 @@ export const Card: React.FC<{
           </p>
         )}
         {titleToUse && (
-          <h3 className="text-step-lead">
-            <Link
-              className="underline-offset-4 decoration-2 decoration-fucsia group-hover:underline"
-              href={href}
-              ref={link.ref}
-            >
+          <h3 className="flex items-start justify-between gap-3 font-[family-name:var(--font-display)] text-step-body font-semibold leading-snug">
+            <Link className="transition-colors group-hover:text-corinto" href={href} ref={link.ref}>
               {titleToUse}
             </Link>
+            <span
+              aria-hidden="true"
+              className="grid size-9 shrink-0 place-items-center rounded-full bg-corinto/10 text-corinto transition-colors duration-300 group-hover:bg-corinto group-hover:text-besh-suave"
+            >
+              <SquareArrowOutUpRight className="size-4" />
+            </span>
           </h3>
         )}
-        {description && <p className="mt-3 text-step-body text-muted-foreground line-clamp-3">{sanitizedDescription}</p>}
+        {description && <p className="mt-2 text-step-small text-texto-secundario line-clamp-2">{sanitizedDescription}</p>}
       </div>
     </article>
   )

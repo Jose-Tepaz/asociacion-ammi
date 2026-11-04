@@ -57,6 +57,9 @@ export const RenderBlocks: React.FC<{
   const { blocks } = props
 
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0
+  // Varias presentaciones en una misma página se muestran como paneles de color numerados
+  const isIntro = (block: AnyBlock) => block.blockType === 'intro'
+  const introCount = hasBlocks ? blocks.filter(isIntro).length : 0
 
   if (hasBlocks) {
     return (
@@ -68,6 +71,9 @@ export const RenderBlocks: React.FC<{
             const Block = blockComponents[blockType]
 
             if (Block) {
+              const panelPosition =
+                introCount > 1 && isIntro(block) ? blocks.slice(0, index).filter(isIntro).length : undefined
+
               return (
                 <div
                   // Los campos de color ya traen su propio espacio; el resto lleva 96px arriba y abajo
@@ -77,7 +83,7 @@ export const RenderBlocks: React.FC<{
                   key={index}
                 >
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
-                  <Block {...block} disableInnerContainer />
+                  <Block {...block} disableInnerContainer panelPosition={panelPosition} />
                 </div>
               )
             }

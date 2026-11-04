@@ -6,6 +6,8 @@ import RichText from '@/components/RichText'
 
 import type { MediaBlock as MediaBlockProps } from '@/payload-types'
 
+import { getMediaUrl } from '@/utilities/getMediaUrl'
+
 import { Media } from '../../components/Media'
 
 type Props = MediaBlockProps & {
@@ -35,9 +37,28 @@ export const MediaBlock: React.FC<Props> = (props) => {
   let caption
   if (media && typeof media === 'object') caption = media.caption
 
+  // Sin texto encima, la foto queda fija y la página se desliza sobre ella
+  if (fullBleed && media && typeof media === 'object' && !overlayText) {
+    return (
+      <figure className={className}>
+        <div
+          aria-label={media.alt || undefined}
+          className="h-[60svh] min-h-[22rem] bg-besh-oscuro bg-cover bg-center md:h-[40rem] md:bg-fixed"
+          role="img"
+          style={{ backgroundImage: `url("${getMediaUrl(media.url, media.updatedAt)}")` }}
+        />
+        <span aria-hidden="true" className="tejido" />
+      </figure>
+    )
+  }
+
   if (fullBleed && media && typeof media === 'object') {
     return (
-      <figure className={cn('relative isolate', className)} data-theme={overlayText ? 'dark' : undefined}>
+      <figure
+        className={cn('relative isolate', className)}
+        data-reveal="circle"
+        data-theme={overlayText ? 'dark' : undefined}
+      >
         <div className="relative h-[64svh] min-h-[22rem] md:h-[78svh] overflow-hidden bg-besh-oscuro">
           <Media fill imgClassName="object-cover hero-drift" resource={media} size="100vw" />
           {overlayText && (
@@ -47,7 +68,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
         </div>
         {overlayText && (
           <blockquote className="absolute inset-x-0 bottom-0 text-besh-suave">
-            <div className="container pb-10 md:pb-16" data-reveal>
+            <div className="container pb-10 md:pb-16" data-reveal style={{ '--i': 8 } as React.CSSProperties}>
               <p className="font-[family-name:var(--font-display)] text-step-head max-w-[22ch]">
                 {overlayText}
               </p>

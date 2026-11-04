@@ -39,6 +39,15 @@ export const hero: Field = {
       required: true,
     },
     {
+      name: 'dark',
+      label: 'Fondo corinto',
+      type: 'checkbox',
+      admin: {
+        condition: (_, { type } = {}) => type === 'mediumImpact',
+        description: 'Cambia el fondo claro de la portada por corinto.',
+      },
+    },
+    {
       name: 'kicker',
       label: 'Etiqueta sobre el título',
       type: 'text',
