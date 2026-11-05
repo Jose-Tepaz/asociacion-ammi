@@ -72,6 +72,9 @@ export default buildConfig({
         // Permite conservar los IDs al copiar contenido de una base a otra
         allowIDOnCreate: true,
         migrationDir: path.resolve(dirname, 'migrations'),
+        // Nunca modificar el esquema de Postgres en modo desarrollo: deja una fila `dev`
+        // (batch -1) en payload_migrations que bloquea las migraciones. Usa migraciones.
+        push: false,
         // Crea o actualiza las tablas al arrancar en producción
         prodMigrations: migrations,
       })
