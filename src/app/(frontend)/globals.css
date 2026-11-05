@@ -47,10 +47,11 @@
   --font-display: var(--font-source-serif), ui-serif, Georgia, serif;
 }
 
-/* Un solo par de márgenes para todo el sitio */
+/* Un solo par de márgenes para todo el sitio: 20px a los lados en celular, 32px en tablet y escritorio.
+   El contenido llega a 1250px como máximo (el ancho incluye los márgenes). */
 @utility container {
   width: 100%;
-  max-width: 90rem;
+  max-width: calc(1250px + var(--margin) * 2);
   margin-inline: auto;
   padding-inline: var(--margin);
 }
@@ -110,10 +111,10 @@
   color: var(--fucsia-primario);
 }
 
-/* Espacio de sección (Quiénes somos): 48px en celular, 62px en tablet y 96px en escritorio, arriba/abajo y a los lados */
+/* Espacio de sección (Quiénes somos): 48px en celular, 62px en tablet y 96px en escritorio, solo arriba y abajo.
+   Los lados usan el mismo --margin que el resto del sitio. */
 @utility section-pad {
   --pad: 48px;
-  --margin: var(--pad);
   padding-block: var(--pad);
   @media (width >= 48rem) {
     --pad: 62px;
@@ -141,7 +142,7 @@
   --texto-primario: #240f16;
   --texto-secundario: #625056;
 
-  --margin: clamp(1rem, 2.6vw, 2.5rem);
+  --margin: 20px;
   /* Escala general en celular; tablet y computadora se definen más abajo */
   --section-y: 3rem;
   --step-small: 0.75rem;
@@ -195,6 +196,7 @@
 /* Tablet */
 @media (width >= 48rem) {
   :root {
+    --margin: 32px;
     --section-y: 3.875rem;
     --step-small: 0.75rem;
     --step-regular: 0.875rem;
