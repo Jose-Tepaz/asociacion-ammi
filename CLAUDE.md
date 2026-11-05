@@ -50,16 +50,17 @@ Pasos:
 
 1. Cambia la configuración.
 2. Ejecuta `pnpm generate:types`, y `pnpm generate:importmap` si agregaste componentes al admin.
-3. Crea `src/migrations/<AAAAMMDD_HHMMSS>_<descripcion>.ts` y su `.json`. Usa la migración más reciente como modelo.
-4. Regístrala al final de `src/migrations/index.ts`.
-5. Escribe `up` y `down`, en SQL de Postgres. Las migraciones deben ser seguras sobre datos existentes: nunca borres datos sin aprobación explícita.
-6. Ejecuta `npx tsc --noEmit`.
-7. En Neon, crea un branch de respaldo desde `production` (`respaldo-antes-de-<cambio>`).
-8. Ejecuta `pnpm payload migrate` contra producción. Avisa al equipo antes, para que dos personas no migren a la vez.
+3. Genera la migración con `pnpm payload migrate:create <descripcion>` (conectado a Postgres). Crea `src/migrations/<fecha>_<descripcion>.ts` y su `.json`; revisa que quedó registrada en `src/migrations/index.ts`.
+4. Revisa `up` y `down`. Las migraciones deben ser seguras sobre datos existentes: solo agregan tablas y campos (los campos nuevos opcionales o con valor por defecto). Nunca borres datos sin aprobación explícita.
+5. Ejecuta `npx tsc --noEmit`.
+6. Avisa al equipo y ejecuta `pnpm payload migrate` contra producción, para que dos personas no migren a la vez. Si algo falla, avisa enseguida: Neon restaura las últimas 6 horas.
+7. Una migración que ya corrió en producción no se edita: si hace falta otro cambio, crea una migración nueva.
+
+Si la migración modifica tablas que ya tienen contenido (cambiar o quitar un campo existente), primero crea en Neon un branch de respaldo desde `production` (`respaldo-antes-de-<cambio>`), porque ese respaldo no vence a las 6 horas.
 
 Los cambios que solo tocan diseño, labels o `admin` no necesitan migración, porque no alteran la base.
 
-`payload migrate:create` necesita una conexión real a Postgres y se queda colgado con una base ficticia. Sin esa conexión, escribe la migración a mano.
+`payload migrate:create` necesita una conexión real a Postgres y se queda colgado con una base ficticia o con SQLite. Sin esa conexión, escribe la migración a mano usando la más reciente como modelo.
 
 Las migraciones son SQL de Postgres y SQLite nunca las ejecuta. Si el cambio también toca el admin, regenera el import map y súbelo en el mismo commit.
 
@@ -68,7 +69,7 @@ Las migraciones son SQL de Postgres y SQLite nunca las ejecuta. Si el cambio tam
 Todo el equipo trabaja en local conectado a la base de **producción** (proyecto de Neon `AMMI- WEBSITE`, branch `production`). El contenido se carga una sola vez, directo en producción, y no hay nada que copiar después.
 
 1. En local, con `PAYLOAD_DB_PUSH=false`, crea la sección o el bloque y su migración (ver arriba).
-2. Respaldo en Neon y `pnpm payload migrate` contra producción.
+2. Avisa al equipo y corre `pnpm payload migrate` contra producción.
 3. Carga el contenido en `localhost:3000/admin`. Ya queda en la base real.
 4. Sube el código en una rama con su PR. Mientras no se mergee, la sección existe en la base pero el sitio publicado no la muestra: es normal.
 
