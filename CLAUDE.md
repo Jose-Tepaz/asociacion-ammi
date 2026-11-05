@@ -80,6 +80,11 @@ Las migraciones son SQL de Postgres y SQLite nunca las ejecuta. Antes de mergear
 ### Git y seguridad
 
 - Haz commit o push solo cuando se pida.
+- **Todo cambio se sube en una rama y se abre un Pull Request.** Nunca hagas push directo a `main`. Flujo:
+  1. Desde `main` actualizado, crea una rama con nombre descriptivo (`feature/...`, `fix/...`, `chore/...`).
+  2. Haz commit en esa rama y súbela con `git push -u origin <rama>` (cuenta `Jose-Tepaz`).
+  3. Abre el PR hacia `main` con `gh pr create`. Describe qué cambia y cómo se probó; si toca el esquema, menciona la migración.
+  4. Se mergea desde GitHub una vez revisado. Toda rama que se suba lleva su PR, sin excepciones.
 - Nunca subas `.env*`, `ammi.db`, `public/media`, respaldos de base de datos ni llaves.
 - Nunca muestres valores de variables de entorno ni direcciones de conexión en el chat o en commits.
 - Publicar en producción y borrar datos en la nube requiere aprobación explícita.
