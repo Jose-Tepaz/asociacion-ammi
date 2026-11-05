@@ -235,11 +235,15 @@ export interface Page {
   };
   layout: (
     | IntroBlock
+    | StatementBlock
     | ContentBlock
     | WorkAreasBlock
     | AgendaBlock
     | QuoteBlock
     | StripBlock
+    | StructureBlock
+    | MissionBlock
+    | TimelineBlock
     | MembersBlock
     | ArchiveBlock
     | MediaBlock
@@ -541,6 +545,33 @@ export interface IntroBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatementBlock".
+ */
+export interface StatementBlock {
+  heading: string;
+  /**
+   * Una o dos frases. Se muestra en letra grande.
+   */
+  statement: string;
+  /**
+   * Se unen en una frase bajo la declaración: «Somos mayas, garífunas… en una sola alianza».
+   */
+  peoples?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * De preferencia horizontal y ancha (por ejemplo 2880 × 1100).
+   */
+  image?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statement';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
@@ -715,15 +746,118 @@ export interface StripBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StructureBlock".
+ */
+export interface StructureBlock {
+  kicker?: string | null;
+  heading: string;
+  /**
+   * Dos o tres líneas como máximo.
+   */
+  intro?: string | null;
+  /**
+   * Se recorta en círculo. Si no eliges una, se muestra el símbolo de AMMI.
+   */
+  image?: (number | null) | Media;
+  /**
+   * Los primeros tres van a la izquierda y los siguientes a la derecha.
+   */
+  items?:
+    | {
+        icon:
+          'users' | 'flag' | 'network' | 'laptop' | 'handshake' | 'user' | 'scale' | 'megaphone' | 'book' | 'sprout';
+        title: string;
+        /**
+         * Una sola frase, unas 15 palabras.
+         */
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'structure';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MissionBlock".
+ */
+export interface MissionBlock {
+  layout: 'tabs' | 'rows';
+  /**
+   * Pestañas: cada una cambia el título grande y el texto. Filas: una fila con ilustración por elemento.
+   */
+  items?:
+    | {
+        label: string;
+        heading: string;
+        /**
+         * Una frase corta bajo el título.
+         */
+        subtitle?: string | null;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mission';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TimelineBlock".
+ */
+export interface TimelineBlock {
+  heading: string;
+  /**
+   * Separa los párrafos con una línea en blanco. Se reparten en dos columnas.
+   */
+  intro?: string | null;
+  /**
+   * Se muestra muy tenue, en blanco y negro, detrás de la sección.
+   */
+  background?: (number | null) | Media;
+  /**
+   * En orden, del más antiguo al más reciente. Se alternan a izquierda y derecha.
+   */
+  events?:
+    | {
+        year: string;
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'timeline';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MembersBlock".
  */
 export interface MembersBlock {
   heading: string;
   headingSecond?: string | null;
   intro?: string | null;
+  /**
+   * Se agrupan por «Categoría», en el orden en que aparece cada categoría por primera vez. Sin logo, se muestran las siglas.
+   */
   organizations?:
     | {
         name: string;
+        /**
+         * Se muestran si no hay logo. Ej.: UNAMG, Moloj.
+         */
+        acronym?: string | null;
+        /**
+         * Ej.: Participación política. Escríbela igual en cada organización del grupo.
+         */
+        category?: string | null;
+        /**
+         * PNG con fondo transparente, de preferencia horizontal.
+         */
+        logo?: (number | null) | Media;
         focus?: string | null;
         place?: string | null;
         url?: string | null;
@@ -1396,11 +1530,15 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         intro?: T | IntroBlockSelect<T>;
+        statement?: T | StatementBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         workAreas?: T | WorkAreasBlockSelect<T>;
         agenda?: T | AgendaBlockSelect<T>;
         quote?: T | QuoteBlockSelect<T>;
         strip?: T | StripBlockSelect<T>;
+        structure?: T | StructureBlockSelect<T>;
+        mission?: T | MissionBlockSelect<T>;
+        timeline?: T | TimelineBlockSelect<T>;
         members?: T | MembersBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
@@ -1436,6 +1574,23 @@ export interface IntroBlockSelect<T extends boolean = true> {
     | {
         value?: T;
         label?: T;
+        id?: T;
+      };
+  image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatementBlock_select".
+ */
+export interface StatementBlockSelect<T extends boolean = true> {
+  heading?: T;
+  statement?: T;
+  peoples?:
+    | T
+    | {
+        name?: T;
         id?: T;
       };
   image?: T;
@@ -1570,6 +1725,63 @@ export interface StripBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StructureBlock_select".
+ */
+export interface StructureBlockSelect<T extends boolean = true> {
+  kicker?: T;
+  heading?: T;
+  intro?: T;
+  image?: T;
+  items?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MissionBlock_select".
+ */
+export interface MissionBlockSelect<T extends boolean = true> {
+  layout?: T;
+  items?:
+    | T
+    | {
+        label?: T;
+        heading?: T;
+        subtitle?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TimelineBlock_select".
+ */
+export interface TimelineBlockSelect<T extends boolean = true> {
+  heading?: T;
+  intro?: T;
+  background?: T;
+  events?:
+    | T
+    | {
+        year?: T;
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MembersBlock_select".
  */
 export interface MembersBlockSelect<T extends boolean = true> {
@@ -1580,6 +1792,9 @@ export interface MembersBlockSelect<T extends boolean = true> {
     | T
     | {
         name?: T;
+        acronym?: T;
+        category?: T;
+        logo?: T;
         focus?: T;
         place?: T;
         url?: T;

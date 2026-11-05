@@ -110,6 +110,19 @@
   color: var(--fucsia-primario);
 }
 
+/* Espacio de sección (Quiénes somos): 48px en celular, 62px en tablet y 96px en escritorio, arriba/abajo y a los lados */
+@utility section-pad {
+  --pad: 48px;
+  --margin: var(--pad);
+  padding-block: var(--pad);
+  @media (width >= 48rem) {
+    --pad: 62px;
+  }
+  @media (width >= 64rem) {
+    --pad: 96px;
+  }
+}
+
 /* Superficie redondeada: tarjetas, fotos y paneles */
 @utility rounded-card {
   border-radius: var(--radius-card);
@@ -492,5 +505,30 @@ body:has([data-calendar-tile]) .cholqij-float {
   .panel-stack > div {
     position: sticky;
     top: calc(min(1rem, 100svh - 52rem) + var(--stack, 0) * 1rem);
+  }
+}
+
+
+/* Emblemas de Misión y visión: los puntos del anillo giran mientras la sección cruza la pantalla.
+   Sin soporte del navegador, o con «reducir movimiento», se quedan quietos. */
+.emblem-orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .emblem-orbit {
+      animation: emblem-orbit linear both;
+      animation-timeline: view();
+      animation-range: entry 10% exit 90%;
+    }
+  }
+}
+@keyframes emblem-orbit {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(90deg);
   }
 }

@@ -18,8 +18,8 @@ export const QuoteBlock: React.FC<QuoteBlockProps> = ({ author, image, quote, ro
     <section className={cn(tones[tone || 'corinto'])}>
       <div className={cn('grid', hasImage && 'lg:grid-cols-12')}>
         {hasImage && (
-          <div className="relative min-h-[60svh] lg:min-h-[80svh] lg:col-span-5 overflow-hidden" data-reveal>
-            <Media fill imgClassName="object-cover grayscale contrast-[1.05]" resource={image} size="(max-width: 1024px) 100vw, 42vw" />
+          <div className="group relative min-h-[60svh] lg:min-h-[80svh] lg:col-span-5 overflow-hidden" data-reveal>
+            <Media fill imgClassName="object-cover grayscale contrast-[1.05] transition-transform duration-500 group-hover:scale-[1.04]" resource={image} size="(max-width: 1024px) 100vw, 42vw" />
           </div>
         )}
         <figure
