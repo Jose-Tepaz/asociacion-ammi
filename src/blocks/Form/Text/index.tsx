@@ -14,6 +14,9 @@ export const Text: React.FC<
     register: UseFormRegister<FieldValues>
   }
 > = ({ name, defaultValue, errors, label, register, required, width }) => {
+  // En el celular abre el teclado numérico y el navegador puede autocompletar el número
+  const isPhone = name === 'telefono'
+
   return (
     <Width width={width}>
       <Label htmlFor={name}>
@@ -25,7 +28,13 @@ export const Text: React.FC<
           </span>
         )}
       </Label>
-      <Input defaultValue={defaultValue} id={name} type="text" {...register(name, { required })} />
+      <Input
+        autoComplete={isPhone ? 'tel' : undefined}
+        defaultValue={defaultValue}
+        id={name}
+        type={isPhone ? 'tel' : 'text'}
+        {...register(name, { required })}
+      />
       {errors[name] && <Error name={name} />}
     </Width>
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import { ArrowUpRight, Clock, MapPin, Users } from 'lucide-react'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import type { AgendaBlock as AgendaBlockProps } from '@/payload-types'
 
@@ -56,6 +56,15 @@ export const AgendaBlock: React.FC<AgendaBlockProps & { id?: string | null }> = 
     setActive(next === -1 ? Math.max(days.length - 1, 0) : next)
   }, [days])
 
+  // En el celular los días van en un carrusel: el día elegido siempre queda a la vista
+  const tabs = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const list = tabs.current
+    const tab = list?.children[active]
+    if (!list || !tab || list.scrollWidth <= list.clientWidth) return
+    list.scrollBy({ left: tab.getBoundingClientRect().left - list.getBoundingClientRect().left - 16 })
+  }, [active])
+
   const [activeKey, sessions = []] = days[active] || []
   const activeDate = activeKey ? toLocalDate(activeKey) : null
   const activeDay = activeDate ? cholqij(activeDate) : null
@@ -90,13 +99,14 @@ export const AgendaBlock: React.FC<AgendaBlockProps & { id?: string | null }> = 
 
         {days.length > 0 && (
           <div
-            className="mt-10 md:mt-14 grid gap-5 lg:grid-cols-[17rem_1fr] lg:gap-8"
+            className="mt-10 md:mt-14 grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[17rem_1fr] lg:gap-8"
             data-reveal
             style={{ '--i': 1 } as React.CSSProperties}
           >
             <div
               aria-label="Días con actividades"
-              className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:flex lg:flex-col"
+              className="-mx-[var(--margin)] flex snap-x snap-mandatory scroll-px-[var(--margin)] gap-3 overflow-x-auto px-[var(--margin)] [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 lg:flex lg:flex-col [&::-webkit-scrollbar]:hidden"
+              ref={tabs}
               role="tablist"
             >
               {days.map(([key], i) => {
@@ -108,7 +118,7 @@ export const AgendaBlock: React.FC<AgendaBlockProps & { id?: string | null }> = 
                     aria-controls={`agenda-${id}-panel`}
                     aria-selected={isActive}
                     className={cn(
-                      'flex items-center gap-4 rounded-card p-4 text-left transition-colors',
+                      'flex w-[72%] shrink-0 snap-start items-center gap-4 rounded-card p-4 text-left transition-colors sm:w-auto',
                       isActive
                         ? 'bg-corinto text-besh-suave'
                         : 'bg-besh-fuerte hover:bg-besh-oscuro',

@@ -10,6 +10,7 @@ import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 
 import { fields } from './fields'
 import { getClientSideURL } from '@/utilities/getURL'
+import { cn } from '@/utilities/ui'
 
 export type FormBlockType = {
   blockName?: string
@@ -117,14 +118,14 @@ export const FormBlock: React.FC<
   )
 
   return (
-    <div className={embedded ? undefined : 'container lg:max-w-[48rem]'}>
+    <div className={embedded ? 'flex flex-1 flex-col' : 'container lg:max-w-[48rem]'}>
       {enableIntro && introContent && !hasSubmitted && (
         <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
       )}
       <div
         className={
           embedded
-            ? 'rounded-[2rem] bg-background p-6 md:p-8'
+            ? 'flex flex-1 flex-col rounded-[2rem] bg-background p-6 md:p-8'
             : 'p-4 lg:p-6 border border-border rounded-[0.8rem]'
         }
       >
@@ -135,8 +136,12 @@ export const FormBlock: React.FC<
           {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
           {error && <div>{`${error.status || '500'}: ${error.message || ''}`}</div>}
           {!hasSubmitted && (
-            <form id={formID} onSubmit={handleSubmit(onSubmit)}>
-              <div className="mb-4 last:mb-0">
+            <form
+              className={embedded ? 'flex flex-1 flex-col' : undefined}
+              id={formID}
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className={cn('mb-4 last:mb-0', embedded && 'flex flex-1 flex-col')}>
                 {formFromProps &&
                   formFromProps.fields &&
                   formFromProps.fields?.map((field, index) => {
@@ -144,7 +149,16 @@ export const FormBlock: React.FC<
                     const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields]
                     if (Field) {
                       return (
-                        <div className="mb-6 last:mb-0" key={index}>
+                        <div
+                          className={cn(
+                            'mb-6 last:mb-0',
+                            // El mensaje crece para que la tarjeta llegue a la altura de la columna vecina
+                            embedded &&
+                              field.blockType === 'textarea' &&
+                              'flex-1 [&>div]:flex [&>div]:h-full [&>div]:flex-col [&>div]:gap-1.5 [&_textarea]:flex-1',
+                          )}
+                          key={index}
+                        >
                           <Field
                             form={formFromProps}
                             {...field}
@@ -160,7 +174,7 @@ export const FormBlock: React.FC<
                   })}
               </div>
 
-              <Button form={formID} type="submit" variant="default">
+              <Button className={embedded ? 'self-start' : undefined} form={formID} type="submit" variant="default">
                 {submitButtonLabel}
               </Button>
             </form>

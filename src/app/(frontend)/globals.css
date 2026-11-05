@@ -501,6 +501,12 @@ body:has([data-calendar-tile]) .cholqij-float {
 .panel-stack > div:not(:nth-child(2)) {
   margin-top: 1.5rem;
 }
+@media (width < 64rem) {
+  .panel-stack > div {
+    position: sticky;
+    top: calc(min(1rem, 100svh - var(--panel-h, 100svh) - 1rem) + var(--stack, 0) * 1rem);
+  }
+}
 @media (width >= 64rem) {
   .panel-stack > div {
     position: sticky;

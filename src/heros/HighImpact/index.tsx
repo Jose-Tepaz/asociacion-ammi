@@ -49,7 +49,7 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
 
   return (
     <section
-      className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-corinto-terciario text-besh-suave"
+      className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-corinto-terciario text-besh-suave max-lg:justify-center"
       data-hero="overlay"
       data-theme="dark"
     >
@@ -79,7 +79,7 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
         />
       </div>
 
-      <div className="container flex flex-col items-center pb-12 pt-32 text-center md:pb-20 xl:pb-32">
+      <div className="container flex flex-col items-center pb-8 pt-24 text-center md:pt-32 lg:pb-20 xl:pb-32">
         {kicker && (
           <p className="fade-up mb-5 inline-flex items-center gap-2 rounded-full bg-besh-suave/15 px-4 py-1.5 text-step-small font-medium text-besh-suave backdrop-blur-sm">
             <span aria-hidden="true" className="size-1.5 rounded-full bg-ocre" />

@@ -67,11 +67,16 @@ const IntroPanel: React.FC<IntroBlockProps & { position: number }> = ({
           {image && typeof image === 'object' && (
             <figure
               className={cn(
-                'relative mx-auto aspect-[4/5] w-full max-w-[24rem] overflow-hidden rounded-[2rem] bg-besh-oscuro shadow-[0_32px_64px_-24px_rgb(36_15_22/0.6)] ring-[6px] ring-besh-suave transition-transform duration-500 hover:rotate-0 lg:col-span-5 lg:-my-24 lg:max-w-none',
+                'relative mx-auto aspect-[4/5] w-full max-w-[24rem] overflow-hidden rounded-[2rem] bg-besh-oscuro shadow-[0_32px_64px_-24px_rgb(36_15_22/0.6)] ring-[6px] ring-besh-suave transition-transform duration-500 hover:rotate-0 md:aspect-[4/3] md:max-w-none lg:col-span-5 lg:-my-24 lg:aspect-[4/5]',
                 flipped ? 'lg:rotate-2' : 'lg:-rotate-2',
               )}
             >
-              <Media fill imgClassName="object-cover" resource={image} size="(max-width: 1024px) 100vw, 40vw" />
+              <Media
+                fill
+                imgClassName="object-cover md:max-lg:object-top"
+                resource={image}
+                size="(max-width: 1024px) 100vw, 40vw"
+              />
             </figure>
           )}
         </div>
@@ -94,22 +99,22 @@ export const IntroBlock: React.FC<IntroBlockProps & { panelPosition?: number }> 
 
   return (
     <section className="container">
-      <div className={cn('grid items-center gap-12 lg:gap-16', hasImage && 'lg:grid-cols-12')}>
+      <div className={cn('grid items-center gap-12 md:gap-8 lg:gap-16', hasImage && 'md:grid-cols-12')}>
         {hasImage && (
-          <figure className="relative lg:order-last lg:col-span-5" data-reveal>
+          <figure className="relative order-last md:col-span-5" data-reveal>
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-besh-oscuro">
               <Media fill imgClassName="object-cover" resource={image} size="(max-width: 1024px) 100vw, 40vw" />
               <span aria-hidden="true" className="tejido absolute inset-x-0 bottom-0" />
             </div>
             {firstFact && (
-              <figcaption className="absolute left-5 top-5 rounded-full bg-besh-suave/95 px-4 py-2 text-step-small font-medium text-corinto">
+              <figcaption className="absolute left-5 top-5 rounded-full bg-besh-suave/95 px-4 py-2 text-step-small font-medium text-corinto md:max-lg:hidden">
                 Desde {firstFact.value}
               </figcaption>
             )}
           </figure>
         )}
 
-        <div className={cn(hasImage ? 'lg:col-span-7' : 'max-w-[52rem]')}>
+        <div className={cn(hasImage ? 'md:col-span-7' : 'max-w-[52rem]')}>
           <div data-reveal>
             {kicker && <p className="kicker mb-3">{kicker}</p>}
             <h2 className="text-step-head text-corinto max-w-[18ch]">{heading}</h2>
@@ -136,7 +141,7 @@ export const IntroBlock: React.FC<IntroBlockProps & { panelPosition?: number }> 
 
           {list.length > 0 && (
             <dl
-              className="mt-12 grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3"
+              className="mt-12 grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 md:max-lg:grid-cols-2"
               data-reveal
               style={{ '--i': 3 } as React.CSSProperties}
             >

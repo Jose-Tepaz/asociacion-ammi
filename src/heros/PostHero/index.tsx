@@ -52,14 +52,14 @@ export const PostHero: React.FC<{ post: Post }> = ({ post }) => {
           <h1 className="text-step-display max-w-[30ch]">{title}</h1>
         </div>
 
-        <dl className="fade-up mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-step-small">
+        <dl className="fade-up mt-10 flex flex-wrap items-center gap-2 text-step-small whitespace-nowrap md:gap-x-8 md:gap-y-4">
           {cats.length > 0 && (
             <div className="flex gap-2">
               <dt className="sr-only">Categoría</dt>
               {cats.map((c) => (
                 <dd key={c.id}>
                   <Link
-                    className="inline-flex h-8 items-center rounded-full bg-besh-suave/10 px-3.5 font-medium text-ocre transition-colors hover:bg-besh-suave/20"
+                    className="inline-flex h-8 items-center rounded-full bg-besh-suave/10 px-3 font-medium text-ocre transition-colors hover:bg-besh-suave/20 md:px-3.5"
                     href={`/posts/categoria/${c.slug}`}
                   >
                     {c.title}
@@ -77,7 +77,7 @@ export const PostHero: React.FC<{ post: Post }> = ({ post }) => {
             </div>
           )}
           {day && (
-            <div className="flex items-center gap-2" title={day.significado}>
+            <div className="flex items-center gap-1.5 md:gap-2" title={day.significado}>
               <dt className="sr-only">Día del Cholq&apos;ij</dt>
               <span className="grid size-8 place-items-center rounded-full bg-besh-suave/10 text-ocre">
                 <NawalGlyph className="size-5" src={day.glifo} />

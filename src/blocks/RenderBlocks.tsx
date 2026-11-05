@@ -18,6 +18,7 @@ import { StripBlock } from '@/blocks/Strip/Component'
 import { StructureBlock } from '@/blocks/Structure/Component'
 import { TimelineBlock } from '@/blocks/Timeline/Component'
 import { WorkAreasBlock } from '@/blocks/WorkAreas/Component'
+import { PanelStack } from '@/components/PanelStack'
 import { cn } from '@/utilities/ui'
 
 const blockComponents = {
@@ -114,9 +115,7 @@ export const RenderBlocks: React.FC<{
       <Fragment>
         {runs.map((run, i) =>
           run[0]?.isPanel ? (
-            <div className="panel-stack" key={`paneles-${i}`}>
-              {run.map((item) => item.node)}
-            </div>
+            <PanelStack key={`paneles-${i}`}>{run.map((item) => item.node)}</PanelStack>
           ) : (
             run.map((item) => item.node)
           ),
