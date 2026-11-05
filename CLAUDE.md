@@ -10,8 +10,8 @@ Para Payload, empieza por `.claude/skills/payload/SKILL.md` y consulta `.claude/
 
 - Payload CMS 3.92, Next.js 16 (App Router, Turbopack), React 19, Tailwind CSS v4, TypeScript.
 - Node 24 y **pnpm**. No uses `npm install`.
-- Local: SQLite (`ammi.db`) y archivos en `public/media`.
-- Producción: Postgres (Neon) y Vercel Blob. El adaptador se elige en `src/payload.config.ts` según si `DATABASE_URL` empieza con `postgres`.
+- Local: SQLite (`DATABASE_URL=file:./ammi.db`) y archivos en `public/media`, con las `S3_*` vacías.
+- Producción: Postgres (Neon) y Neon Object Storage (S3-compatible, bucket `uploades`, solo path-style). El adaptador de base de datos se elige en `src/payload.config.ts` según si `DATABASE_URL` empieza con `postgres`, y el almacenamiento S3 se activa solo si existe `S3_ENDPOINT`.
 
 ## Comandos
 
@@ -59,9 +59,14 @@ Los cambios que solo tocan diseño, labels o `admin` no necesitan migración, po
 
 `payload migrate:create` necesita una conexión real a Postgres y se queda colgado con una base ficticia. Sin esa conexión, escribe la migración a mano.
 
+Las migraciones son SQL de Postgres y SQLite nunca las ejecuta. Antes de mergear un cambio de esquema, pruébalo contra un **branch de Neon** (se crea en segundos y es gratis): apunta `DATABASE_URL` al branch y ejecuta `pnpm payload migrate`. Si el cambio también toca el admin, regenera el import map y súbelo en el mismo commit.
+
 ### Base de datos local
 
 - Antes de tocar `ammi.db`, haz una copia de respaldo.
+- **Nunca ejecutes `pnpm dev`, `payload run` ni otro comando en modo desarrollo contra la base de producción de Neon.** Payload deja ahí una fila `dev` (batch `-1`) en `payload_migrations`, y a partir de entonces el build se queda esperando una pregunta interactiva ("It looks like you've run Payload in dev mode...") y no termina. Para revisar el sitio contra Neon usa `pnpm build` y `pnpm start`. Si la fila ya existe y el esquema no cambió, bórrala: `DELETE FROM payload_migrations WHERE name='dev' AND batch=-1`.
+- Antes de cada deploy, ejecuta `pnpm payload migrate` contra la base de producción. Si el build corre con migraciones pendientes, los workers las aplican a la vez y chocan (`column ... already exists`).
+- Next guarda en `.next/cache` los globals (header y footer) por un año. Si se construyó con la base vacía, el navbar y el footer salen sin elementos: borra `.next/cache/fetch-cache` y reconstruye, o guarda el global en el admin.
 - Si agregas una columna a mano antes de cambiar la configuración, detén el servidor primero y usa la misma definición que generaría Payload. Una columna distinta hace que el modo `push` reconstruya las tablas y el servidor se quede colgado.
 
 ### Diseño
@@ -81,4 +86,4 @@ Los cambios que solo tocan diseño, labels o `admin` no necesitan migración, po
 
 ## Variables de entorno
 
-Ver `.env.example`. El proyecto usa `DATABASE_URL`, `PAYLOAD_SECRET`, `BLOB_READ_WRITE_TOKEN`, `NEXT_PUBLIC_SERVER_URL`, `CRON_SECRET` y `PREVIEW_SECRET`.
+Ver `.env.example`. El proyecto usa `DATABASE_URL`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, `CRON_SECRET`, `PREVIEW_SECRET` y las cinco `S3_*` (Neon Object Storage). Vercel inyecta solo las `VERCEL_*`; no las copies al `.env`. Las credenciales de almacenamiento se crean en Neon (`neon credentials create --scope storage:read --scope storage:write`) y el secreto se muestra una sola vez.
