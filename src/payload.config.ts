@@ -72,6 +72,9 @@ export default buildConfig({
         // Permite conservar los IDs al copiar contenido de una base a otra
         allowIDOnCreate: true,
         migrationDir: path.resolve(dirname, 'migrations'),
+        // El push en modo desarrollo deja una fila `dev` (batch -1) en payload_migrations
+        // que bloquea las migraciones. Solo se activa en el branch personal de cada dev.
+        push: process.env.PAYLOAD_DB_PUSH === 'true',
         // Crea o actualiza las tablas al arrancar en producción
         prodMigrations: migrations,
       })

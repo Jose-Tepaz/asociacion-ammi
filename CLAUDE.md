@@ -10,8 +10,8 @@ Para Payload, empieza por `.claude/skills/payload/SKILL.md` y consulta `.claude/
 
 - Payload CMS 3.92, Next.js 16 (App Router, Turbopack), React 19, Tailwind CSS v4, TypeScript.
 - Node 24 y **pnpm**. No uses `npm install`.
-- Local: SQLite (`DATABASE_URL=file:./ammi.db`) y archivos en `public/media`, con las `S3_*` vacías.
-- Producción: Postgres (Neon) y Neon Object Storage (S3-compatible, bucket `uploades`, solo path-style). El adaptador de base de datos se elige en `src/payload.config.ts` según si `DATABASE_URL` empieza con `postgres`, y el almacenamiento S3 se activa solo si existe `S3_ENDPOINT`.
+- Desarrollo: cada dev trabaja en **su propio branch de Neon** (ver "Branches de Neon" abajo). SQLite (`DATABASE_URL=file:./ammi.db`, con las `S3_*` vacías y archivos en `public/media`) queda como alternativa sin conexión.
+- Producción: Postgres (Neon, branch `production`) y Neon Object Storage (S3-compatible, bucket `uploades`, solo path-style). El adaptador de base de datos se elige en `src/payload.config.ts` según si `DATABASE_URL` empieza con `postgres`, y el almacenamiento S3 se activa solo si existe `S3_ENDPOINT`.
 
 ## Comandos
 
@@ -44,7 +44,7 @@ npx tsc --noEmit          # revisión de tipos
 
 Todo cambio que altere el esquema de la base de datos debe registrar una migración **en el mismo commit**. Esto incluye agregar, quitar o renombrar colecciones, globals, bloques o campos, y cambiar opciones de un `select`, `required`, `unique`, `localized` o `hasMany`.
 
-Es obligatorio porque en local SQLite se actualiza solo, así que un cambio sin migración parece funcionar en tu computadora y falla en producción. Producción solo aplica lo que esté en `prodMigrations`.
+Es obligatorio porque en desarrollo la base se actualiza sola (SQLite, o tu branch con `PAYLOAD_DB_PUSH=true`), así que un cambio sin migración parece funcionar en tu computadora y falla en producción. Producción solo aplica lo que esté en `prodMigrations`.
 
 Pasos:
 
@@ -61,10 +61,27 @@ Los cambios que solo tocan diseño, labels o `admin` no necesitan migración, po
 
 Las migraciones son SQL de Postgres y SQLite nunca las ejecuta. Antes de mergear un cambio de esquema, pruébalo contra un **branch de Neon** (se crea en segundos y es gratis): apunta `DATABASE_URL` al branch y ejecuta `pnpm payload migrate`. Si el cambio también toca el admin, regenera el import map y súbelo en el mismo commit.
 
-### Base de datos local
+### Branches de Neon: uno por persona
+
+Proyecto de Neon `AMMI- WEBSITE`. Cada branch tiene su propia copia de la base **y** del bucket `uploades` (el almacenamiento se ramifica con la base, copy-on-write): lo que subas o borres en tu branch no toca producción.
+
+| Branch | Quién | Para qué | `PAYLOAD_DB_PUSH` |
+|---|---|---|---|
+| `production` | Vercel (sitio publicado) | Contenido real. Solo cambia por migraciones | nunca |
+| `dev-cesar` | César | Su desarrollo y pruebas | `true` si quiere |
+| `dev-andrea` | Andrea | Su desarrollo y pruebas | `true` si quiere |
+| `respaldo-*` | Nadie | Respaldos puntuales. No conectes nada a ellos | nunca |
+
+- En tu `.env` usa la cadena de conexión, el `S3_ENDPOINT` y una credencial de almacenamiento **de tu branch**, nunca los de `production`. Se copian desde la consola de Neon; no se comparten por chat.
+- Una persona nueva recibe su branch `dev-<nombre>`, creado desde `production`. Agrégala a esta tabla.
+- **Los branches no se fusionan.** Al mergear a `main` llega a producción el **esquema**, a través de las migraciones. El **contenido** (páginas, textos, imágenes) que cargues en tu branch se queda ahí; el contenido real se edita en el admin de producción.
+- Para tener los datos actuales de producción, resetea tu branch desde su padre (`production`) en la consola de Neon. Pierdes lo que tenías en tu branch.
+- Con `PAYLOAD_DB_PUSH=true`, tu branch queda con la fila `dev` y un esquema que puede no coincidir con las migraciones. Antes de mergear, prueba tu migración en un branch limpio creado desde `production` y resetea el tuyo cuando termines.
+
+### Base de datos
 
 - Antes de tocar `ammi.db`, haz una copia de respaldo.
-- **Nunca ejecutes `pnpm dev`, `payload run` ni otro comando en modo desarrollo contra la base de producción de Neon.** Payload deja ahí una fila `dev` (batch `-1`) en `payload_migrations`, y a partir de entonces el build se queda esperando una pregunta interactiva ("It looks like you've run Payload in dev mode...") y no termina. Para revisar el sitio contra Neon usa `pnpm build` y `pnpm start`. Si la fila ya existe y el esquema no cambió, bórrala: `DELETE FROM payload_migrations WHERE name='dev' AND batch=-1`.
+- **Nunca pongas `PAYLOAD_DB_PUSH=true` ni ejecutes `pnpm dev`, `payload run` o `pnpm seed:ammi` contra el branch `production`.** El push deja ahí una fila `dev` (batch `-1`) en `payload_migrations`, y a partir de entonces el build y cada función de Vercel se quedan esperando una pregunta interactiva ("It looks like you've run Payload in dev mode...") que nunca termina. Para revisar el sitio contra producción usa `pnpm build` y `pnpm start`. Si la fila aparece y el esquema no cambió, haz un branch de respaldo y bórrala: `DELETE FROM payload_migrations WHERE name='dev' AND batch=-1`. Luego cancela el build trabado y vuelve a desplegar.
 - Antes de cada deploy, ejecuta `pnpm payload migrate` contra la base de producción. Si el build corre con migraciones pendientes, los workers las aplican a la vez y chocan (`column ... already exists`).
 - Next guarda en `.next/cache` los globals (header y footer) por un año. Si se construyó con la base vacía, el navbar y el footer salen sin elementos: borra `.next/cache/fetch-cache` y reconstruye, o guarda el global en el admin.
 - Si agregas una columna a mano antes de cambiar la configuración, detén el servidor primero y usa la misma definición que generaría Payload. Una columna distinta hace que el modo `push` reconstruya las tablas y el servidor se quede colgado.
@@ -80,10 +97,15 @@ Las migraciones son SQL de Postgres y SQLite nunca las ejecuta. Antes de mergear
 ### Git y seguridad
 
 - Haz commit o push solo cuando se pida.
+- **Todo cambio se sube en una rama y se abre un Pull Request.** Nunca hagas push directo a `main`. Flujo:
+  1. Desde `main` actualizado, crea una rama con nombre descriptivo (`feature/...`, `fix/...`, `chore/...`).
+  2. Haz commit en esa rama y súbela con `git push -u origin <rama>` (cuenta `Jose-Tepaz`).
+  3. Abre el PR hacia `main` con `gh pr create`. Describe qué cambia y cómo se probó; si toca el esquema, menciona la migración.
+  4. Se mergea desde GitHub una vez revisado. Toda rama que se suba lleva su PR, sin excepciones.
 - Nunca subas `.env*`, `ammi.db`, `public/media`, respaldos de base de datos ni llaves.
 - Nunca muestres valores de variables de entorno ni direcciones de conexión en el chat o en commits.
 - Publicar en producción y borrar datos en la nube requiere aprobación explícita.
 
 ## Variables de entorno
 
-Ver `.env.example`. El proyecto usa `DATABASE_URL`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, `CRON_SECRET`, `PREVIEW_SECRET` y las cinco `S3_*` (Neon Object Storage). Vercel inyecta solo las `VERCEL_*`; no las copies al `.env`. Las credenciales de almacenamiento se crean en Neon (`neon credentials create --scope storage:read --scope storage:write`) y el secreto se muestra una sola vez.
+Ver `.env.example`. El proyecto usa `DATABASE_URL`, `PAYLOAD_DB_PUSH` (solo `true` en tu branch personal), `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, `CRON_SECRET`, `PREVIEW_SECRET` y las cinco `S3_*` (Neon Object Storage). Vercel inyecta solo las `VERCEL_*`; no las copies al `.env`. Las credenciales de almacenamiento se crean en Neon (`neon credentials create --scope storage:read --scope storage:write`) y el secreto se muestra una sola vez.
