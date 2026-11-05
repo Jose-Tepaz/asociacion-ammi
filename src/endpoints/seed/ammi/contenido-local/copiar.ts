@@ -10,7 +10,9 @@ import path from 'path'
 import type { Payload } from 'payload'
 
 const contentDir = path.join(process.cwd(), 'src/endpoints/seed/ammi/contenido-local')
-const ctx = { disableRevalidate: true }
+// Un objeto nuevo por operación: el plugin de S3 guarda estado en el contexto y, si se
+// comparte, solo sube el primer archivo sin avisar de ningún error
+const newContext = () => ({ disableRevalidate: true })
 
 const mimeTypes: Record<string, string> = {
   '.jpeg': 'image/jpeg',
@@ -67,28 +69,38 @@ export const copyContent = async ({ apply, log, payload }: Options) => {
       where: { filename: { equals: filename } },
     })
 
-    if (found.docs[0]) {
-      ids.set(filename, found.docs[0].id)
-      log(`Imagen ya existe: ${filename}`)
-      continue
-    }
-
-    log(`Imagen nueva: ${filename}`)
+    const existingMedia = found.docs[0]
+    log(`${existingMedia ? 'Imagen se volverá a subir' : 'Imagen nueva'}: ${filename}`)
+    if (existingMedia) ids.set(filename, existingMedia.id)
     if (!apply) continue
 
     const data = fs.readFileSync(path.join(contentDir, 'archivos', filename))
-    const created = await payload.create({
-      collection: 'media',
-      context: ctx,
-      data: { alt },
-      file: {
-        data,
-        mimetype: mimeTypes[path.extname(filename).toLowerCase()],
-        name: filename,
-        size: data.length,
-      },
-    })
-    ids.set(filename, created.id)
+    const file = {
+      data,
+      mimetype: mimeTypes[path.extname(filename).toLowerCase()],
+      name: filename,
+      size: data.length,
+    }
+
+    if (existingMedia) {
+      // Conserva el registro y su nombre: solo asegura que el archivo esté en el almacenamiento
+      await payload.update({
+        collection: 'media',
+        context: newContext(),
+        data: {},
+        file,
+        id: existingMedia.id,
+        overwriteExistingFiles: true,
+      })
+    } else {
+      const created = await payload.create({
+        collection: 'media',
+        context: newContext(),
+        data: { alt },
+        file,
+      })
+      ids.set(filename, created.id)
+    }
   }
 
   // --- Página de Ejes -----------------------------------------------------------------
@@ -105,12 +117,12 @@ export const copyContent = async ({ apply, log, payload }: Options) => {
     if (existing.docs[0]) {
       await payload.update({
         collection: 'pages',
-        context: ctx,
+        context: newContext(),
         data,
         id: existing.docs[0].id,
       })
     } else {
-      await payload.create({ collection: 'pages', context: ctx, data: data as never })
+      await payload.create({ collection: 'pages', context: newContext(), data: data as never })
     }
   }
 
@@ -149,7 +161,7 @@ export const copyContent = async ({ apply, log, payload }: Options) => {
 
     await payload.update({
       collection: 'pages',
-      context: ctx,
+      context: newContext(),
       data: {
         _status: 'published',
         hero: { ...home.hero, media: resolveMedia(content.home.heroMedia, ids) as number },
@@ -167,7 +179,7 @@ export const copyContent = async ({ apply, log, payload }: Options) => {
     if (!apply) continue
 
     await payload.updateGlobal({
-      context: ctx,
+      context: newContext(),
       data: {
         logo: resolveMedia(content[slug].logo, ids) as number,
         navItems: global.navItems?.map((item) =>
