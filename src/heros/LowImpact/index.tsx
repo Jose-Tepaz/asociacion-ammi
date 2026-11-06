@@ -1,11 +1,11 @@
-import { ArrowUpRight, Mail, MapPin } from 'lucide-react'
+import { ArrowUpRight, MapPin } from 'lucide-react'
 import React from 'react'
 
 import type { Page } from '@/payload-types'
 
 import { CalendarTile } from '@/components/MayaDate/CalendarTile'
 import RichText from '@/components/RichText'
-import { SocialIcon } from '@/components/SocialIcon'
+import { ContactIcon, SocialIcon } from '@/components/SocialIcon'
 import { getCachedGlobal } from '@/utilities/getGlobals'
 import { cn } from '@/utilities/ui'
 
@@ -36,10 +36,17 @@ const Kicker: React.FC<{ className?: string; dot: string; text: string }> = ({ c
   </p>
 )
 
-/** Datos de contacto y redes, tomados del pie de página. */
+const isWhatsApp = (href?: string | null) => /wa\.me|whatsapp/i.test(href || '')
+
+/** Orden de la tarjeta: correo, dirección y WhatsApp. */
+const contactOrder = (href?: string | null) => (isWhatsApp(href) ? 2 : href ? 0 : 1)
+
+/** Correo, dirección, WhatsApp y redes, tomados del pie de página. El teléfono solo va en el pie. */
 const ContactCard = async () => {
   const footer = await getCachedGlobal('footer', 1)()
-  const contacts = footer?.contacts || []
+  const contacts = (footer?.contacts || [])
+    .filter(({ href }) => !href?.startsWith('tel:'))
+    .sort((a, b) => contactOrder(a.href) - contactOrder(b.href))
   const social = footer?.socialLinks || []
 
   return (
@@ -47,11 +54,14 @@ const ContactCard = async () => {
       <p className="text-step-small font-medium text-fucsia">Otras formas de encontrarnos</p>
       <ul className="mt-5 flex flex-col gap-4">
         {contacts.map(({ href, id, label }) => {
-          const Icon = href?.startsWith('mailto:') || href?.startsWith('/') ? Mail : MapPin
           const body = (
             <>
               <span className="grid size-11 shrink-0 place-items-center rounded-full bg-corinto text-besh-suave">
-                <Icon aria-hidden="true" className="size-5" />
+                {href ? (
+                  <ContactIcon className="size-5" href={href} />
+                ) : (
+                  <MapPin aria-hidden="true" className="size-5" />
+                )}
               </span>
               <span className="text-step-body font-medium">{label}</span>
             </>
@@ -59,7 +69,11 @@ const ContactCard = async () => {
           return (
             <li key={id}>
               {href ? (
-                <a className="group flex items-center gap-4 underline-offset-4 hover:underline" href={href}>
+                <a
+                  className="group flex items-center gap-4 underline-offset-4 hover:underline"
+                  href={href}
+                  {...(href.startsWith('http') ? { rel: 'noopener noreferrer', target: '_blank' } : {})}
+                >
                   {body}
                   <ArrowUpRight aria-hidden="true" className="ms-auto size-4 text-corinto opacity-0 transition-opacity group-hover:opacity-100" />
                 </a>
@@ -112,19 +126,23 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
   if (tone === 'contacto') {
     return (
       <section className="overflow-hidden bg-besh-fuerte" data-hero="beige">
-        <div className="container grid items-start gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-6">
+        <div className="container grid items-stretch gap-8 py-[var(--section-y)] md:grid-cols-12 md:gap-10 lg:grid-rows-[auto_1fr] lg:gap-y-8">
+          <div className="md:col-span-6">
             {kicker && <Kicker className="bg-corinto/10 text-fucsia" dot="bg-fucsia" text={kicker} />}
             <div className="mask-line">
               <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
             </div>
             {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
             {links && <HeroLinks className="fade-up mt-8" links={links} />}
-            <div className="mt-8">
-              <ContactCard />
-            </div>
           </div>
-          {aside && <div className="lg:col-span-6">{aside}</div>}
+          <div className="md:col-span-6 lg:col-start-1">
+            <ContactCard />
+          </div>
+          {aside && (
+            <div className="flex flex-col md:col-span-12 lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1">
+              {aside}
+            </div>
+          )}
         </div>
       </section>
     )
@@ -133,8 +151,8 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
   if (tone === 'calendario') {
     return (
       <section className="overflow-hidden bg-besh-fuerte" data-hero="beige">
-        <div className="container grid items-center gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-7">
+        <div className="container grid items-center gap-12 py-[var(--section-y)] md:grid-cols-12 md:gap-8 lg:gap-10">
+          <div className="md:col-span-6 lg:col-span-7">
             {kicker && <Kicker className="bg-corinto/10 text-fucsia" dot="bg-fucsia" text={kicker} />}
             <div className="mask-line">
               <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
@@ -142,7 +160,7 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
             {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
             {links && <HeroLinks className="fade-up mt-8" links={links} />}
           </div>
-          <div className="flex justify-center lg:col-span-5 lg:justify-end">
+          <div className="flex justify-center md:col-span-6 md:justify-end lg:col-span-5">
             <CalendarTile />
           </div>
         </div>

@@ -20,7 +20,14 @@ export const CallToActionBlock: React.FC<CTABlockProps> = ({ backgroundImage, li
         data-theme="dark"
       >
         <span aria-hidden="true" className="tejido" />
-        <div className={cn('grid gap-10 p-6 sm:p-10 md:p-14', hasImage && 'lg:grid-cols-2 lg:items-center lg:gap-14')}>
+        <div
+          className={cn(
+            'grid gap-10 p-6 sm:p-10 md:p-14',
+            hasImage && 'lg:grid-cols-2 lg:items-center lg:gap-14',
+            // La nota sobresale de la foto: se compensa para que arriba y abajo quede el mismo aire
+            hasImage && note && 'pb-10 sm:pb-14 md:pb-20',
+          )}
+        >
           <div className={cn(!hasImage && 'max-w-[44rem]')}>
             {richText && (
               <RichText

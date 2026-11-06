@@ -1,0 +1,303 @@
+{
+  "ejes": {
+    "title": "Ejes estratégicos",
+    "slug": "ejes",
+    "generateSlug": false,
+    "hero": {
+      "type": "mediumImpact",
+      "dark": true,
+      "kicker": "Nuestro trabajo",
+      "tone": "corinto",
+      "richText": {
+        "root": {
+          "type": "root",
+          "direction": "ltr",
+          "format": "",
+          "indent": 0,
+          "version": 1,
+          "children": [
+            {
+              "type": "heading",
+              "tag": "h1",
+              "direction": "ltr",
+              "format": "",
+              "indent": 0,
+              "version": 1,
+              "children": [
+                {
+                  "type": "text",
+                  "detail": 0,
+                  "format": 0,
+                  "mode": "normal",
+                  "style": "",
+                  "text": "Nuestros ejes por la justicia y la ",
+                  "version": 1
+                },
+                {
+                  "type": "text",
+                  "detail": 0,
+                  "format": 2,
+                  "mode": "normal",
+                  "style": "",
+                  "text": "paridad",
+                  "version": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "standfirst": "Somos una plataforma de organizaciones de mujeres y mujeres indígenas que propician acciones por la justicia. Así trabajamos.",
+      "links": [],
+      "media": {
+        "$media": "WhatsApp Image 2026-11-04 at 12.22.03-1.jpeg"
+      },
+      "featured": {
+        "label": "Nuevo pronunciamiento",
+        "post": null
+      },
+      "mosaic": []
+    },
+    "layout": [
+      {
+        "kicker": "Eje 01",
+        "heading": "Incidencia y acciones políticas",
+        "body": "Llevamos la voz de las mujeres indígenas al Congreso, a las cortes y a las instituciones del Estado.\n\nEn 2021 respaldamos una acción de inconstitucionalidad para exigir paridad y alternabilidad en la Ley Electoral y de Partidos Políticos. En 2024 dialogamos con las magistraturas del Tribunal Supremo Electoral sobre la participación política de las mujeres.",
+        "highlight": "Proponemos que el Tribunal Supremo Electoral se integre con paridad y con personas de los pueblos indígenas.",
+        "image": {
+          "$media": "ejes-incidencia.jpg"
+        },
+        "blockName": "Incidencia",
+        "facts": [
+          {
+            "value": "21",
+            "label": "propuestas de reforma electoral ante el Tribunal Supremo Electoral"
+          },
+          {
+            "value": "2",
+            "label": "dictámenes de la Corte de Constitucionalidad a favor de la paridad"
+          },
+          {
+            "value": "25+",
+            "label": "años de cabildeo de las organizaciones de mujeres"
+          }
+        ],
+        "blockType": "intro"
+      },
+      {
+        "kicker": "Eje 02",
+        "heading": "Participación política de mujeres",
+        "body": "Acompañamos a mujeres para que sean candidatas, ocupen cargos de decisión y los ejerzan sin violencia política.\n\nProponemos que los partidos postulen con paridad y alternancia a mujeres y Pueblos Indígenas, que parte del financiamiento público llegue a las secretarías de la mujer, de pueblos indígenas y de juventudes, y que la violencia política contra las mujeres sea delito electoral.",
+        "highlight": "Exigimos a los partidos postular candidatas indígenas en puestos elegibles.",
+        "image": {
+          "$media": "ejes-participacion.jpeg"
+        },
+        "blockName": "Participacion",
+        "facts": [
+          {
+            "value": "3",
+            "label": "candidatas a binomio presidencial inscritas en marzo de 2023"
+          },
+          {
+            "value": "0",
+            "label": "de ellas eran mujeres indígenas"
+          }
+        ],
+        "blockType": "intro"
+      },
+      {
+        "kicker": "Eje 03",
+        "heading": "Formación y fortalecimiento",
+        "body": "Talleres, diálogos y materiales para que cada mujer conozca y defienda sus derechos.\n\nEl Encuentro Virtual Mujeres y Poder llegó a su sexta edición con el lema «Desde el territorio transformamos la democracia». También organizamos conversatorios y encuentros nacionales sobre las elecciones de segundo grado.",
+        "highlight": "Integridad electoral, organización y acción política: los temas del VI Encuentro.",
+        "image": {
+          "$media": "ejes-formacion.jpg"
+        },
+        "blockName": "Formacion",
+        "facts": [
+          {
+            "value": "6",
+            "label": "ediciones del Encuentro Virtual Mujeres y Poder"
+          }
+        ],
+        "blockType": "intro"
+      },
+      {
+        "kicker": "Eje 04",
+        "heading": "Alianzas",
+        "body": "Organizaciones, mujeres a lo individual y cooperantes que caminan con nosotras.\n\nMujeres mayas, garífunas, afrodescendientes, xinkas, mestizas y ladinas trabajamos juntas en una misma plataforma, administrada por la Asociación Política de Mujeres Mayas, Moloj.",
+        "highlight": "Sumamos fuerzas con otras organizaciones, como Alas de Mariposas y Convergencia Cívico Política de Mujeres.",
+        "image": {
+          "$media": "ejes-alianzas-encuentro.jpeg"
+        },
+        "blockName": "Alianzas",
+        "facts": [
+          {
+            "value": "18",
+            "label": "organizaciones de la sociedad civil"
+          },
+          {
+            "value": "2013",
+            "label": "año en que se formó la Alianza"
+          }
+        ],
+        "blockType": "intro"
+      },
+      {
+        "media": {
+          "$media": "WhatsApp Image 2026-11-04 at 12.15.21 (1).jpeg"
+        },
+        "fullBleed": true,
+        "overlayText": null,
+        "overlayAuthor": null,
+        "blockName": null,
+        "blockType": "mediaBlock"
+      },
+      {
+        "backgroundImage": {
+          "$media": "ejes-sumarse.jpeg"
+        },
+        "note": "18 organizaciones ya caminan juntas",
+        "richText": {
+          "root": {
+            "type": "root",
+            "children": [
+              {
+                "type": "heading",
+                "children": [
+                  {
+                    "type": "text",
+                    "detail": 0,
+                    "format": 0,
+                    "mode": "normal",
+                    "style": "",
+                    "text": "¿Tu organización quiere sumarse?",
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr",
+                "format": "",
+                "indent": 0,
+                "version": 1,
+                "tag": "h2"
+              },
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "detail": 0,
+                    "format": 0,
+                    "mode": "normal",
+                    "style": "",
+                    "text": "Si trabajas por los derechos de las mujeres y las mujeres indígenas, escríbenos y conversemos sobre cómo caminar juntas.",
+                    "version": 1
+                  }
+                ],
+                "direction": "ltr",
+                "format": "",
+                "indent": 0,
+                "version": 1,
+                "textFormat": 0
+              }
+            ],
+            "direction": "ltr",
+            "format": "",
+            "indent": 0,
+            "version": 1
+          }
+        },
+        "blockName": null,
+        "links": [
+          {
+            "link": {
+              "type": "reference",
+              "newTab": null,
+              "reference": {
+                "relationTo": "pages",
+                "value": 1
+              },
+              "url": null,
+              "label": "Contáctanos",
+              "appearance": "default"
+            }
+          },
+          {
+            "link": {
+              "type": "custom",
+              "newTab": null,
+              "url": "/quienes-somos#organizaciones",
+              "label": "Conoce a las organizaciones",
+              "appearance": "outline"
+            }
+          }
+        ],
+        "blockType": "cta"
+      }
+    ],
+    "meta": {
+      "title": null,
+      "image": null,
+      "description": null
+    }
+  },
+  "home": {
+    "heroMedia": {
+      "$media": "WhatsApp Image 2026-11-03 at 11.14.01.jpeg"
+    },
+    "introImage": {
+      "$media": "WhatsApp Image 2026-11-04 at 16.16.58.jpeg"
+    },
+    "workAreaUrls": [
+      "/ejes#incidencia",
+      "/ejes#participacion",
+      "/ejes#formacion",
+      "/ejes#alianzas"
+    ]
+  },
+  "header": {
+    "logo": {
+      "$media": "Logo-Extendido-Color.png"
+    }
+  },
+  "footer": {
+    "logo": {
+      "$media": "Logo-Extendido-Blanco.png"
+    }
+  },
+  "media": {
+    "WhatsApp Image 2026-11-03 at 11.14.01.jpeg": {
+      "alt": "Marta Juana López y Carmen Aida Ibarra frente a la Corte de Constitucionalidad dibujada"
+    },
+    "WhatsApp Image 2026-11-04 at 16.16.58.jpeg": {
+      "alt": "WhatsApp Image 2026-11-04 at 16.16.58.jpeg"
+    },
+    "ejes-incidencia.jpg": {
+      "alt": "Afiche del conversatorio sobre la Corte de Constitucionalidad"
+    },
+    "ejes-participacion.jpeg": {
+      "alt": "Afiche del VI Encuentro Virtual Mujeres y Poder, por una participación política en condiciones de dignidad"
+    },
+    "ejes-formacion.jpg": {
+      "alt": "Afiche del Encuentro Nacional sobre elecciones de segundo grado"
+    },
+    "ejes-sumarse.jpeg": {
+      "alt": "Integrantes de la Alianza con trajes tradicionales en un encuentro"
+    },
+    "WhatsApp Image 2026-11-04 at 12.15.21 (1).jpeg": {
+      "alt": "Integrantes de la Alianza con trajes tradicionales en un encuentro"
+    },
+    "ejes-alianzas-encuentro.jpeg": {
+      "alt": "Logotipo del VI Encuentro Virtual Mujeres y Poder"
+    },
+    "WhatsApp Image 2026-11-04 at 12.22.03-1.jpeg": {
+      "alt": "Integrantes de la Alianza con trajes tradicionales en un encuentro"
+    },
+    "Logo-Extendido-Color.png": {
+      "alt": "Logo-Extendido-Color.png"
+    },
+    "Logo-Extendido-Blanco.png": {
+      "alt": "Logo-Extendido-Blanco.png"
+    }
+  }
+}

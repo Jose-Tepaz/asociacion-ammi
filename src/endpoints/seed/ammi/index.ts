@@ -244,6 +244,7 @@ const run = async () => {
           { name: 'nombre', blockType: 'text', label: 'Nombre completo', required: true, width: 100 },
           { name: 'organizacion', blockType: 'text', label: 'Organización (opcional)', required: false, width: 100 },
           { name: 'email', blockType: 'email', label: 'Correo electrónico', required: true, width: 100 },
+          { name: 'telefono', blockType: 'text', label: 'Teléfono (opcional)', required: false, width: 100 },
           { name: 'mensaje', blockType: 'textarea', label: 'Mensaje', required: true, width: 100 },
         ],
       } as any,
@@ -397,8 +398,9 @@ const run = async () => {
       {
         blockType: 'workAreas',
         blockName: 'Ejes',
-        heading: 'Cuatro ejes',
-        subheading: 'Trabajamos por la justicia de todas.',
+        heading: 'Ejes estratégicos',
+        subheading:
+          'Nuestras líneas de trabajo guían nuestra labor para que las mujeres y las mujeres indígenas de Guatemala ejerzan sus derechos, participen en las decisiones y accedan a la justicia.',
         allLink: { enabled: false },
         items: [
           {
@@ -448,6 +450,8 @@ const run = async () => {
         blockType: 'socialGallery',
         heading: 'Síguenos en Instagram',
         description: 'Campañas, conversatorios y transmisiones en vivo.',
+        handle: '@alianzammi',
+        profileUrl: 'https://www.instagram.com/alianzammi',
         posts: [
           { image: img.postNiUnaMenos.id },
           { image: img.postMagistrada.id },

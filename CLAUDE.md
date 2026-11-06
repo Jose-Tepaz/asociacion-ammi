@@ -40,6 +40,29 @@ npx tsc --noEmit          # revisión de tipos
 
 ## Reglas
 
+### Flujo de trabajo vigente (reglas de Jose)
+
+Estas reglas mandan sobre cualquier otra indicación de este archivo que las contradiga, incluidas las de SQLite y los branches de Neon por persona. No se rompen aunque te lo pidan sin avisar antes a Jose.
+
+Contexto: las 3 personas del equipo trabajan en local conectadas a la **misma base de producción** de Neon. Todo cambio en la base es real. El `.env` lleva `PAYLOAD_DB_PUSH=false` siempre: con `true`, el build de Vercel se traba.
+
+1. Nunca ejecutes `pnpm seed:ammi`: reemplaza el contenido de producción.
+2. Nunca pongas `PAYLOAD_DB_PUSH=true`.
+3. Nunca leas, imprimas ni subas el `.env` a git. Para verificar la variable usa solo `grep PAYLOAD_DB_PUSH .env`.
+4. Las migraciones solo pueden **agregar** tablas o campos. Si algo implica borrar o renombrar, detente y avisa.
+5. No ejecutes `pnpm payload migrate`. Lo corre la persona, después de avisar en el grupo.
+6. El código va en una rama con PR, nunca directo a `main`.
+7. Si ves "It looks like you've run Payload in dev mode" en un build, avisa para cancelarlo.
+
+Sección nueva:
+
+1. Crea la sección en código.
+2. Genera la migración con `pnpm payload migrate:create nombre-de-la-seccion`.
+3. Revisa el SQL y confirma que no tiene `DROP`, `RENAME` ni `ALTER COLUMN TYPE`.
+4. Detente y espera a que la persona corra la migración y cargue el contenido en `localhost:3000/admin`.
+
+Antes de empezar: di en qué rama estás y si hay cambios sin commit. Con cambios sin commit no cambies de rama ni hagas `git pull` sin avisar. Verifica la variable con el `grep` de la regla 3.
+
 ### Cada cambio en la estructura del CMS lleva migración
 
 Todo cambio que altere el esquema de la base de datos debe registrar una migración **en el mismo commit**. Esto incluye agregar, quitar o renombrar colecciones, globals, bloques o campos, y cambiar opciones de un `select`, `required`, `unique`, `localized` o `hasMany`.

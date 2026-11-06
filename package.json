@@ -16,6 +16,8 @@
     "lint:fix": "cross-env NODE_OPTIONS=--no-deprecation eslint . --fix",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "seed:ammi": "cross-env NODE_OPTIONS=--no-deprecation payload run src/endpoints/seed/ammi/index.ts",
+    "seed:contenido": "cross-env NODE_OPTIONS=--no-deprecation PAYLOAD_MIGRATING=true payload run src/endpoints/seed/ammi/contenido-local/index.ts",
+    "seed:contenido:aplicar": "cross-env NODE_OPTIONS=--no-deprecation PAYLOAD_MIGRATING=true APLICAR=true payload run src/endpoints/seed/ammi/contenido-local/index.ts",
     "reinstall": "cross-env NODE_OPTIONS=--no-deprecation rm -rf node_modules && rm pnpm-lock.yaml && pnpm --ignore-workspace install",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
@@ -54,6 +56,7 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-hook-form": "7.71.1",
+    "react-icons": "^5.7.0",
     "sharp": "0.35.4",
     "tailwind-merge": "^3.4.0"
   },

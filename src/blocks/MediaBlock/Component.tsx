@@ -60,7 +60,13 @@ export const MediaBlock: React.FC<Props> = (props) => {
         data-theme={overlayText ? 'dark' : undefined}
       >
         <div className="relative h-[64svh] min-h-[22rem] md:h-[78svh] overflow-hidden bg-besh-oscuro">
-          <Media fill imgClassName="object-cover hero-drift" resource={media} size="100vw" />
+          {/* Encuadre alto: las caras suelen estar arriba y el texto va abajo */}
+          <Media
+            fill
+            imgClassName="object-cover object-[50%_15%] hero-drift min-[100rem]:object-[50%_24%]"
+            resource={media}
+            size="100vw"
+          />
           {overlayText && (
             // Velo neutro solo bajo el texto, para que se lea sobre cualquier foto
             <div className="absolute inset-0 bg-linear-to-t from-corinto-terciario/90 via-corinto-terciario/35 to-transparent" />

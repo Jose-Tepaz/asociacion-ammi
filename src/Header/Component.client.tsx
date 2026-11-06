@@ -1,4 +1,5 @@
 'use client'
+import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -79,17 +80,18 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               <CMSLink
                 {...action}
                 appearance="inline"
-                className="hidden h-full items-center rounded-full bg-corinto px-6 lg:px-5 xl:px-6 text-step-body font-medium whitespace-nowrap text-besh-suave transition-colors hover:bg-corinto-secundario sm:flex"
+                className="hidden h-full items-center rounded-full bg-corinto px-5 text-step-body font-medium whitespace-nowrap text-besh-suave transition-colors hover:bg-corinto-secundario lg:flex xl:px-6"
               />
             )}
             <button
               aria-controls="menu-movil"
               aria-expanded={open}
-              className="lg:hidden h-full rounded-full px-5 text-step-regular font-medium bg-besh-fuerte transition-colors hover:bg-besh-oscuro"
+              aria-label={open ? 'Cerrar el menú' : 'Abrir el menú'}
+              className="grid aspect-square h-full place-items-center rounded-full bg-besh-fuerte transition-colors hover:bg-besh-oscuro lg:hidden"
               onClick={() => setOpen((v) => !v)}
               type="button"
             >
-              {open ? 'Cerrar' : 'Menú'}
+              {open ? <X aria-hidden="true" className="size-6" /> : <Menu aria-hidden="true" className="size-6" />}
             </button>
           </div>
 

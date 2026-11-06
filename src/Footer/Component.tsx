@@ -1,11 +1,11 @@
 import { getCachedGlobal } from '@/utilities/getGlobals'
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
-import { SocialIcon } from '@/components/SocialIcon'
+import { ContactIcon, SocialIcon } from '@/components/SocialIcon'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
 
 const columnTitle = 'font-sans text-step-body font-medium tracking-normal text-ocre'
@@ -15,7 +15,10 @@ export async function Footer() {
   const footerData = await getCachedGlobal('footer', 1)()
 
   const navItems = footerData?.navItems || []
-  const contacts = footerData?.contacts || []
+  // Las formas de contacto sin enlace son direcciones y van debajo del logo
+  const allContacts = footerData?.contacts || []
+  const contacts = allContacts.filter(({ href }) => href)
+  const addresses = allContacts.filter(({ href }) => !href)
   const socialLinks = footerData?.socialLinks || []
   const logo = footerData?.logo && typeof footerData.logo === 'object' ? footerData.logo : null
 
@@ -39,6 +42,16 @@ export async function Footer() {
           {footerData?.statement && (
             <p className="mt-6 text-step-body text-besh-fuerte max-w-[34ch]">{footerData.statement}</p>
           )}
+          {addresses.length > 0 && (
+            <ul className="mt-4 flex flex-col gap-2">
+              {addresses.map(({ id, label }) => (
+                <li className="flex items-start gap-2.5 text-step-body text-besh-suave/85 max-w-[38ch]" key={id}>
+                  <MapPin aria-hidden="true" className="mt-1 size-5 shrink-0 text-ocre" />
+                  {label}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {navItems.length > 0 && (
@@ -61,17 +74,22 @@ export async function Footer() {
             <h2 className={columnTitle}>Contáctanos</h2>
             {contacts.length > 0 && (
               <ul className="mt-5 flex flex-col gap-3">
-                {contacts.map(({ href, label, id }) => (
-                  <li key={id}>
-                    {href ? (
-                      <a className={`${columnLink} break-words`} href={href}>
+                {contacts.map(({ href, label, id }) => {
+                  const url = href || ''
+                  const external = url.startsWith('http')
+                  return (
+                    <li key={id}>
+                      <a
+                        className={`${columnLink} inline-flex items-center gap-2.5 break-words`}
+                        href={url}
+                        {...(external ? { rel: 'noopener noreferrer', target: '_blank' } : {})}
+                      >
+                        <ContactIcon className="size-5 shrink-0 text-ocre" href={url} />
                         {label}
                       </a>
-                    ) : (
-                      <span className="text-step-body text-besh-suave/85">{label}</span>
-                    )}
-                  </li>
-                ))}
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </div>
@@ -84,12 +102,12 @@ export async function Footer() {
                   <li key={id}>
                     <a
                       aria-label={label}
-                      className="grid size-10 place-items-center rounded-full bg-besh-suave/10 transition-colors hover:bg-ocre hover:text-texto-primario"
+                      className="grid size-11 place-items-center rounded-full bg-besh-suave/10 transition-colors hover:bg-ocre hover:text-texto-primario"
                       href={url}
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      <SocialIcon className="size-4" name={label} url={url} />
+                      <SocialIcon className="size-5" name={label} url={url} />
                     </a>
                   </li>
                 ))}

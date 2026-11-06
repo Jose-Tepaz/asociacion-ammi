@@ -82,9 +82,9 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <PostHero post={post} />
 
-      <div className="container grid gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
-        <aside className="lg:order-2 lg:col-span-4 lg:col-start-9">
-          <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+      <div className="container grid gap-12 py-[var(--section-y)] md:grid-cols-12 md:gap-8 lg:gap-10">
+        <aside className="order-2 md:col-span-5 lg:col-span-4 lg:col-start-9">
+          <div className="flex flex-col gap-6 md:sticky md:top-6">
             {image && (
               <figure className="rounded-card bg-besh-fuerte p-3">
                 <Lightbox alt={image.alt || 'Pieza de la publicación'} src={getMediaUrl(image.url, image.updatedAt)}>
@@ -92,7 +92,7 @@ export default async function Post({ params: paramsPromise }: Args) {
                     imgClassName="h-auto w-full transition-transform duration-500 group-hover:scale-[1.02]"
                     priority
                     resource={image}
-                    size="(max-width: 1024px) 100vw, 30vw"
+                    size="(max-width: 768px) 100vw, 35vw"
                   />
                 </Lightbox>
               </figure>
@@ -104,7 +104,7 @@ export default async function Post({ params: paramsPromise }: Args) {
           </div>
         </aside>
 
-        <div className="lg:order-1 lg:col-span-7">
+        <div className="order-1 md:col-span-7">
           {post.meta?.description && (
             <p className="mb-10 font-[family-name:var(--font-display)] text-step-title text-corinto max-w-[34ch]">
               {post.meta.description}
@@ -125,7 +125,7 @@ export default async function Post({ params: paramsPromise }: Args) {
       {related.length > 0 && (
         <section className="bg-besh-fuerte py-[var(--section-y)]">
           <h2 className="container mb-10 text-step-head">También te puede interesar</h2>
-          <CollectionArchive posts={related} />
+          <CollectionArchive posts={related} slideOnMobile />
         </section>
       )}
     </article>

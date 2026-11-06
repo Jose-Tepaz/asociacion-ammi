@@ -30,8 +30,8 @@ const latestPost = async (): Promise<Post | null> => {
 }
 
 /**
- * Portada del inicio: título a la izquierda, texto y botones a la derecha y, debajo, la foto o
- * el video a todo el ancho. El último pronunciamiento va en la esquina inferior derecha.
+ * Portada del inicio: la foto o el video a pantalla completa, con título, texto y botones
+ * centrados en la parte baja. El último pronunciamiento va en la esquina inferior derecha.
  */
 export const HighImpactHero: React.FC<Page['hero']> = async ({
   featured,
@@ -49,47 +49,17 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
 
   return (
     <section
-      className="relative flex min-h-[calc(100svh-var(--header-h))] flex-col overflow-hidden bg-background"
-      data-hero="light"
+      className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-corinto-terciario text-besh-suave max-lg:justify-center"
+      data-hero="overlay"
+      data-theme="dark"
     >
-      <div className="container grid gap-6 pt-10 md:pt-14 lg:grid-cols-12 lg:gap-8">
-        <div className="lg:col-span-7">
-          {kicker && (
-            <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-corinto/10 px-4 py-1.5 text-step-small font-medium text-fucsia">
-              <span aria-hidden="true" className="size-1.5 rounded-full bg-fucsia" />
-              {kicker}
-            </p>
-          )}
-          {richText && (
-            <div className="mask-line">
-              <div>
-                <RichText
-                  className={cn(
-                    heroTitleClasses,
-                    '[&_h1]:leading-[1.04] [&_h1]:max-w-[20ch] [&_h1]:text-corinto',
-                  )}
-                  data={richText}
-                  enableGutter={false}
-                  enableProse={false}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="lg:col-span-5 lg:self-center lg:pt-14">
-          {standfirst && <p className="text-step-lead max-w-[36ch] fade-up">{standfirst}</p>}
-          <HeroLinks className="mt-6 fade-up" links={links} />
-        </div>
-      </div>
-
-      {/* Escena a todo el ancho: la foto o el video sube fundiéndose con el fondo */}
-      <div className="relative mt-6 min-h-[22rem] flex-1 [mask-image:linear-gradient(to_bottom,transparent,black_28%)] md:min-h-[26rem]">
+      {/* La foto o el video ocupa toda la pantalla, por debajo de la barra de navegación */}
+      <div className="absolute inset-0 -z-10">
         {resource &&
           (isVideo ? (
             <HeroVideo
               className="object-[50%_35%]"
-              controlClassName="md:bottom-6 md:top-auto"
+              controlClassName="bottom-auto top-24 md:top-28"
               src={getMediaUrl(resource.url, resource.updatedAt)}
               type={resource.mimeType}
             />
@@ -102,12 +72,43 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
               size="100vw"
             />
           ))}
+        {/* Oscurece la foto, más hacia abajo, para que el texto se lea sobre cualquier imagen */}
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/5"
+        />
+      </div>
+
+      <div className="container flex flex-col items-center pb-8 pt-24 text-center md:pt-32 lg:pb-20 xl:pb-32">
+        {kicker && (
+          <p className="fade-up mb-5 inline-flex items-center gap-2 rounded-full bg-besh-suave/15 px-4 py-1.5 text-step-small font-medium text-besh-suave backdrop-blur-sm">
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-ocre" />
+            {kicker}
+          </p>
+        )}
+        {richText && (
+          <div className="mask-line">
+            <div>
+              <RichText
+                className={cn(
+                  heroTitleClasses,
+                  '[&_h1]:leading-[1.04] [&_h1]:mx-auto [&_h1]:max-w-[24ch] [&_h1]:text-besh-suave [&_p]:mx-auto',
+                )}
+                data={richText}
+                enableGutter={false}
+                enableProse={false}
+              />
+            </div>
+          </div>
+        )}
+        {standfirst && <p className="mt-5 text-step-lead max-w-[52ch] fade-up">{standfirst}</p>}
+        <HeroLinks className="mt-6 justify-center fade-up" links={links} onDark />
       </div>
 
       {post && (
-        <div className="container relative -mt-24 pb-6 lg:absolute lg:bottom-0 lg:right-0 lg:mt-0 lg:flex lg:w-auto lg:justify-end lg:p-6">
+        <div className="container flex justify-center pb-6 xl:absolute xl:bottom-0 xl:right-0 xl:w-auto xl:p-6">
           <Link
-            className="group fade-up flex w-full max-w-[20rem] items-center gap-3 rounded-xl bg-besh-suave p-2 pe-3 text-left text-texto-primario shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-1"
+            className="group fade-up flex w-full max-w-[20rem] xl:max-w-[17rem] items-center gap-3 rounded-xl bg-besh-suave p-2 pe-3 text-left text-texto-primario shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-1"
             href={`/posts/${post.slug}`}
           >
             {thumb && (

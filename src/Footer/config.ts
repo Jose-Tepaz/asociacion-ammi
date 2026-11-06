@@ -30,14 +30,17 @@ export const Footer: GlobalConfig = {
       label: 'Formas de contacto',
       type: 'array',
       maxRows: 4,
-      admin: { description: 'Correo, teléfono o dirección. Se muestran en grande.' },
+      admin: {
+        description:
+          'Con enlace aparece en Contáctanos con su ícono (tel:, https://wa.me/ o mailto:). Sin enlace aparece como dirección debajo del logo.',
+      },
       fields: [
         { name: 'label', label: 'Texto visible', type: 'text', required: true },
         {
           name: 'href',
           label: 'Enlace',
           type: 'text',
-          admin: { description: 'mailto:, tel: o una URL. Opcional.' },
+          admin: { description: 'Por ejemplo tel:+50200000000 o https://wa.me/50200000000. Déjalo vacío si es una dirección.' },
         },
       ],
     },

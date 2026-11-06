@@ -82,7 +82,7 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
       <div className="container pt-[var(--section-y)]">
         <nav
           aria-label="Categorías de publicaciones"
-          className="mx-auto w-fit max-w-full overflow-x-auto rounded-full bg-white p-1.5 shadow-[0_16px_32px_-16px_rgb(36_15_22/0.4)] ring-1 ring-texto-primario/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mx-auto w-fit max-w-[calc(100%-1rem)] overflow-x-auto rounded-full bg-white p-1.5 px-3 shadow-[0_16px_32px_-16px_rgb(36_15_22/0.4)] ring-1 ring-texto-primario/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           <ul className="flex w-max gap-1">
             {tabs.map((tab) => (
