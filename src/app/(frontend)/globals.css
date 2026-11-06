@@ -48,10 +48,10 @@
 }
 
 /* Un solo par de márgenes para todo el sitio: 20px a los lados en celular, 32px en tablet y escritorio.
-   El contenido llega a 1250px como máximo (el ancho incluye los márgenes). */
+   Ancho máximo de 1440px (90rem), igual que el hero y el resto de secciones; los márgenes van por dentro. */
 @utility container {
   width: 100%;
-  max-width: calc(1250px + var(--margin) * 2);
+  max-width: 90rem;
   margin-inline: auto;
   padding-inline: var(--margin);
 }
