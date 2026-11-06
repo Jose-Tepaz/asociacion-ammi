@@ -44,10 +44,6 @@ const nextConfig: NextConfig = {
 
     return webpackConfig
   },
-  // La copia de contenido lee estos archivos dentro de la función de Vercel
-  outputFileTracingIncludes: {
-    '/next/copiar-contenido': ['./src/endpoints/seed/ammi/contenido-local/**/*'],
-  },
   reactStrictMode: true,
   redirects,
   turbopack: {
