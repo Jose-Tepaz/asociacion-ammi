@@ -40,28 +40,28 @@ npx tsc --noEmit          # revisión de tipos
 
 ## Reglas
 
-### Flujo de trabajo vigente (reglas de Jose)
+### Reglas para Claude Code
 
-Estas reglas mandan sobre cualquier otra indicación de este archivo que las contradiga, incluidas las de SQLite y los branches de Neon por persona. No se rompen aunque te lo pidan sin avisar antes a Jose.
+Aplican a cualquier sesión de Claude Code en este repositorio. Complementan, sin contradecirlo, el flujo de "Flujo de trabajo con Neon".
 
-Contexto: las 3 personas del equipo trabajan en local conectadas a la **misma base de producción** de Neon. Todo cambio en la base es real. El `.env` lleva `PAYLOAD_DB_PUSH=false` siempre: con `true`, el build de Vercel se traba.
+Contexto: cada persona trabaja en local conectada a **su propio branch de Neon** (`dev-<nombre>`), nunca a `production`. Aun así, trata la base como real: pregunta antes de cualquier acción destructiva.
 
-1. Nunca ejecutes `pnpm seed:ammi`: reemplaza el contenido de producción.
-2. Nunca pongas `PAYLOAD_DB_PUSH=true`.
-3. Nunca leas, imprimas ni subas el `.env` a git. Para verificar la variable usa solo `grep PAYLOAD_DB_PUSH .env`.
+1. Nunca ejecutes `pnpm seed:ammi` contra `production`: reemplaza el contenido. En el branch personal o en SQLite sí se puede.
+2. Nunca pongas `PAYLOAD_DB_PUSH=true` con la base de `production`. En el branch personal está permitido.
+3. Nunca leas, imprimas ni subas el `.env` a git. Para verificar qué base y qué modo usa la sesión, revisa solo `grep PAYLOAD_DB_PUSH .env`, y confirma con la persona que `DATABASE_URL` apunta a su branch (sin mostrar el valor).
 4. Las migraciones solo pueden **agregar** tablas o campos. Si algo implica borrar o renombrar, detente y avisa.
-5. No ejecutes `pnpm payload migrate`. Lo corre la persona, después de avisar en el grupo.
+5. No ejecutes `pnpm payload migrate` contra `production`. Lo hace Jose al mergear (ver "Al mergear un PR").
 6. El código va en una rama con PR, nunca directo a `main`.
-7. Si ves "It looks like you've run Payload in dev mode" en un build, avisa para cancelarlo.
+7. Si ves "It looks like you've run Payload in dev mode" en un build, avisa para cancelarlo: hay una fila `dev` en `payload_migrations` de producción (ver "Base de datos").
 
 Sección nueva:
 
 1. Crea la sección en código.
 2. Genera la migración con `pnpm payload migrate:create nombre-de-la-seccion`.
 3. Revisa el SQL y confirma que no tiene `DROP`, `RENAME` ni `ALTER COLUMN TYPE`.
-4. Detente y espera a que la persona corra la migración y cargue el contenido en `localhost:3000/admin`.
+4. Prueba la migración en un branch limpio desde `production` y sube la rama con su PR. Detente: la migración en producción y la carga del contenido las hace Jose después del merge.
 
-Antes de empezar: di en qué rama estás y si hay cambios sin commit. Con cambios sin commit no cambies de rama ni hagas `git pull` sin avisar. Verifica la variable con el `grep` de la regla 3.
+Antes de empezar: di en qué rama estás y si hay cambios sin commit. Con cambios sin commit no cambies de rama ni hagas `git pull` sin avisar.
 
 ### Cada cambio en la estructura del CMS lleva migración
 
