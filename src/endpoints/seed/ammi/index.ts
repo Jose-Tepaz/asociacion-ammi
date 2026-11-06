@@ -311,59 +311,6 @@ const run = async () => {
     ],
   })
 
-  // --- Actividades -------------------------------------------------------------
-  console.log('Actividades…')
-  const evento = (date: string, time: string, kind: string, title: string, place: string, people?: string) => ({
-    date,
-    time,
-    kind,
-    title,
-    place,
-    people,
-  })
-  await page('actividades', {
-    title: 'Actividades',
-    hero: {
-      type: 'lowImpact',
-      tone: 'calendario',
-      kicker: 'Agenda de la Alianza',
-      richText: doc(h('h1', 'Conversatorios y encuentros')),
-      standfirst: 'Espacios de diálogo, formación e incidencia que convoca la Alianza.',
-    },
-    layout: [
-      {
-        blockType: 'agenda',
-        heading: 'Agenda',
-        headingSecond: 'de la Alianza',
-        action: { enabled: true, ...toContacto('Pide información') },
-        events: [
-          evento(
-            '2026-03-17T12:00:00.000Z',
-            '9:30 a 12:00',
-            'Conversatorio',
-            'Integración de la Corte de Constitucionalidad: desafíos para la democracia en Guatemala',
-            'Restaurante El Adobe, 7a avenida 9-45, zona 1',
-            'Marta Juana López, Carmen Aida Ibarra · modera Nanci Sinto',
-          ),
-          evento(
-            '2026-05-28T12:00:00.000Z',
-            '8:00 a 17:00',
-            'Encuentro Nacional',
-            'Aprendizajes y desafíos de la participación política de mujeres y mujeres indígenas',
-            'Hotel Royal Palace, 6a avenida 12-66, zona 1',
-          ),
-          evento(
-            '2026-05-29T12:00:00.000Z',
-            '8:30 a 13:00',
-            'Encuentro Nacional',
-            'Elecciones de segundo grado en Guatemala: segunda jornada',
-            'Hotel Royal Palace, 6a avenida 12-66, zona 1',
-          ),
-        ],
-      },
-    ],
-  })
-
   // --- Inicio ------------------------------------------------------------------
   console.log('Inicio…')
   await page('home', {
@@ -486,7 +433,6 @@ const run = async () => {
     custom('/quienes-somos', 'Quiénes somos'),
     custom('/ejes', 'Ejes estratégicos'),
     custom('/posts', 'Publicaciones'),
-    custom('/actividades', 'Actividades'),
   ]
   const header = await payload.findGlobal({ slug: 'header' })
   const footer = await payload.findGlobal({ slug: 'footer' })
