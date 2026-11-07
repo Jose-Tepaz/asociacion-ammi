@@ -62,19 +62,23 @@ const DarkHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, stan
   </section>
 )
 
-/** Portada clara: el título a un lado y la foto al otro, montada sobre un bloque ocre. */
+/**
+ * Portada corinto: etiqueta y título a la izquierda, texto (en claro) a la derecha
+ * y, debajo, la foto panorámica a todo el ancho en una tarjeta con la franja de tejido.
+ * La banda del encabezado toma el mismo corinto (data-hero="dark").
+ */
 export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
   if (props.dark) return <DarkHero {...props} />
 
   const { kicker, links, media, richText, standfirst } = props
 
   return (
-    <section className="overflow-hidden bg-background" data-hero="light">
-      <div className="container grid items-center gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
+    <section className="overflow-hidden bg-corinto-secundario text-besh-suave" data-hero="dark" data-theme="dark">
+      <div className="container grid grid-cols-1 items-center gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-6">
           {kicker && (
-            <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-corinto/10 px-4 py-1.5 text-step-small font-medium text-fucsia">
-              <span aria-hidden="true" className="size-1.5 rounded-full bg-fucsia" />
+            <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-besh-suave/10 px-4 py-1.5 text-step-small font-medium text-besh-suave">
+              <span aria-hidden="true" className="size-1.5 rounded-full bg-ocre" />
               {kicker}
             </p>
           )}
@@ -82,10 +86,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
             <div className="mask-line">
               <div>
                 <RichText
-                  className={cn(
-                    heroTitleClasses,
-                    '[&_h1]:leading-[1.02] [&_h1]:text-corinto',
-                  )}
+                  className={cn(heroTitleClasses, '[&_h1]:leading-[1.02] [&_h1]:text-besh-suave [&_em]:text-ocre')}
                   data={richText}
                   enableGutter={false}
                   enableProse={false}
@@ -93,23 +94,16 @@ export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
               </div>
             </div>
           )}
-          {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
-          <HeroLinks className="fade-up mt-8" links={links} />
+          {standfirst && <p className="fade-up mt-6 text-step-lead text-white/90 max-w-[40ch]">{standfirst}</p>}
+          <HeroLinks className="fade-up mt-8" links={links} onDark />
         </div>
 
         {media && typeof media === 'object' && (
           <figure className="relative lg:col-span-6 lg:ps-6">
-            {/* Bloque ocre desplazado detrás de la foto */}
-            <div aria-hidden="true" className="absolute -bottom-5 -right-5 left-10 top-10 rounded-[2rem] bg-ocre lg:left-16" />
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-besh-oscuro">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-corinto-terciario">
               <Media fill imgClassName="object-cover hero-drift" priority resource={media} size="(max-width: 1024px) 100vw, 50vw" />
               <span aria-hidden="true" className="tejido absolute inset-x-0 bottom-0" />
             </div>
-            {media.caption && (
-              <figcaption className="relative mt-8 text-step-small text-texto-secundario">
-                <RichText data={media.caption} enableGutter={false} enableProse={false} />
-              </figcaption>
-            )}
           </figure>
         )}
       </div>

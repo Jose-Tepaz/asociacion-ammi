@@ -448,6 +448,55 @@ html[data-theme='light'] {
   }
 }
 
+/* Carrusel de organizaciones: la fila se desliza hacia la derecha sin fin, sin detenerse.
+   La lista va dos veces seguidas; al llegar a la mitad vuelve al inicio sin que se note.
+   Los logos van en gris y toman su color al pasar el cursor. Sin movimiento, quedan en filas. */
+.marquee {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+/* El color entra con un fundido suave y se va un poco más lento, para que no se sienta brusco */
+.marquee-logo {
+  filter: grayscale(1);
+  opacity: 0.65;
+  transition:
+    filter 700ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.marquee-logo:hover,
+.marquee-logo:focus-visible {
+  filter: grayscale(0);
+  opacity: 1;
+  transition-duration: 450ms;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee-right var(--marquee-duration, 40s) linear infinite;
+  }
+}
+@keyframes marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    mask-image: none;
+  }
+  .marquee-track,
+  .marquee-track > ul {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    width: 100%;
+    row-gap: 1rem;
+  }
+  .marquee-track > [aria-hidden='true'] {
+    display: none;
+  }
+}
+
 /* Visor de imágenes: la pieza aparece con una escala suave */
 @media (prefers-reduced-motion: no-preference) {
   .lightbox-in {
@@ -516,27 +565,77 @@ body:has([data-calendar-tile]) .cholqij-float {
   }
 }
 
-
-/* Emblemas de Misión y visión: los puntos del anillo giran mientras la sección cruza la pantalla.
-   Sin soporte del navegador, o con «reducir movimiento», se quedan quietos. */
-.emblem-orbit {
-  transform-box: fill-box;
-  transform-origin: center;
+/* Tarjetas de Misión, visión y valor: al pasar el cursor (escritorio) o con el scroll (celular y tablet)
+   se levantan un poco, el fondo de la esquina crece como una gota y el ícono flota suavemente. */
+.mission-card {
+  transition:
+    transform 600ms var(--ease-out),
+    box-shadow 600ms var(--ease-out);
 }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .emblem-orbit {
-      animation: emblem-orbit linear both;
-      animation-timeline: view();
-      animation-range: entry 10% exit 90%;
+.mission-card:focus-visible,
+.mission-card[data-active] {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 40px -28px rgb(123 30 58 / 0.45);
+}
+@media (hover: hover) {
+  .mission-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 40px -28px rgb(123 30 58 / 0.45);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mission-card:is(:focus-visible, [data-active]) .mission-card-icon {
+    animation: icon-bob 2.4s ease-in-out infinite;
+  }
+  @media (hover: hover) {
+    .mission-card:hover .mission-card-icon {
+      animation: icon-bob 2.4s ease-in-out infinite;
     }
   }
 }
-@keyframes emblem-orbit {
-  from {
-    transform: rotate(-90deg);
+@media (prefers-reduced-motion: reduce) {
+  .mission-card,
+  .mission-card:is(:hover, :focus-visible, [data-active]) {
+    transform: none;
   }
-  to {
-    transform: rotate(90deg);
+}
+
+/* Gota de la esquina: escondida en reposo; al encender crece desde la esquina con un pequeño rebote
+   y pasa de círculo a cuarto de círculo, como una gota que se asienta. */
+.mission-card-drop {
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: top right;
+  transition:
+    transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-radius 700ms var(--ease-out),
+    opacity 250ms var(--ease-out);
+}
+.mission-card:is(:focus-visible, [data-active]) .mission-card-drop {
+  border-radius: 0 0 0 100%;
+  opacity: 1;
+  transform: scale(1);
+}
+@media (hover: hover) {
+  .mission-card:hover .mission-card-drop {
+    border-radius: 0 0 0 100%;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mission-card-drop {
+    transform: none;
+    border-radius: 0 0 0 100%;
+  }
+}
+@keyframes icon-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
   }
 }

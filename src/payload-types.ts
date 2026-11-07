@@ -363,7 +363,6 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
-  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -555,14 +554,9 @@ export interface StatementBlock {
    */
   statement: string;
   /**
-   * Se unen en una frase bajo la declaración: «Somos mayas, garífunas… en una sola alianza».
+   * Una línea bajo la declaración. Déjala vacía para no mostrarla.
    */
-  peoples?:
-    | {
-        name: string;
-        id?: string | null;
-      }[]
-    | null;
+  peoplesLine?: string | null;
   /**
    * De preferencia horizontal y ancha (por ejemplo 2880 × 1100).
    */
@@ -757,11 +751,11 @@ export interface StructureBlock {
    */
   intro?: string | null;
   /**
-   * Se recorta en círculo. Si no eliges una, se muestra el símbolo de AMMI.
+   * Va junto al título. Si no eliges una, se muestra el símbolo de AMMI.
    */
   image?: (number | null) | Media;
   /**
-   * Los primeros tres van a la izquierda y los siguientes a la derecha.
+   * Se muestran en una lista vertical, en este orden.
    */
   items?:
     | {
@@ -786,7 +780,7 @@ export interface StructureBlock {
 export interface MissionBlock {
   layout: 'tabs' | 'rows';
   /**
-   * Pestañas: cada una cambia el título grande y el texto. Filas: una fila con ilustración por elemento.
+   * Pestañas: cada una cambia el título grande y el texto. Tarjetas: una tarjeta con ícono por elemento.
    */
   items?:
     | {
@@ -838,6 +832,7 @@ export interface TimelineBlock {
  * via the `definition` "MembersBlock".
  */
 export interface MembersBlock {
+  kicker?: string | null;
   heading: string;
   headingSecond?: string | null;
   intro?: string | null;
@@ -1588,12 +1583,7 @@ export interface IntroBlockSelect<T extends boolean = true> {
 export interface StatementBlockSelect<T extends boolean = true> {
   heading?: T;
   statement?: T;
-  peoples?:
-    | T
-    | {
-        name?: T;
-        id?: T;
-      };
+  peoplesLine?: T;
   image?: T;
   id?: T;
   blockName?: T;
@@ -1786,6 +1776,7 @@ export interface TimelineBlockSelect<T extends boolean = true> {
  * via the `definition` "MembersBlock_select".
  */
 export interface MembersBlockSelect<T extends boolean = true> {
+  kicker?: T;
   heading?: T;
   headingSecond?: T;
   intro?: T;
@@ -1953,7 +1944,6 @@ export interface PostsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
-  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2429,13 +2419,13 @@ export interface Footer {
    */
   statement?: string | null;
   /**
-   * Correo, teléfono o dirección. Se muestran en grande.
+   * Con enlace aparece en Contáctanos con su ícono (tel:, https://wa.me/ o mailto:). Sin enlace aparece como dirección debajo del logo.
    */
   contacts?:
     | {
         label: string;
         /**
-         * mailto:, tel: o una URL. Opcional.
+         * Por ejemplo tel:+50200000000 o https://wa.me/50200000000. Déjalo vacío si es una dirección.
          */
         href?: string | null;
         id?: string | null;

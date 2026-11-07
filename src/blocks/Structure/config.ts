@@ -31,10 +31,10 @@ export const Structure: Block = {
     },
     {
       name: 'image',
-      label: 'Imagen del centro (opcional)',
+      label: 'Foto (opcional)',
       type: 'upload',
       relationTo: 'media',
-      admin: { description: 'Se recorta en círculo. Si no eliges una, se muestra el símbolo de AMMI.' },
+      admin: { description: 'Va junto al título. Si no eliges una, se muestra el símbolo de AMMI.' },
     },
     {
       name: 'items',
@@ -42,7 +42,7 @@ export const Structure: Block = {
       type: 'array',
       minRows: 2,
       maxRows: 6,
-      admin: { description: 'Los primeros tres van a la izquierda y los siguientes a la derecha.' },
+      admin: { description: 'Se muestran en una lista vertical, en este orden.' },
       defaultValue: [
         {
           icon: 'users',
