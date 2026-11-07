@@ -6,6 +6,7 @@ import type { MissionBlock as MissionBlockProps } from '@/payload-types'
 import { cn } from '@/utilities/ui'
 
 import { MissionTabs } from './Tabs.client'
+import { ScrollActive } from './ScrollActive.client'
 
 type Item = { id?: string | null; label: string; heading: string; subtitle?: string | null; text: string }
 
@@ -33,28 +34,33 @@ const MissionRows: React.FC<{ items: Item[] }> = ({ items }) => (
       const lastAlone = items.length % 2 === 1 && i === items.length - 1
       return (
         <li
-          className={cn(
-            'relative flex flex-col overflow-hidden rounded-card border border-besh-oscuro bg-white p-6 md:p-8 lg:p-10',
-            lastAlone && 'md:col-span-2 lg:col-span-1',
-          )}
+          className={cn('flex', lastAlone && 'md:col-span-2 lg:col-span-1')}
           data-reveal
           key={item.id || i}
           style={{ '--i': i } as React.CSSProperties}
         >
-          {/* Ícono en la esquina, en el lugar donde las tarjetas de los ejes llevan el número */}
-          <span
-            aria-hidden="true"
-            className="absolute right-0 top-0 grid size-24 place-items-start justify-end rounded-bl-full bg-corinto/10 pe-5 pt-5 text-corinto md:size-28 md:pe-6 md:pt-6"
+          {/* tabIndex: con teclado, al enfocarla también se «enciende» (ver .mission-card en globals.css) */}
+          <div
+            className="mission-card relative flex w-full flex-col overflow-hidden rounded-card border border-besh-oscuro bg-white p-6 outline-none md:p-8 lg:p-10"
+            tabIndex={0}
           >
-            <Icon className="size-7 md:size-8" strokeWidth={1.75} />
-          </span>
-          <Title className="pe-20 text-step-head text-corinto md:pe-24">{item.label}</Title>
-          {item.subtitle && (
-            <p className="mt-2 pe-20 font-[family-name:var(--font-display)] text-lg font-semibold leading-snug text-texto-primario md:pe-24 md:text-xl">
-              {item.subtitle}
-            </p>
-          )}
-          <p className="mt-4 text-step-body leading-relaxed text-texto-secundario">{item.text}</p>
+            {/* Ícono en la esquina, en el lugar donde las tarjetas de los ejes llevan el número */}
+            <span
+              aria-hidden="true"
+              className="absolute right-0 top-0 grid size-24 place-items-start justify-end pe-5 pt-5 text-corinto md:size-28 md:pe-6 md:pt-6"
+            >
+              {/* Fondo de la esquina: aparece como una gota que crece al encender la tarjeta */}
+              <span className="mission-card-drop absolute inset-0 bg-corinto/10" />
+              <Icon className="mission-card-icon relative size-7 md:size-8" strokeWidth={1.75} />
+            </span>
+            <Title className="pe-20 text-step-head text-corinto md:pe-24">{item.label}</Title>
+            {item.subtitle && (
+              <p className="mt-2 pe-20 font-[family-name:var(--font-display)] text-lg font-semibold leading-snug text-texto-primario md:pe-24 md:text-xl">
+                {item.subtitle}
+              </p>
+            )}
+            <p className="mt-4 text-step-body leading-relaxed text-texto-secundario">{item.text}</p>
+          </div>
         </li>
       )
     })}
@@ -68,7 +74,13 @@ export const MissionBlock: React.FC<MissionBlockProps> = ({ items, layout }) => 
 
   return (
     <section className="container section-pad" data-reveal={layout === 'rows' ? undefined : true}>
-      {layout === 'rows' ? <MissionRows items={list} /> : <MissionTabs items={list} />}
+      {layout === 'rows' ? (
+        <ScrollActive>
+          <MissionRows items={list} />
+        </ScrollActive>
+      ) : (
+        <MissionTabs items={list} />
+      )}
     </section>
   )
 }

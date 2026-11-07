@@ -751,11 +751,11 @@ export interface StructureBlock {
    */
   intro?: string | null;
   /**
-   * Se recorta en círculo. Si no eliges una, se muestra el símbolo de AMMI.
+   * Va junto al título. Si no eliges una, se muestra el símbolo de AMMI.
    */
   image?: (number | null) | Media;
   /**
-   * Los primeros tres van a la izquierda y los siguientes a la derecha.
+   * Se muestran en una lista vertical, en este orden.
    */
   items?:
     | {

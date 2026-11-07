@@ -66,7 +66,7 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
 
   return (
     <section className="section-pad">
-      <div className="container grid gap-5 max-md:text-center lg:grid-cols-12 lg:items-end lg:gap-x-8">
+      <div className="container grid gap-5 max-lg:text-center lg:grid-cols-12 lg:items-end lg:gap-x-8">
         {/* El ancho máximo hace que el título caiga en dos líneas sin tener que separarlo a mano */}
         <div className="lg:col-span-8" data-reveal>
           {kicker && (
@@ -74,11 +74,11 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
               {kicker}
             </p>
           )}
-          <h2 className="max-w-[18ch] text-step-head text-corinto max-md:mx-auto">{title}</h2>
+          <h2 className="max-w-[18ch] text-step-head text-corinto max-lg:mx-auto">{title}</h2>
         </div>
         {intro && (
           <p
-            className="text-step-body max-w-[46ch] text-texto-secundario max-md:mx-auto lg:col-span-4"
+            className="text-step-body max-w-[46ch] text-texto-secundario max-lg:mx-auto lg:col-span-4"
             data-reveal
             style={{ '--i': 1 } as React.CSSProperties}
           >
