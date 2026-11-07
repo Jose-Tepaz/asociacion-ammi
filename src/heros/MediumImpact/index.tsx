@@ -99,8 +99,6 @@ export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
 
         {media && typeof media === 'object' && (
           <figure className="relative lg:col-span-6 lg:ps-6">
-            {/* Bloque ocre desplazado detrás de la foto */}
-            <div aria-hidden="true" className="absolute -bottom-5 -right-5 left-10 top-10 rounded-[2rem] bg-ocre lg:left-16" />
             <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-besh-oscuro">
               <Media fill imgClassName="object-cover hero-drift" priority resource={media} size="(max-width: 1024px) 100vw, 50vw" />
               <span aria-hidden="true" className="tejido absolute inset-x-0 bottom-0" />

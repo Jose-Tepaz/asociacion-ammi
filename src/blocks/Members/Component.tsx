@@ -3,24 +3,8 @@ import React from 'react'
 import type { MembersBlock as MembersBlockProps } from '@/payload-types'
 
 import { Media } from '@/components/Media'
-import { cn } from '@/utilities/ui'
 
 type Org = NonNullable<MembersBlockProps['organizations']>[number]
-
-/** Agrupa las organizaciones por categoría, respetando el orden en que aparece cada una. */
-const groupByCategory = (list: Org[]) => {
-  const groups: { label: string; items: Org[] }[] = []
-  for (const org of list) {
-    const label = org.category?.trim() || ''
-    let group = groups.find((g) => g.label === label)
-    if (!group) {
-      group = { label, items: [] }
-      groups.push(group)
-    }
-    group.items.push(org)
-  }
-  return groups
-}
 
 /** Siglas para cuando no hay logo: las indicadas, o lo que va después de la última coma, o el nombre. */
 const shortName = (org: Org) => {
@@ -30,33 +14,38 @@ const shortName = (org: Org) => {
 }
 
 /**
- * Logo dentro de una caja de tamaño fijo: cualquier imagen (cuadrada, redonda, horizontal,
- * grande o pequeña) se ajusta sin deformarse ni salirse.
+ * Logo a una altura fija y con el ancho de su propia proporción: así el espacio entre
+ * logos es el mismo para los redondos y los horizontales. Los muy anchos tienen un tope.
  */
-const OrgCell: React.FC<{ org: Org }> = ({ org }) => {
+const OrgCell: React.FC<{ hidden?: boolean; org: Org }> = ({ hidden, org }) => {
   const hasLogo = org.logo && typeof org.logo === 'object'
   const label = shortName(org)
+  const logo = hasLogo && typeof org.logo === 'object' ? org.logo : null
+  const ratio = logo?.width && logo?.height ? logo.width / logo.height : 1
   const Wrapper: React.ElementType = org.url ? 'a' : 'div'
 
   return (
-    <li>
+    <li className="shrink-0">
       <Wrapper
         {...(org.url ? { href: org.url, rel: 'noopener noreferrer', target: '_blank' } : {})}
-        className="group flex h-full flex-col gap-3"
+        {...(hidden ? { tabIndex: -1 } : {})}
+        className="marquee-logo relative flex h-[74px] max-w-[11rem] items-center justify-center [-webkit-tap-highlight-color:transparent] md:h-[90px] md:max-w-[13.5rem]"
+        draggable={false}
+        style={{ aspectRatio: hasLogo ? ratio : undefined }}
         title={org.focus ? `${org.name} · ${org.focus}` : org.name}
       >
-        <span className="relative flex h-[72px] w-full max-w-[12rem] items-center md:h-20 lg:h-[90px]">
+        <span className="relative flex size-full items-center justify-center">
           {hasLogo ? (
             <Media
               fill
-              imgClassName="object-contain object-left transition-transform duration-700 group-hover:scale-[1.04]"
+              imgClassName="pointer-events-none object-contain"
               resource={org.logo}
-              size="(max-width: 768px) 40vw, 12rem"
+              size="(max-width: 768px) 11rem, 13.5rem"
             />
           ) : (
             <span
               aria-hidden="true"
-              className="font-[family-name:var(--font-display)] text-xl font-semibold leading-none tracking-tight text-texto-primario/60 transition-colors duration-300 group-hover:text-corinto md:text-2xl"
+              className="font-[family-name:var(--font-display)] text-xl font-semibold leading-none tracking-tight text-texto-primario/60 md:text-2xl"
             >
               {label}
             </span>
@@ -68,22 +57,28 @@ const OrgCell: React.FC<{ org: Org }> = ({ org }) => {
   )
 }
 
-/** Organizaciones: logos (o siglas) agrupados por categoría. */
-export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSecond, intro, organizations }) => {
+/** Organizaciones: etiqueta, título corto y carrusel de logos en gris que se desliza hacia la derecha sin fin. */
+export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSecond, intro, kicker, organizations }) => {
   const list = organizations || []
-  const groups = groupByCategory(list)
-  const hasCategories = groups.some((g) => g.label)
+  const title = [heading, headingSecond].filter(Boolean).join(' ')
+  // Unos 3 segundos por logo: la velocidad se siente igual con pocas o muchas organizaciones
+  const duration = `${Math.max(list.length * 3, 20)}s`
 
   return (
-    <section className="container section-pad">
-      <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-x-8">
-        <h2 className="text-step-head text-corinto lg:col-span-7" data-reveal>
-          <span className="block">{heading}</span>
-          {headingSecond && <span className="block lg:ps-[16.6%]">{headingSecond}</span>}
-        </h2>
+    <section className="section-pad">
+      <div className="container grid gap-5 max-md:text-center lg:grid-cols-12 lg:items-end lg:gap-x-8">
+        {/* El ancho máximo hace que el título caiga en dos líneas sin tener que separarlo a mano */}
+        <div className="lg:col-span-8" data-reveal>
+          {kicker && (
+            <p className="kicker mb-3 uppercase tracking-[0.18em] md:mb-4">
+              {kicker}
+            </p>
+          )}
+          <h2 className="max-w-[18ch] text-step-head text-corinto max-md:mx-auto">{title}</h2>
+        </div>
         {intro && (
           <p
-            className="text-step-body max-w-[46ch] text-texto-secundario lg:col-span-4 lg:col-start-9"
+            className="text-step-body max-w-[46ch] text-texto-secundario max-md:mx-auto lg:col-span-4"
             data-reveal
             style={{ '--i': 1 } as React.CSSProperties}
           >
@@ -93,35 +88,29 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
       </div>
 
       {list.length > 0 && (
-        <div className="mt-10 space-y-10 md:mt-12 md:space-y-12 lg:mt-16 lg:space-y-14">
-          {groups.map((group, gi) => (
-            <div
-              className={cn('grid gap-5', hasCategories && 'lg:grid-cols-12 lg:gap-12')}
-              data-reveal
-              key={group.label || gi}
-              style={{ '--i': gi + 2 } as React.CSSProperties}
-            >
-              {hasCategories && (
-                <div className="lg:col-span-3">
-                  <h3 className="font-[family-name:var(--font-display)] text-[18px] font-semibold leading-tight text-corinto">
-                    {group.label || 'Otras organizaciones'}
-                  </h3>
-                </div>
-              )}
+        <div
+          className="marquee mx-auto mt-10 max-w-[90rem] overflow-hidden md:mt-12 lg:mt-16"
+          data-reveal
+          style={{ '--i': 2 } as React.CSSProperties}
+        >
+          <div
+            className="marquee-track flex w-max select-none"
+            style={{ '--marquee-duration': duration } as React.CSSProperties}
+          >
+            {[false, true].map((copy) => (
               <ul
-                aria-label={group.label || 'Organizaciones'}
-                className={cn(
-                  'grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-8',
-                  hasCategories && 'lg:col-span-9',
-                )}
+                aria-hidden={copy || undefined}
+                aria-label={copy ? undefined : 'Organizaciones'}
+                className="flex shrink-0 items-center gap-x-12 pe-12 md:gap-x-16 md:pe-16"
+                key={String(copy)}
                 role="list"
               >
-                {group.items.map((org, i) => (
-                  <OrgCell key={org.id || i} org={org} />
+                {list.map((org, i) => (
+                  <OrgCell hidden={copy} key={`${copy}-${org.id || i}`} org={org} />
                 ))}
               </ul>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </section>

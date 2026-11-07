@@ -13,65 +13,52 @@ type Item = { id?: string | null; label: string; heading: string; subtitle?: str
 const icons: LucideIcon[] = [Target, Eye, HeartHandshake, Sparkles]
 
 /**
- * Ilustración vectorial: anillo con cuatro puntos ocre (giran al desplazar la pantalla)
- * y un círculo corinto con el ícono al centro.
+ * Versión en tarjetas, con el mismo lenguaje que «Cuatro ejes» y «Cómo nos organizamos»:
+ * ícono en la esquina (donde los ejes llevan el número), título, frase y texto.
+ * Celular: una debajo de otra. Tablet: dos por fila (la tercera ocupa la fila completa).
+ * Escritorio: todas en una fila.
  */
-const Emblem: React.FC<{ Icon: LucideIcon }> = ({ Icon }) => (
-  <div className="relative mx-auto aspect-square w-full max-w-[16rem] md:max-w-[22rem]">
-    <svg aria-hidden="true" className="absolute inset-0 size-full text-corinto" viewBox="0 0 360 360">
-      <circle cx="180" cy="180" fill="none" r="148" stroke="currentColor" strokeWidth="5" />
-      <g stroke="currentColor" strokeLinecap="round" strokeWidth="5">
-        <line x1="180" x2="180" y1="10" y2="40" />
-        <line x1="320" x2="350" y1="180" y2="180" />
-        <line x1="180" x2="180" y1="320" y2="350" />
-        <line x1="10" x2="40" y1="180" y2="180" />
-      </g>
-      <g
-        className="emblem-orbit fill-ocre"
-      >
-        <circle cx="180" cy="32" r="22" />
-        <circle cx="328" cy="180" r="22" />
-        <circle cx="180" cy="328" r="22" />
-        <circle cx="32" cy="180" r="22" />
-      </g>
-      <circle cx="180" cy="180" fill="currentColor" r="96" />
-    </svg>
-    <Icon
-      aria-hidden="true"
-      className="absolute left-1/2 top-1/2 size-[24%] -translate-x-1/2 -translate-y-1/2 text-besh-suave"
-      strokeWidth={1.75}
-    />
-  </div>
-)
-
-/** Versión en filas: texto e ilustración, alternando el lado en cada fila. */
 const MissionRows: React.FC<{ items: Item[] }> = ({ items }) => (
-  <div className="space-y-16 md:space-y-24 lg:space-y-28">
+  <ul
+    className={cn(
+      'grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5',
+      items.length === 3 && 'lg:grid-cols-3',
+      items.length === 4 && 'lg:grid-cols-4',
+    )}
+    role="list"
+  >
     {items.map((item, i) => {
-      const flip = i % 2 === 1
+      const Icon = icons[i] || Sparkles
       const Title = i === 0 ? 'h2' : 'h3'
+      const lastAlone = items.length % 2 === 1 && i === items.length - 1
       return (
-        <article
-          className="group grid items-center gap-10 md:grid-cols-2 md:gap-12 lg:gap-20"
+        <li
+          className={cn(
+            'relative flex flex-col overflow-hidden rounded-card border border-besh-oscuro bg-white p-6 md:p-8 lg:p-10',
+            lastAlone && 'md:col-span-2 lg:col-span-1',
+          )}
           data-reveal
           key={item.id || i}
+          style={{ '--i': i } as React.CSSProperties}
         >
-          <div className={cn(flip && 'md:order-2')}>
-            <Title className="text-step-display text-corinto">{item.label}</Title>
-            {item.subtitle && (
-              <p className="mt-3 font-[family-name:var(--font-display)] text-xl font-semibold leading-snug text-texto-primario md:text-2xl">
-                {item.subtitle}
-              </p>
-            )}
-            <p className="mt-5 max-w-[56ch] text-step-body leading-relaxed text-texto-secundario">{item.text}</p>
-          </div>
-          <div className={cn(flip && 'md:order-1')}>
-            <Emblem Icon={icons[i] || Sparkles} />
-          </div>
-        </article>
+          {/* Ícono en la esquina, en el lugar donde las tarjetas de los ejes llevan el número */}
+          <span
+            aria-hidden="true"
+            className="absolute right-0 top-0 grid size-24 place-items-start justify-end rounded-bl-full bg-corinto/10 pe-5 pt-5 text-corinto md:size-28 md:pe-6 md:pt-6"
+          >
+            <Icon className="size-7 md:size-8" strokeWidth={1.75} />
+          </span>
+          <Title className="pe-20 text-step-head text-corinto md:pe-24">{item.label}</Title>
+          {item.subtitle && (
+            <p className="mt-2 pe-20 font-[family-name:var(--font-display)] text-lg font-semibold leading-snug text-texto-primario md:pe-24 md:text-xl">
+              {item.subtitle}
+            </p>
+          )}
+          <p className="mt-4 text-step-body leading-relaxed text-texto-secundario">{item.text}</p>
+        </li>
       )
     })}
-  </div>
+  </ul>
 )
 
 /** Misión, visión y valor: en pestañas con un título grande o en filas con ilustración. */

@@ -123,7 +123,6 @@ export const StructureBlock: React.FC<StructureBlockProps> = ({ heading, image, 
           {kicker && (
             <p className="kicker mb-3 flex items-center gap-3 uppercase tracking-[0.18em] md:mb-4">
               {kicker}
-              <span aria-hidden="true" className="h-px w-10 bg-fucsia/50" />
             </p>
           )}
           <h2 className="text-step-head max-w-[14ch] text-corinto max-md:text-[1.75rem] max-md:leading-[1.05]">

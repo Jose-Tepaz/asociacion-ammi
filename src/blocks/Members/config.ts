@@ -5,6 +5,7 @@ export const Members: Block = {
   interfaceName: 'MembersBlock',
   labels: { singular: 'Organizaciones', plural: 'Organizaciones' },
   fields: [
+    { name: 'kicker', label: 'Etiqueta sobre el título', type: 'text', defaultValue: 'Alianza' },
     {
       type: 'row',
       fields: [
