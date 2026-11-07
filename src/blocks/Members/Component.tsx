@@ -78,7 +78,7 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
         </div>
         {intro && (
           <p
-            className="text-step-body max-w-[46ch] text-texto-secundario max-lg:mx-auto lg:col-span-4"
+            className="text-step-body max-w-[46ch] text-texto-secundario max-lg:mx-auto max-lg:max-w-[64ch] lg:col-span-4"
             data-reveal
             style={{ '--i': 1 } as React.CSSProperties}
           >

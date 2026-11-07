@@ -17,6 +17,8 @@ import type { StructureBlock as StructureBlockProps } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 
+import { StepsProgress } from './StepsProgress.client'
+
 const icons: Record<string, LucideIcon> = {
   book: BookOpen,
   flag: Flag,
@@ -32,8 +34,8 @@ const icons: Record<string, LucideIcon> = {
 
 /**
  * Cómo nos organizamos: a la izquierda (fija en escritorio) la etiqueta, el título, el texto y una foto;
- * a la derecha cada espacio de la Alianza en una lista vertical unida por una línea,
- * como un recorrido de la Asamblea hasta las mujeres que participan a título individual.
+ * a la derecha cada espacio de la Alianza en un recorrido vertical: la línea se rellena al bajar
+ * y cada espacio se enciende al llegar a la mitad de la pantalla (ver StepsProgress).
  */
 export const StructureBlock: React.FC<StructureBlockProps> = ({ heading, image, intro, items, kicker }) => {
   const list = items || []
@@ -41,17 +43,17 @@ export const StructureBlock: React.FC<StructureBlockProps> = ({ heading, image, 
 
   return (
     <section className="container section-pad">
-      <div className="grid grid-cols-1 gap-10 md:gap-12 lg:grid-cols-12 lg:gap-16">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-10 lg:gap-16">
         {/* Encabezado y foto: en escritorio se quedan fijos mientras se recorre la lista */}
-        <div className="lg:col-span-5">
-          <div className="lg:sticky lg:top-28">
+        <div className="md:col-span-5">
+          <div className="md:sticky md:top-8">
             <div data-reveal>
               {kicker && <p className="kicker mb-3 uppercase tracking-[0.18em] md:mb-4">{kicker}</p>}
-              <h2 className="text-step-head max-w-[14ch] text-corinto">{heading}</h2>
-              {intro && <p className="mt-4 max-w-[46ch] text-step-body text-texto-secundario md:mt-5">{intro}</p>}
+              <h2 className="text-step-head text-corinto md:max-w-[14ch]">{heading}</h2>
+              {intro && <p className="mt-4 text-step-body text-texto-secundario md:mt-5 md:max-w-[46ch]">{intro}</p>}
             </div>
             <figure
-              className="group relative mt-8 aspect-[16/10] overflow-hidden rounded-card bg-besh-fuerte md:mt-10 lg:aspect-[4/5]"
+              className="group relative mt-8 aspect-[16/10] overflow-hidden rounded-card bg-besh-fuerte md:mt-10 md:aspect-auto md:h-[calc(100svh-26rem)] md:min-h-[16rem] lg:h-[calc(100svh-24rem)] lg:min-h-[18rem]"
               data-reveal
               style={{ '--i': 1 } as React.CSSProperties}
             >
@@ -71,38 +73,39 @@ export const StructureBlock: React.FC<StructureBlockProps> = ({ heading, image, 
           </div>
         </div>
 
-        {/* Espacios de la Alianza */}
+        {/* Espacios de la Alianza: recorrido con una línea que se rellena al bajar */}
         {list.length > 0 && (
-          <ol className="relative lg:col-span-7" role="list">
-            {/* Línea que une los íconos */}
-            <span
-              aria-hidden="true"
-              className="absolute bottom-10 left-6 top-10 w-px -translate-x-1/2 bg-besh-oscuro md:left-7"
-            />
-            {list.map((item, i) => {
-              const Icon = icons[item.icon] || UsersRound
-              return (
-                <li
-                  className="relative flex gap-5 border-b border-besh-oscuro/70 py-6 last:border-b-0 md:gap-7 md:py-8"
-                  data-reveal
-                  key={item.id || i}
-                  style={{ '--i': Math.min(i, 3) } as React.CSSProperties}
-                >
-                  <span className="relative z-10 grid size-12 shrink-0 place-items-center rounded-2xl bg-corinto text-besh-suave md:size-14">
-                    <Icon aria-hidden="true" className="size-5 md:size-6" strokeWidth={1.75} />
-                  </span>
-                  <div className="pt-1 md:pt-2">
-                    <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold leading-tight text-corinto md:text-2xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 max-w-[52ch] text-step-body leading-relaxed text-texto-secundario">
-                      {item.description}
-                    </p>
-                  </div>
-                </li>
-              )
-            })}
-          </ol>
+          <div className="md:col-span-7">
+            <StepsProgress>
+              {/* Línea base y relleno; su alto y posición los ajusta StepsProgress */}
+              <span aria-hidden="true" className="absolute left-6 w-0.5 -translate-x-1/2 bg-besh-oscuro" data-track>
+                <span className="absolute inset-x-0 top-0 h-0 bg-corinto" data-fill />
+              </span>
+              <ol className="relative" role="list">
+                {list.map((item, i) => {
+                  const Icon = icons[item.icon] || UsersRound
+                  return (
+                    <li className="group flex gap-6 pb-20 last:pb-0 md:gap-8 md:pb-28 lg:pb-36" data-step key={item.id || i}>
+                      <span
+                        className="relative z-10 grid size-12 shrink-0 place-items-center rounded-full border-2 border-besh-oscuro bg-background text-texto-secundario/70 transition-all duration-500 group-data-[active]:border-corinto group-data-[active]:bg-corinto group-data-[active]:text-besh-suave group-data-[active]:shadow-[0_0_0_8px_rgb(123_30_58/0.12)]"
+                        data-icon
+                      >
+                        <Icon aria-hidden="true" className="size-5" strokeWidth={1.75} />
+                      </span>
+                      <div className="pt-1.5 opacity-40 transition-opacity duration-500 group-data-[active]:opacity-100">
+                        <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold leading-tight text-corinto md:text-2xl">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-step-body leading-relaxed text-texto-secundario md:max-w-[52ch]">
+                          {item.description}
+                        </p>
+                      </div>
+                    </li>
+                  )
+                })}
+              </ol>
+            </StepsProgress>
+          </div>
         )}
       </div>
     </section>

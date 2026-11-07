@@ -1,4 +1,4 @@
-import { Eye, HeartHandshake, type LucideIcon, Sparkles, Target } from 'lucide-react'
+import { Eye, HeartHandshake, type LucideProps, Sparkles } from 'lucide-react'
 import React from 'react'
 
 import type { MissionBlock as MissionBlockProps } from '@/payload-types'
@@ -10,8 +10,31 @@ import { ScrollActive } from './ScrollActive.client'
 
 type Item = { id?: string | null; label: string; heading: string; subtitle?: string | null; text: string }
 
+/**
+ * Diana con flecha (Lucide no la trae). Trazos del ícono «target-arrow» de Tabler Icons (licencia MIT),
+ * con el mismo grosor y puntas redondas que los íconos de Lucide.
+ */
+const TargetArrow: React.FC<LucideProps> = ({ className, strokeWidth = 2 }) => (
+  <svg
+    aria-hidden="true"
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+  >
+    <path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+    <path d="M12 7a5 5 0 1 0 5 5" />
+    <path d="M13 3.055a9 9 0 1 0 7.941 7.945" />
+    <path d="M15 6v3h3l3 -3h-3v-3z" />
+    <path d="M15 9l-3 3" />
+  </svg>
+)
+
 // Misión, visión, valor y uno extra, en ese orden
-const icons: LucideIcon[] = [Target, Eye, HeartHandshake, Sparkles]
+const icons: React.ComponentType<LucideProps>[] = [TargetArrow, Eye, HeartHandshake, Sparkles]
 
 /**
  * Versión en tarjetas, con el mismo lenguaje que «Cuatro ejes» y «Cómo nos organizamos»:

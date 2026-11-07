@@ -565,29 +565,20 @@ body:has([data-calendar-tile]) .cholqij-float {
   }
 }
 
-/* Tarjetas de Misión, visión y valor: en reposo se ven tenues, como desvaneciéndose;
-   al pasar el cursor (escritorio) o con el scroll (celular y tablet) toman su color, se levantan un poco,
-   el fondo de la esquina crece como una gota y el ícono flota suavemente. */
+/* Tarjetas de Misión, visión y valor: al pasar el cursor (escritorio) o con el scroll (celular y tablet)
+   se levantan un poco, el fondo de la esquina crece como una gota y el ícono flota suavemente. */
 .mission-card {
-  opacity: 0.6;
-  filter: saturate(0.5);
   transition:
-    opacity 500ms var(--ease-out),
-    filter 500ms var(--ease-out),
     transform 600ms var(--ease-out),
     box-shadow 600ms var(--ease-out);
 }
 .mission-card:focus-visible,
 .mission-card[data-active] {
-  opacity: 1;
-  filter: none;
   transform: translateY(-6px);
   box-shadow: 0 22px 40px -28px rgb(123 30 58 / 0.45);
 }
 @media (hover: hover) {
   .mission-card:hover {
-    opacity: 1;
-    filter: none;
     transform: translateY(-6px);
     box-shadow: 0 22px 40px -28px rgb(123 30 58 / 0.45);
   }

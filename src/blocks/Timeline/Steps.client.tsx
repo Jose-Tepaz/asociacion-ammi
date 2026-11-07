@@ -40,13 +40,13 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
               items.current[i] = el
             }}
           >
-            {/* Año solo en celular */}
-            <p className="font-[family-name:var(--font-display)] text-[4rem] font-semibold leading-none tracking-[-0.03em] text-ocre md:hidden">
+            {/* Año solo en celular (44px: destaca sin pesar tanto como el año fijo de tablet y escritorio) */}
+            <p className="font-[family-name:var(--font-display)] text-[2.75rem] font-semibold leading-none tracking-[-0.03em] text-ocre md:hidden">
               {event.year}
             </p>
             <h3
               className={
-                'mt-3 font-[family-name:var(--font-display)] text-[clamp(1.75rem,1.2rem+1.8vw,3rem)] font-semibold leading-[1.05] transition-opacity duration-500 md:mt-0 ' +
+                'mt-2 font-[family-name:var(--font-display)] text-xl font-semibold leading-tight md:text-[clamp(1.75rem,1.2rem+1.8vw,3rem)] md:leading-[1.05] transition-opacity duration-500 md:mt-0 ' +
                 (i === active ? 'md:opacity-100' : 'md:opacity-40')
               }
             >
@@ -54,7 +54,7 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
             </h3>
             <p
               className={
-                'mt-4 max-w-[44ch] text-step-body leading-relaxed text-besh-suave/85 transition-opacity duration-500 ' +
+                'mt-4 text-step-body leading-relaxed text-besh-suave/85 transition-opacity duration-500 md:max-w-[44ch] ' +
                 (i === active ? 'md:opacity-100' : 'md:opacity-40')
               }
             >
@@ -67,13 +67,14 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
       {/* Año fijo: se queda en pantalla y cambia con cada hito (desde tablet) */}
       <div aria-hidden="true" className="hidden md:block">
         <div className="sticky top-0 flex h-svh items-center justify-end">
-          <div className="h-[0.9em] overflow-hidden font-[family-name:var(--font-display)] text-[clamp(7rem,3rem+10vw,15rem)] font-semibold leading-[0.9] tracking-[-0.04em] text-ocre">
+          {/* Ventana de 1.4em: deja espacio a letras con cola (la «y» de «Hoy», la «j»…) */}
+          <div className="h-[1.4em] overflow-hidden font-[family-name:var(--font-display)] text-[clamp(7rem,3rem+10vw,15rem)] font-semibold leading-[1.4] tracking-[-0.04em] text-ocre">
             <div
               className="transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-              style={{ transform: `translateY(${-active * 0.9}em)` }}
+              style={{ transform: `translateY(${-active * 1.4}em)` }}
             >
               {events.map((event, i) => (
-                <p className="h-[0.9em] text-right" key={event.id || i}>
+                <p className="h-[1.4em] text-right" key={event.id || i}>
                   {event.year}
                 </p>
               ))}
