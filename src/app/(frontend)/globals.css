@@ -478,7 +478,7 @@ html[data-theme='light'] {
 }
 @media (prefers-reduced-motion: no-preference) {
   .marquee-track {
-    animation: marquee-right var(--marquee-duration, 40s) linear infinite;
+    animation: marquee-right var(--marquee-duration, 40000ms) linear infinite;
   }
 }
 @keyframes marquee-right {
@@ -692,11 +692,11 @@ body:has([data-calendar-tile]) .cholqij-float {
 }
 @media (prefers-reduced-motion: no-preference) {
   .mission-card:is(:focus-visible, [data-active]) .mission-card-icon {
-    animation: icon-bob 2.4s ease-in-out infinite;
+    animation: icon-bob 2400ms ease-in-out infinite;
   }
   @media (hover: hover) {
     .mission-card:hover .mission-card-icon {
-      animation: icon-bob 2.4s ease-in-out infinite;
+      animation: icon-bob 2400ms ease-in-out infinite;
     }
   }
 }

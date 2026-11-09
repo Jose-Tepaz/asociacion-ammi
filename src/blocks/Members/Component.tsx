@@ -62,7 +62,7 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
   const list = organizations || []
   const title = [heading, headingSecond].filter(Boolean).join(' ')
   // Unos 3 segundos por logo: la velocidad se siente igual con pocas o muchas organizaciones
-  const duration = `${Math.max(list.length * 3, 20)}s`
+  const duration = `${Math.max(list.length * 3000, 20000)}ms`
 
   return (
     <section className="section-pad">

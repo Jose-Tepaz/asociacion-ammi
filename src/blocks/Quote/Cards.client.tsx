@@ -15,7 +15,12 @@ export type QuoteSlide = {
  * Con más de una voz aparecen el contador «01 / 02» y las flechas; las voces se cruzan con un fundido.
  * Todas las voces ocupan la misma celda, así la tarjeta no cambia de alto al pasar de una a otra.
  */
-export const QuoteCards: React.FC<{ accent: string; slides: QuoteSlide[] }> = ({ accent, slides }) => {
+export const QuoteCards: React.FC<{
+  accent: string
+  /** Fondo propio de la tarjeta (p. ej. corinto oscuro cuando va sobre la foto de la historia). */
+  cardClassName?: string
+  slides: QuoteSlide[]
+}> = ({ accent, cardClassName = '', slides }) => {
   const [current, setCurrent] = useState(0)
   const total = slides.length
   const many = total > 1
@@ -31,13 +36,16 @@ export const QuoteCards: React.FC<{ accent: string; slides: QuoteSlide[] }> = ({
             aria-hidden={!isCurrent}
             className={
               'grid overflow-hidden rounded-card border border-current/15 transition-opacity duration-500 ease-out [grid-area:1/1] motion-reduce:transition-none ' +
-              'md:grid-cols-[minmax(0,5fr)_minmax(0,4fr)] lg:grid-cols-[minmax(0,4fr)_minmax(0,3fr)_minmax(0,6fr)] ' +
-              (isCurrent ? 'opacity-100' : 'pointer-events-none opacity-0')
+              // Tablet: foto y texto mitad y mitad. Escritorio: retrato | nombre | cita
+              'md:grid-cols-2 lg:grid-cols-[minmax(0,4fr)_minmax(0,3fr)_minmax(0,6fr)] ' +
+              (isCurrent ? 'opacity-100 ' : 'pointer-events-none opacity-0 ') +
+              cardClassName
             }
             inert={!isCurrent}
             key={i}
           >
-            <div className="group relative aspect-[4/5] overflow-hidden md:row-span-2 md:aspect-auto md:min-h-[26rem] lg:row-span-1 lg:min-h-[32rem]">
+            {/* Celular: todo el ancho y 450 px de alto (la foto se recorta, centrada). Desde tablet toma el alto de la tarjeta */}
+            <div className="group relative h-[450px] overflow-hidden md:row-span-2 md:h-auto md:min-h-[26rem] lg:row-span-1 lg:min-h-[32rem]">
               {slide.portrait}
             </div>
 
@@ -79,11 +87,11 @@ export const QuoteCards: React.FC<{ accent: string; slides: QuoteSlide[] }> = ({
             </figcaption>
 
             <blockquote className="flex flex-col justify-center p-6 md:col-start-2 md:p-8 lg:col-start-auto lg:p-12">
-              <span aria-hidden="true" className={'font-[family-name:var(--font-display)] text-6xl leading-none ' + accent}>
-                “
-              </span>
-              <p className="mt-2 font-[family-name:var(--font-display)] text-[clamp(1.5rem,1rem+1.6vw,2.5rem)] font-semibold leading-[1.15]">
+              {/* Comillas españolas pegadas al texto, en el color de acento (ocre) */}
+              <p className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,1rem+1.6vw,2.5rem)] font-semibold leading-[1.15]">
+                <span className={accent}>«</span>
                 {slide.quote}
+                <span className={accent}>»</span>
               </p>
             </blockquote>
           </figure>

@@ -43,7 +43,12 @@ export const QuoteBlock: React.FC<QuoteBlockProps & { onBackdrop?: boolean }> = 
   return (
     <section className={cn(toneClass, 'py-[var(--section-y)]')}>
       <div className="container" data-reveal>
-        <QuoteCards accent={accent} slides={[{ quote, author, role, portrait }]} />
+        <QuoteCards
+          accent={accent}
+          // Sobre la foto de la historia, la tarjeta lleva fondo corinto oscuro para leerse como un bloque
+          cardClassName={onBackdrop ? 'bg-corinto-terciario' : ''}
+          slides={[{ quote, author, role, portrait }]}
+        />
       </div>
     </section>
   )
