@@ -96,6 +96,7 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
                       : 'bg-white text-texto-secundario ring-1 ring-texto-primario/5 hover:bg-besh-fuerte hover:text-corinto',
                   )}
                   href={tab.href}
+                  scroll={false}
                 >
                   {tab.label}
                   <span className={cn('text-step-regular', tab.active ? 'text-besh-fuerte' : 'text-texto-secundario')}>

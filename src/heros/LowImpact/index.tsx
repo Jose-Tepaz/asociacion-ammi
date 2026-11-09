@@ -53,12 +53,16 @@ const ContactCard = async () => {
     <div className="fade-up w-full max-w-[28rem] rounded-[2rem] bg-background p-6 ring-1 ring-texto-primario/8 md:p-8">
       <p className="text-step-small font-medium text-fucsia">Otras formas de encontrarnos</p>
       <ul className="mt-5 flex flex-col gap-4">
-        {contacts.map(({ href, id, label }) => {
+        {contacts.map(({ href: link, id, label }) => {
+          // Una dirección sin enlace abre su ubicación en Google Maps
+          const href =
+            link ||
+            (label ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(label)}` : '')
           const body = (
             <>
               <span className="grid size-11 shrink-0 place-items-center rounded-full bg-corinto text-besh-suave">
-                {href ? (
-                  <ContactIcon className="size-5" href={href} />
+                {link ? (
+                  <ContactIcon className="size-5" href={link} />
                 ) : (
                   <MapPin aria-hidden="true" className="size-5" />
                 )}
