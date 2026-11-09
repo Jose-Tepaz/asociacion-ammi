@@ -77,7 +77,7 @@ export const ArchiveBlock: React.FC<
         >
           {introContent && (
             <RichText
-              className="[&_h2]:text-step-head [&_h2]:m-0 [&_h3]:text-step-title [&_h3]:m-0 [&_p]:mt-3 [&_p]:text-step-body [&_p]:text-muted-foreground [&_p]:max-w-[52ch]"
+              className="[&_h2]:text-step-head [&_h2]:m-0 [&_h3]:text-step-title [&_h3]:m-0 [&_p]:mt-4 md:[&_p]:mt-3 lg:[&_p]:mt-4 [&_p]:text-step-body [&_p]:text-muted-foreground [&_p]:max-w-[52ch]"
               data={introContent}
               enableGutter={false}
               enableProse={false}

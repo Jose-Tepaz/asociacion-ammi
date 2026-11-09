@@ -132,8 +132,8 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
             <div className="mask-line">
               <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
             </div>
-            {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
-            {links && <HeroLinks className="fade-up mt-8" links={links} />}
+            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead max-w-[40ch]">{standfirst}</p>}
+            {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} />}
           </div>
           <div className="md:col-span-6 lg:col-start-1">
             <ContactCard />
@@ -157,8 +157,8 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
             <div className="mask-line">
               <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
             </div>
-            {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
-            {links && <HeroLinks className="fade-up mt-8" links={links} />}
+            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead max-w-[40ch]">{standfirst}</p>}
+            {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} />}
           </div>
           <div className="flex justify-center md:col-span-6 md:justify-end lg:col-span-5">
             <CalendarTile />
@@ -183,8 +183,8 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
         <div className="mask-line">
           <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[22ch]')}>{title}</div>
         </div>
-        {standfirst && <p className="fade-up mt-6 text-step-lead text-besh-fuerte max-w-[46ch]">{standfirst}</p>}
-        {links && <HeroLinks className="fade-up mt-8" links={links} onDark />}
+        {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-besh-fuerte max-w-[46ch]">{standfirst}</p>}
+        {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} onDark />}
       </div>
       <span aria-hidden="true" className="tejido relative" />
     </section>

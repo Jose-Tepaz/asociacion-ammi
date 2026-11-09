@@ -123,12 +123,12 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
             )}
           </div>
 
-          <div className="mt-6 lg:col-span-4 lg:mt-0">
+          <div className="mt-4 md:mt-6 lg:col-span-4 lg:mt-0">
             {standfirst && (
               <p className="hero-rise text-step-lead max-w-[44ch]">{standfirst}</p>
             )}
             <HeroLinks
-              className="hero-rise pointer-events-auto mt-6"
+              className="hero-rise pointer-events-auto mt-6 lg:mt-8"
               links={links?.slice(0, 1)}
               onDark
             />
