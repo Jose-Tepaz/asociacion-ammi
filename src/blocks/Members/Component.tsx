@@ -76,7 +76,7 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
 
   return (
     <section className="container section-pad">
-      <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-x-8">
+      <div className="grid gap-4 md:gap-5 lg:grid-cols-12 lg:items-end lg:gap-x-8">
         <h2 className="text-step-head text-corinto lg:col-span-7" data-reveal>
           <span className="block">{heading}</span>
           {headingSecond && <span className="block lg:ps-[16.6%]">{headingSecond}</span>}

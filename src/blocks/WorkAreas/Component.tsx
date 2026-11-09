@@ -56,11 +56,11 @@ export const WorkAreasBlock: React.FC<WorkAreasBlockProps> = ({ allLink, heading
   return (
     <section className="bg-besh-fuerte/60 py-[var(--section-y)]">
       <div className="container">
-        <div className="flex flex-col items-center gap-6 text-center" data-reveal>
+        <div className="flex flex-col items-center gap-6 text-center lg:gap-8" data-reveal>
           <div>
             <h2 className="text-step-head">{heading}</h2>
             {subheading && (
-              <p className="mx-auto mt-3 text-step-body text-muted-foreground max-w-[62ch]">{subheading}</p>
+              <p className="mx-auto mt-4 md:mt-3 lg:mt-4 text-step-body text-muted-foreground max-w-[62ch]">{subheading}</p>
             )}
           </div>
           {allLink?.enabled && allLink.link?.label && (

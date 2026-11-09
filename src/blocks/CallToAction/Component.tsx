@@ -31,14 +31,14 @@ export const CallToActionBlock: React.FC<CTABlockProps> = ({ backgroundImage, li
           <div className={cn(!hasImage && 'max-w-[44rem]')}>
             {richText && (
               <RichText
-                className="[&_h2]:text-step-head [&_h2]:m-0 [&_h2]:max-w-[16ch] [&_h3]:text-step-title [&_h3]:m-0 [&_p]:text-step-lead [&_p]:mt-5 [&_p]:max-w-[38ch] [&_p]:text-besh-fuerte"
+                className="[&_h2]:text-step-head [&_h2]:m-0 [&_h2]:max-w-[16ch] [&_h3]:text-step-title [&_h3]:m-0 [&_p]:text-step-lead [&_p]:mt-4 md:[&_p]:mt-5 lg:[&_p]:mt-4 [&_p]:max-w-[38ch] [&_p]:text-besh-fuerte"
                 data={richText}
                 enableGutter={false}
                 enableProse={false}
               />
             )}
             {Array.isArray(links) && links.length > 0 && (
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row md:mt-10 lg:mt-8">
                 {links.map(({ link }, i) => (
                   <CMSLink
                     className={

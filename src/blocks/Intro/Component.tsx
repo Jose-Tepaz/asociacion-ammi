@@ -41,7 +41,7 @@ const IntroPanel: React.FC<IntroBlockProps & { position: number }> = ({
           <div className={cn('lg:col-span-7', flipped && 'lg:order-last')}>
             {kicker && <p className={cn('mb-3 text-step-small font-semibold', tone.accent)}>{kicker}</p>}
             <h2 className="text-step-head max-w-[18ch]">{heading}</h2>
-            <p className="mt-5 text-step-body max-w-[52ch] whitespace-pre-line">{body}</p>
+            <p className="mt-4 text-step-body max-w-[52ch] whitespace-pre-line md:mt-5 lg:mt-4">{body}</p>
 
             {highlight && (
               <p className={cn('mt-6 flex items-center gap-3 rounded-2xl p-4 text-step-small font-medium', tone.soft)}>
@@ -120,7 +120,7 @@ export const IntroBlock: React.FC<IntroBlockProps & { panelPosition?: number }> 
             <h2 className="text-step-head text-corinto max-w-[18ch]">{heading}</h2>
           </div>
           <p
-            className="mt-6 text-step-lead max-w-[40ch] whitespace-pre-line"
+            className="mt-4 text-step-lead max-w-[40ch] whitespace-pre-line md:mt-6 lg:mt-4"
             data-reveal
             style={{ '--i': 1 } as React.CSSProperties}
           >

@@ -35,4 +35,4 @@ export const HeroLinks: React.FC<{
 
 /** Estilos del título enriquecido de las portadas: un H1 grande y un párrafo de apoyo. */
 export const heroTitleClasses =
-  '[&_h1]:text-step-display [&_h1]:m-0 [&_h2]:text-step-head [&_h2]:m-0 [&_p]:text-step-lead [&_p]:mt-6 [&_p]:max-w-[40ch]'
+  '[&_h1]:text-step-display [&_h1]:m-0 [&_h2]:text-step-head [&_h2]:m-0 [&_p]:text-step-lead [&_p]:mt-4 md:[&_p]:mt-6 lg:[&_p]:mt-4 [&_p]:max-w-[40ch]'
