@@ -35,27 +35,27 @@ export const Timeline: Block = {
         {
           year: '2013',
           title: 'Nace la Alianza',
-          text: "Kemb'al No'j e Ixoqib' Miriam convocan a organizaciones de mujeres para vigilar las comisiones de postulación del sector justicia.",
+          text: "Kemb'al No'j, Ixoqib' Miriam y ASIGDHA crean la Alianza para vigilar las comisiones de postulación del sector justicia y promover a abogadas para las magistraturas de las altas cortes.",
         },
         {
           year: '2014',
           title: 'La convocatoria se amplía',
-          text: 'Se suman Moloj, Convergencia Cívico Política de Mujeres y Alas de Mariposas para impulsar la paridad y la alternancia.',
+          text: 'Se suman Moloj, Convergencia Cívico Política de Mujeres y Alas de Mariposas. Juntas cabildean ante el Congreso para que la reforma electoral incluya la paridad y la alternancia.',
         },
         {
           year: '2021',
           title: 'Estrategia de comunicación e incidencia',
-          text: 'La Alianza define cómo llevar su voz a la opinión pública y a las instituciones del Estado.',
+          text: 'La Alianza define cómo llevar su voz a la opinión pública y a las instituciones del Estado, con un discurso que visibiliza los aportes de las mujeres y mujeres indígenas.',
         },
         {
           year: '2022',
           title: 'Plan estratégico 2022–2026',
-          text: 'En talleres colectivos, organizaciones y ciudadanas definen la misión, la visión y los objetivos de la Alianza.',
+          text: 'En talleres colectivos, organizaciones y ciudadanas definen la misión, la visión y cuatro objetivos: acceso a la justicia, participación política, trabajo decente y articulación.',
         },
         {
           year: 'Hoy',
           title: 'Mujeres y Poder',
-          text: 'Seis ediciones del Encuentro Virtual Mujeres y Poder y presencia en los espacios donde se decide sobre la justicia.',
+          text: 'Seis ediciones del Encuentro Virtual Mujeres y Poder y presencia donde se decide sobre la justicia, impulsando la paridad, la alternancia y los derechos laborales de las mujeres.',
         },
       ],
       fields: [

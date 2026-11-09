@@ -16,7 +16,7 @@ import { SocialGalleryBlock } from '@/blocks/SocialGallery/Component'
 import { StatementBlock } from '@/blocks/Statement/Component'
 import { StripBlock } from '@/blocks/Strip/Component'
 import { StructureBlock } from '@/blocks/Structure/Component'
-import { TimelineBlock } from '@/blocks/Timeline/Component'
+import { TimelineBackdrop, TimelineBlock } from '@/blocks/Timeline/Component'
 import { WorkAreasBlock } from '@/blocks/WorkAreas/Component'
 import { PanelStack } from '@/components/PanelStack'
 import { cn } from '@/utilities/ui'
@@ -74,8 +74,17 @@ export const RenderBlocks: React.FC<{
   const introCount = hasBlocks ? blocks.filter(isIntro).length : 0
 
   if (hasBlocks) {
+    // Una cita justo después de la línea de tiempo comparte su foto de fondo fija
+    const sharesBackdrop = (index: number) =>
+      blocks[index]?.blockType === 'timeline' && blocks[index + 1]?.blockType === 'quote'
+
     const items = blocks.map((block, index) => {
       const { blockName, blockType } = block
+      const backdropProps = sharesBackdrop(index)
+        ? { sharedBackdrop: true }
+        : sharesBackdrop(index - 1)
+          ? { onBackdrop: true }
+          : {}
       const Block = blockType && blockType in blockComponents ? blockComponents[blockType] : null
       const panelPosition =
         introCount > 1 && isIntro(block) ? blocks.slice(0, index).filter(isIntro).length : undefined
@@ -84,6 +93,7 @@ export const RenderBlocks: React.FC<{
       const anchor = blockName ? toAnchor(blockName) : undefined
 
       return {
+        index,
         isPanel,
         node: Block ? (
           <Fragment key={index}>
@@ -96,7 +106,7 @@ export const RenderBlocks: React.FC<{
               style={isPanel ? ({ '--stack': panelPosition } as React.CSSProperties) : undefined}
             >
               {/* @ts-expect-error there may be some mismatch between the expected types here */}
-              <Block {...block} disableInnerContainer panelPosition={panelPosition} />
+              <Block {...block} {...backdropProps} disableInnerContainer panelPosition={panelPosition} />
             </div>
           </Fragment>
         ) : null,
@@ -111,13 +121,31 @@ export const RenderBlocks: React.FC<{
       return acc
     }, [])
 
+    // Línea de tiempo + cita: un solo contenedor con el fondo fijo detrás de las dos
+    const withSharedBackdrop = (run: typeof items) =>
+      run.map((item) => {
+        const block = blocks[item.index]
+        if (sharesBackdrop(item.index) && block?.blockType === 'timeline') {
+          return (
+            <div className="relative isolate bg-corinto-terciario" key={`historia-${item.index}`}>
+              <TimelineBackdrop background={block.background} />
+              {item.node}
+              {items[item.index + 1]?.node}
+            </div>
+          )
+        }
+        // La cita ya quedó dentro del contenedor de la línea de tiempo
+        if (sharesBackdrop(item.index - 1)) return null
+        return item.node
+      })
+
     return (
       <Fragment>
         {runs.map((run, i) =>
           run[0]?.isPanel ? (
             <PanelStack key={`paneles-${i}`}>{run.map((item) => item.node)}</PanelStack>
           ) : (
-            run.map((item) => item.node)
+            withSharedBackdrop(run)
           ),
         )}
       </Fragment>

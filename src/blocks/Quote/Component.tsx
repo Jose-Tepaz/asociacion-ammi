@@ -5,41 +5,50 @@ import type { QuoteBlock as QuoteBlockProps } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { cn } from '@/utilities/ui'
 
+import { QuoteCards } from './Cards.client'
+
 const tones = {
   corinto: 'bg-corinto text-besh-suave',
   fucsia: 'bg-fucsia text-besh-suave',
   ocre: 'bg-ocre text-texto-primario',
 }
 
-export const QuoteBlock: React.FC<QuoteBlockProps> = ({ author, image, quote, role, tone }) => {
+/**
+ * Voz (cita): tarjeta de tres columnas, retrato | nombre y contexto | cita.
+ *
+ * `onBackdrop`: la cita va justo después de la línea de tiempo y comparte su foto de fondo fija,
+ * así que no pinta fondo propio (ver RenderBlocks).
+ */
+export const QuoteBlock: React.FC<QuoteBlockProps & { onBackdrop?: boolean }> = ({
+  author,
+  image,
+  onBackdrop,
+  quote,
+  role,
+  tone,
+}) => {
   const hasImage = image && typeof image === 'object'
+  const toneClass = onBackdrop ? 'text-besh-suave' : tones[tone || 'corinto']
+  const accent = !onBackdrop && tone === 'ocre' ? 'text-corinto' : 'text-ocre'
+
+  const portrait = hasImage ? (
+    <Media
+      fill
+      imgClassName="object-cover grayscale contrast-[1.05] transition-transform duration-500 group-hover:scale-[1.04]"
+      resource={image}
+      size="(max-width: 768px) 100vw, (max-width: 1024px) 55vw, 32vw"
+    />
+  ) : null
 
   return (
-    <section className={cn(tones[tone || 'corinto'])}>
-      <div className={cn('grid', hasImage && 'lg:grid-cols-12')}>
-        {hasImage && (
-          <div className="group relative min-h-[60svh] lg:min-h-[80svh] lg:col-span-5 overflow-hidden" data-reveal>
-            <Media fill imgClassName="object-cover grayscale contrast-[1.05] transition-transform duration-500 group-hover:scale-[1.04]" resource={image} size="(max-width: 1024px) 100vw, 42vw" />
-          </div>
-        )}
-        <figure
-          className={cn(
-            'container flex flex-col justify-center py-[var(--section-y)]',
-            hasImage ? 'lg:col-span-7 lg:max-w-none lg:px-16 xl:px-24' : 'lg:ps-[calc(var(--margin)+41.6%)]',
-          )}
-        >
-          <blockquote
-            className="text-step-title max-w-[36ch]"
-            data-reveal
-            style={{ '--i': 1 } as React.CSSProperties}
-          >
-            <p>«{quote}»</p>
-          </blockquote>
-          <figcaption className="mt-10 text-step-body" data-reveal style={{ '--i': 2 } as React.CSSProperties}>
-            <span className="block font-medium">{author}</span>
-            {role && <span className="block opacity-90">{role}</span>}
-          </figcaption>
-        </figure>
+    <section className={cn(toneClass, 'py-[var(--section-y)]')}>
+      <div className="container" data-reveal>
+        <QuoteCards
+          accent={accent}
+          // Sobre la foto de la historia, la tarjeta lleva fondo corinto oscuro para leerse como un bloque
+          cardClassName={onBackdrop ? 'bg-corinto-terciario' : ''}
+          slides={[{ quote, author, role, portrait }]}
+        />
       </div>
     </section>
   )
