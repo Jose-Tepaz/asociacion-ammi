@@ -70,7 +70,7 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
       <section className="bg-corinto-secundario text-besh-suave" data-hero="dark" data-theme="dark">
         <div className="container py-[calc(var(--section-y)*2.25)] text-center">
           <h1 className="text-step-display">Publicaciones</h1>
-          <p className="mx-auto mt-5 text-step-lead text-besh-fuerte max-w-[64ch]">
+          <p className="mx-auto mt-4 md:mt-5 lg:mt-4 text-step-lead text-besh-fuerte max-w-[64ch]">
             Pronunciamientos, noticias y voces de la Alianza. Aquí reunimos lo que
             decimos y hacemos por el acceso a la justicia y la participación política de las mujeres
             y las mujeres indígenas de Guatemala.
@@ -96,6 +96,7 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
                       : 'bg-white text-texto-secundario ring-1 ring-texto-primario/5 hover:bg-besh-fuerte hover:text-corinto',
                   )}
                   href={tab.href}
+                  scroll={false}
                 >
                   {tab.label}
                   <span className={cn('text-step-regular', tab.active ? 'text-besh-fuerte' : 'text-texto-secundario')}>

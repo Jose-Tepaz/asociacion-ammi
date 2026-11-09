@@ -53,12 +53,16 @@ const ContactCard = async () => {
     <div className="fade-up w-full max-w-[28rem] rounded-[2rem] bg-background p-6 ring-1 ring-texto-primario/8 md:p-8">
       <p className="text-step-small font-medium text-fucsia">Otras formas de encontrarnos</p>
       <ul className="mt-5 flex flex-col gap-4">
-        {contacts.map(({ href, id, label }) => {
+        {contacts.map(({ href: link, id, label }) => {
+          // Una dirección sin enlace abre su ubicación en Google Maps
+          const href =
+            link ||
+            (label ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(label)}` : '')
           const body = (
             <>
               <span className="grid size-11 shrink-0 place-items-center rounded-full bg-corinto text-besh-suave">
-                {href ? (
-                  <ContactIcon className="size-5" href={href} />
+                {link ? (
+                  <ContactIcon className="size-5" href={link} />
                 ) : (
                   <MapPin aria-hidden="true" className="size-5" />
                 )}
@@ -132,8 +136,8 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
             <div className="mask-line">
               <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
             </div>
-            {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
-            {links && <HeroLinks className="fade-up mt-8" links={links} />}
+            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead max-w-[40ch]">{standfirst}</p>}
+            {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} />}
           </div>
           <div className="md:col-span-6 lg:col-start-1">
             <ContactCard />
@@ -157,8 +161,8 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
             <div className="mask-line">
               <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
             </div>
-            {standfirst && <p className="fade-up mt-6 text-step-lead max-w-[40ch]">{standfirst}</p>}
-            {links && <HeroLinks className="fade-up mt-8" links={links} />}
+            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead max-w-[40ch]">{standfirst}</p>}
+            {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} />}
           </div>
           <div className="flex justify-center md:col-span-6 md:justify-end lg:col-span-5">
             <CalendarTile />
@@ -183,8 +187,8 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
         <div className="mask-line">
           <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[22ch]')}>{title}</div>
         </div>
-        {standfirst && <p className="fade-up mt-6 text-step-lead text-besh-fuerte max-w-[46ch]">{standfirst}</p>}
-        {links && <HeroLinks className="fade-up mt-8" links={links} onDark />}
+        {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-besh-fuerte max-w-[46ch]">{standfirst}</p>}
+        {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} onDark />}
       </div>
       <span aria-hidden="true" className="tejido relative" />
     </section>

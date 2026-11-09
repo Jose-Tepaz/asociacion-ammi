@@ -25,7 +25,7 @@ export const SocialGalleryBlock: React.FC<SocialGalleryBlockProps> = ({
       {profileLabel &&
         (profileUrl ? (
           <a
-            className="mt-4 inline-flex items-center gap-2 text-step-body font-medium text-fucsia underline decoration-fucsia/40 decoration-2 underline-offset-4 transition-colors hover:decoration-fucsia"
+            className="mt-6 md:mt-4 lg:mt-8 inline-flex items-center gap-2 text-step-body font-medium text-fucsia underline decoration-fucsia/40 decoration-2 underline-offset-4 transition-colors hover:decoration-fucsia"
             href={profileUrl}
             rel="noopener noreferrer"
             target="_blank"
