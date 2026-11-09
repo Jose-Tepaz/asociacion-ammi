@@ -20,7 +20,7 @@ export const Statement: Block = {
       label: 'Frase de pueblos',
       type: 'textarea',
       admin: { description: 'Una línea bajo la declaración. Déjala vacía para no mostrarla.' },
-      defaultValue: 'Somos mayas, garífunas, xincas, afrodescendientes, mestizas y ladinas, en una sola alianza.',
+      defaultValue: 'Somos mayas, garífunas, xinkas, afrodescendientes, mestizas y ladinas, en una sola alianza.',
     },
     {
       name: 'image',

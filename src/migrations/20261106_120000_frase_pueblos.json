@@ -518,7 +518,7 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
-          "default": "'Somos mayas, garífunas, xincas, afrodescendientes, mestizas y ladinas, en una sola alianza.'"
+          "default": "'Somos mayas, garífunas, xinkas, afrodescendientes, mestizas y ladinas, en una sola alianza.'"
         },
         "image_id": {
           "name": "image_id",
@@ -4794,7 +4794,7 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
-          "default": "'Somos mayas, garífunas, xincas, afrodescendientes, mestizas y ladinas, en una sola alianza.'"
+          "default": "'Somos mayas, garífunas, xinkas, afrodescendientes, mestizas y ladinas, en una sola alianza.'"
         },
         "image_id": {
           "name": "image_id",
