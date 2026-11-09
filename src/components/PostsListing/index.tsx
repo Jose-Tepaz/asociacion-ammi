@@ -71,7 +71,7 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
         <div className="container py-[calc(var(--section-y)*2.25)] text-center">
           <h1 className="text-step-display">Publicaciones</h1>
           <p className="mx-auto mt-5 text-step-lead text-besh-fuerte max-w-[64ch]">
-            Pronunciamientos, actividades, noticias y voces de la Alianza. Aquí reunimos lo que
+            Pronunciamientos, noticias y voces de la Alianza. Aquí reunimos lo que
             decimos y hacemos por el acceso a la justicia y la participación política de las mujeres
             y las mujeres indígenas de Guatemala.
           </p>
@@ -82,16 +82,18 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
       <div className="container pt-[var(--section-y)]">
         <nav
           aria-label="Categorías de publicaciones"
-          className="mx-auto w-fit max-w-[calc(100%-1rem)] overflow-x-auto rounded-full bg-white p-1.5 px-3 shadow-[0_16px_32px_-16px_rgb(36_15_22/0.4)] ring-1 ring-texto-primario/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="-mx-[var(--margin)] overflow-x-auto px-[var(--margin)] py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <ul className="flex w-max gap-1">
+          <ul className="mx-auto flex w-max gap-3">
             {tabs.map((tab) => (
               <li key={tab.href}>
                 <Link
                   aria-current={tab.active ? 'page' : undefined}
                   className={cn(
-                    'inline-flex h-12 items-center gap-2 rounded-full px-5 text-step-lead font-medium whitespace-nowrap transition-colors',
-                    tab.active ? 'bg-corinto text-besh-suave' : 'text-texto-primario hover:text-corinto',
+                    'inline-flex h-14 items-center gap-2 rounded-full px-7 text-step-lead font-medium whitespace-nowrap transition-colors',
+                    tab.active
+                      ? 'bg-corinto text-besh-suave'
+                      : 'bg-white text-texto-secundario ring-1 ring-texto-primario/5 hover:bg-besh-fuerte hover:text-corinto',
                   )}
                   href={tab.href}
                 >

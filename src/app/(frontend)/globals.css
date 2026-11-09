@@ -96,6 +96,14 @@
   line-height: 1.02;
   letter-spacing: -0.025em;
 }
+/* Título de la portada del inicio en computadora */
+@utility text-step-hero {
+  font-family: var(--font-display);
+  font-size: clamp(3.75rem, 5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
 @utility text-step-display {
   font-family: var(--font-display);
   font-size: var(--step-display);
@@ -484,8 +492,107 @@ body:has([data-hero='overlay']) .site-header {
 [data-hero='overlay'] {
   margin-top: calc(var(--header-h) * -1);
 }
+/* Sobre la portada el menú es transparente con textos blancos. Al bajar, queda fijo arriba
+   como una barra blanca de lado a lado */
+body:has([data-hero='overlay']) .site-header {
+  position: sticky;
+  top: 0;
+  transition: background-color 300ms ease, box-shadow 300ms ease;
+}
+body:has([data-hero='overlay']) .site-header-bar {
+  transition: background-color 300ms ease, color 300ms ease, transform 300ms ease;
+}
+body:has([data-hero='overlay']) .site-header:not([data-scrolled]) .site-header-bar {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  color: var(--besh-suave);
+}
+body:has([data-hero='overlay']) .site-header:not([data-scrolled]) nav[aria-label='Principal'] a {
+  color: var(--besh-suave);
+}
+body:has([data-hero='overlay']) .site-header:not([data-scrolled]) nav[aria-label='Principal'] a:hover {
+  opacity: 0.75;
+}
+body:has([data-hero='overlay']) .site-header:not([data-scrolled]) nav[aria-label='Principal'] a::after {
+  background: var(--besh-suave);
+}
+body:has([data-hero='overlay']) .site-header:not([data-scrolled]) .header-menu {
+  background: rgb(255 255 255 / 0.15);
+  color: var(--besh-suave);
+}
+body:has([data-hero='overlay']) .site-header:not([data-scrolled]) .header-logo {
+  display: none;
+}
+body:has([data-hero='overlay']) .site-header:not([data-scrolled]) .header-logo-white {
+  display: block;
+}
+body:has([data-hero='overlay']) .site-header[data-scrolled] {
+  background: #fff;
+  box-shadow: 0 12px 32px -20px rgb(36 15 22 / 0.45);
+}
+body:has([data-hero='overlay']) .site-header[data-scrolled] .site-header-bar {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: translateY(-0.5rem);
+}
 body:has([data-hero='beige']) .site-header {
   background: var(--besh-fuerte);
+}
+
+/* Portada del inicio: animación de entrada */
+.hero-intro {
+  opacity: 0;
+  pointer-events: none;
+}
+.hero-word {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-intro {
+    animation: hero-intro 1500ms ease-out both;
+  }
+  .hero-word {
+    animation: hero-word 900ms var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 70ms + 500ms);
+  }
+  .hero-rise {
+    animation: hero-rise 900ms var(--ease-out) 1200ms both;
+  }
+}
+@keyframes hero-intro {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes hero-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.12em);
+  }
+}
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Las páginas sin foto de portada llevan siempre la barra blanca de lado a lado, fija arriba */
+body:not(:has([data-hero='overlay'])) .site-header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  box-shadow: 0 12px 32px -20px rgb(36 15 22 / 0.45);
+}
+body:not(:has([data-hero='overlay'])) .site-header-bar {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: translateY(-0.5rem);
 }
 
 /* Si la página ya muestra el calendario grande, la tarjeta flotante sobra */
