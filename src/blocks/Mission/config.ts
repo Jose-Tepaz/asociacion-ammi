@@ -13,7 +13,7 @@ export const Mission: Block = {
       defaultValue: 'tabs',
       options: [
         { label: 'Pestañas (título grande)', value: 'tabs' },
-        { label: 'Filas con ilustración', value: 'rows' },
+        { label: 'Tarjetas con ícono', value: 'rows' },
       ],
     },
     {
@@ -22,7 +22,7 @@ export const Mission: Block = {
       type: 'array',
       minRows: 2,
       maxRows: 4,
-      admin: { description: 'Pestañas: cada una cambia el título grande y el texto. Filas: una fila con ilustración por elemento.' },
+      admin: { description: 'Pestañas: cada una cambia el título grande y el texto. Tarjetas: una tarjeta con ícono por elemento.' },
       defaultValue: [
         {
           label: 'Misión',
@@ -53,7 +53,7 @@ export const Mission: Block = {
         },
         {
           name: 'subtitle',
-          label: 'Subtítulo (solo en filas)',
+          label: 'Subtítulo (solo en tarjetas)',
           type: 'text',
           admin: { description: 'Una frase corta bajo el título.' },
         },

@@ -3,59 +3,86 @@ import React from 'react'
 import type { StatementBlock as StatementBlockProps } from '@/payload-types'
 
 import { Media } from '@/components/Media'
+import { cn } from '@/utilities/ui'
 
-/** Qué somos: una declaración en letra grande, una frase con los pueblos que la integran y una foto panorámica. */
-export const StatementBlock: React.FC<StatementBlockProps> = ({ heading, image, peoples, statement }) => {
-  const list = peoples || []
+/**
+ * Qué somos: mosaico de tarjetas con el mismo lenguaje que «Cuatro ejes» del inicio.
+ * Una tarjeta corinto grande con la declaración, la foto y una tarjeta ocre con la línea de pueblos.
+ * En celular la tarjeta ocre va antes que la foto; en tablet la foto y la tarjeta ocre comparten fila.
+ */
+export const StatementBlock: React.FC<StatementBlockProps> = ({ heading, image, peoplesLine, statement }) => {
   const hasImage = image && typeof image === 'object'
-  // «mayas, garífunas, xinkas, afrodescendientes, mestizas y ladinas»
-  const peoplesLine = new Intl.ListFormat('es', { type: 'conjunction' }).format(
-    list.map((p) => p.name.trim().toLocaleLowerCase('es')).filter(Boolean),
-  )
 
   return (
     <section className="container section-pad">
-      <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
-        <h2
-          className="font-[family-name:var(--font-display)] text-xl font-semibold leading-tight text-corinto md:text-2xl lg:col-span-3 lg:pt-3"
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-12">
+        {/* Declaración */}
+        <article
+          className={cn(
+            'relative flex flex-col justify-center gap-6 overflow-hidden rounded-card bg-corinto px-6 pb-8 pt-10 text-besh-suave md:px-10 md:pb-12 md:pt-14 lg:px-14',
+            hasImage || peoplesLine ? 'md:col-span-2 lg:col-span-7 lg:row-span-2' : 'md:col-span-2 lg:col-span-12',
+          )}
           data-reveal
         >
-          {heading}
-        </h2>
-        <div className="lg:col-span-9">
-          <p
-            className="max-w-[34ch] font-[family-name:var(--font-display)] text-[clamp(1.625rem,1.1rem+1.7vw,2.75rem)] font-semibold leading-[1.18] tracking-[-0.02em] text-texto-primario"
+          <span aria-hidden="true" className="tejido absolute inset-x-0 top-0" />
+          {/* Detalle de esquina, como en las tarjetas de los ejes */}
+          <span
+            aria-hidden="true"
+            className="absolute -bottom-16 -right-16 size-48 rounded-full bg-current/5 md:size-64"
+          />
+          <h2 className="kicker uppercase tracking-[0.18em] !text-ocre">{heading}</h2>
+          <p className="relative max-w-[26ch] font-[family-name:var(--font-display)] text-[clamp(1.5rem,1.05rem+1.7vw,2.625rem)] font-semibold leading-[1.15] tracking-[-0.015em]">
+            {statement}
+          </p>
+        </article>
+
+        {/* Foto */}
+        {hasImage && (
+          <figure
+            className="group relative order-3 h-[clamp(20rem,50vh,30rem)] overflow-hidden rounded-card bg-besh-oscuro md:order-none md:h-auto md:min-h-[20rem] lg:col-span-5"
             data-reveal
             style={{ '--i': 1 } as React.CSSProperties}
           >
-            {statement}
-          </p>
-          {peoplesLine && (
-            <div className="mt-8 flex gap-5 md:mt-10" data-reveal style={{ '--i': 2 } as React.CSSProperties}>
-              <span aria-hidden="true" className="mt-[0.8em] h-0.5 w-10 shrink-0 bg-ocre md:w-14" />
-              <p className="max-w-[40ch] font-[family-name:var(--font-display)] text-[clamp(1.25rem,1rem+0.8vw,1.75rem)] leading-snug text-corinto">
-                Somos {peoplesLine}, en una sola alianza.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
+            <Media
+              fill
+              imgClassName="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              resource={image}
+              size="(max-width: 1024px) 100vw, 42vw"
+            />
+          </figure>
+        )}
 
-      {hasImage && (
-        <figure
-          className="group relative mt-10 aspect-[4/3] overflow-hidden rounded-card bg-besh-oscuro sm:aspect-[16/9] md:mt-14 lg:aspect-[21/8]"
-          data-reveal
-          style={{ '--i': 3 } as React.CSSProperties}
-        >
-          <Media
-            fill
-            imgClassName="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-            resource={image}
-            size="(max-width: 1440px) 100vw, 1440px"
-          />
-          <span aria-hidden="true" className="tejido absolute inset-x-0 bottom-0" />
-        </figure>
-      )}
+        {/* Pueblos */}
+        {peoplesLine && (
+          <div
+            className={cn(
+              'relative flex items-end overflow-hidden rounded-card bg-ocre p-6 text-texto-primario md:p-8',
+              hasImage ? 'lg:col-span-5' : 'md:col-span-2 lg:col-span-12',
+            )}
+            data-reveal
+            style={{ '--i': 2 } as React.CSSProperties}
+          >
+            {/* Solo en tablet: glifo del logo (la parte izquierda de ammi-mark) de fondo, en corinto tenue */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-6 -top-6 hidden h-48 w-44 bg-corinto/15 md:block lg:hidden"
+              style={{
+                maskImage: 'url(/brand/ammi-mark-ink.png)',
+                maskRepeat: 'no-repeat',
+                maskSize: 'auto 100%',
+                maskPosition: 'left center',
+                WebkitMaskImage: 'url(/brand/ammi-mark-ink.png)',
+                WebkitMaskRepeat: 'no-repeat',
+                WebkitMaskSize: 'auto 100%',
+                WebkitMaskPosition: 'left center',
+              }}
+            />
+            <p className="relative font-[family-name:var(--font-display)] text-[clamp(1.125rem,0.95rem+0.6vw,1.5rem)] font-semibold leading-snug">
+              {peoplesLine}
+            </p>
+          </div>
+        )}
+      </div>
     </section>
   )
 }
