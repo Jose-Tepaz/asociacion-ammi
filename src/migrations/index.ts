@@ -7,6 +7,7 @@ import * as migration_20261105_140000_quienes_somos from './20261105_140000_quie
 import * as migration_20261106_120000_frase_pueblos from './20261106_120000_frase_pueblos';
 import * as migration_20261110_144805_quitar_campos_organizaciones from './20261110_144805_quitar_campos_organizaciones';
 import * as migration_20261110_162917_varias_voces_fuente_e_iconos from './20261110_162917_varias_voces_fuente_e_iconos';
+import * as migration_20261110_205558_sincronizar_snapshot from './20261110_205558_sincronizar_snapshot';
 
 export const migrations = [
   {
@@ -53,5 +54,10 @@ export const migrations = [
     up: migration_20261110_162917_varias_voces_fuente_e_iconos.up,
     down: migration_20261110_162917_varias_voces_fuente_e_iconos.down,
     name: '20261110_162917_varias_voces_fuente_e_iconos'
+  },
+  {
+    up: migration_20261110_205558_sincronizar_snapshot.up,
+    down: migration_20261110_205558_sincronizar_snapshot.down,
+    name: '20261110_205558_sincronizar_snapshot'
   },
 ];
