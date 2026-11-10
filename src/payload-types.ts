@@ -161,7 +161,7 @@ export interface Page {
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
     /**
-     * Cambia el fondo claro de la portada por corinto.
+     * La foto ocupa todo el fondo y el texto va encima. Sin marcar: fondo corinto con la foto a un lado.
      */
     dark?: boolean | null;
     kicker?: string | null;
@@ -363,6 +363,7 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -837,26 +838,18 @@ export interface MembersBlock {
   headingSecond?: string | null;
   intro?: string | null;
   /**
-   * Se agrupan por «Categoría», en el orden en que aparece cada categoría por primera vez. Sin logo, se muestran las siglas.
+   * Se muestran en un carrusel de logos. Si una organización no tiene logo, se muestra su nombre corto (lo que va después de la última coma).
    */
   organizations?:
     | {
+        /**
+         * Ej.: Asociación Política de Mujeres Mayas, Moloj. Sin logo se muestra «Moloj».
+         */
         name: string;
-        /**
-         * Se muestran si no hay logo. Ej.: UNAMG, Moloj.
-         */
-        acronym?: string | null;
-        /**
-         * Ej.: Participación política. Escríbela igual en cada organización del grupo.
-         */
-        category?: string | null;
         /**
          * PNG con fondo transparente, de preferencia horizontal.
          */
         logo?: (number | null) | Media;
-        focus?: string | null;
-        place?: string | null;
-        url?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1784,12 +1777,7 @@ export interface MembersBlockSelect<T extends boolean = true> {
     | T
     | {
         name?: T;
-        acronym?: T;
-        category?: T;
         logo?: T;
-        focus?: T;
-        place?: T;
-        url?: T;
         id?: T;
       };
   id?: T;
@@ -1944,6 +1932,7 @@ export interface PostsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;

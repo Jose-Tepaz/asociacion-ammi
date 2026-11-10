@@ -65,7 +65,8 @@ const DarkHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, stan
 /**
  * Portada corinto: etiqueta y título a la izquierda, texto (en claro) a la derecha
  * y, debajo, la foto panorámica a todo el ancho en una tarjeta con la franja de tejido.
- * La banda del encabezado toma el mismo corinto (data-hero="dark").
+ * El menú flota transparente sobre el corinto (data-hero="overlay"), así que la portada
+ * suma arriba la altura del encabezado para que el título no quede debajo.
  */
 export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
   if (props.dark) return <DarkHero {...props} />
@@ -73,8 +74,8 @@ export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
   const { kicker, links, media, richText, standfirst } = props
 
   return (
-    <section className="overflow-hidden bg-corinto-secundario text-besh-suave" data-hero="dark" data-theme="dark">
-      <div className="container grid grid-cols-1 items-center gap-12 py-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
+    <section className="overflow-hidden bg-corinto-secundario text-besh-suave" data-hero="overlay" data-theme="dark">
+      <div className="container grid grid-cols-1 items-center gap-12 pt-[calc(var(--header-h)+var(--section-y))] pb-[var(--section-y)] lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-6">
           {kicker && (
             <p className="fade-up mb-6 inline-flex items-center gap-2 rounded-full bg-besh-suave/10 px-4 py-1.5 text-step-small font-medium text-besh-suave">

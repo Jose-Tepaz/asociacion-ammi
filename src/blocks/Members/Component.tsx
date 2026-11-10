@@ -6,9 +6,8 @@ import { Media } from '@/components/Media'
 
 type Org = NonNullable<MembersBlockProps['organizations']>[number]
 
-/** Siglas para cuando no hay logo: las indicadas, o lo que va después de la última coma, o el nombre. */
+/** Nombre corto para cuando no hay logo: lo que va después de la última coma, o el nombre completo. */
 const shortName = (org: Org) => {
-  if (org.acronym?.trim()) return org.acronym.trim()
   const parts = org.name.split(',')
   return parts.length > 1 ? parts[parts.length - 1].trim() : org.name
 }
@@ -17,22 +16,19 @@ const shortName = (org: Org) => {
  * Logo a una altura fija y con el ancho de su propia proporción: así el espacio entre
  * logos es el mismo para los redondos y los horizontales. Los muy anchos tienen un tope.
  */
-const OrgCell: React.FC<{ hidden?: boolean; org: Org }> = ({ hidden, org }) => {
+const OrgCell: React.FC<{ org: Org }> = ({ org }) => {
   const hasLogo = org.logo && typeof org.logo === 'object'
   const label = shortName(org)
   const logo = hasLogo && typeof org.logo === 'object' ? org.logo : null
   const ratio = logo?.width && logo?.height ? logo.width / logo.height : 1
-  const Wrapper: React.ElementType = org.url ? 'a' : 'div'
 
   return (
     <li className="shrink-0">
-      <Wrapper
-        {...(org.url ? { href: org.url, rel: 'noopener noreferrer', target: '_blank' } : {})}
-        {...(hidden ? { tabIndex: -1 } : {})}
+      <div
         className="marquee-logo relative flex h-[74px] max-w-[11rem] items-center justify-center [-webkit-tap-highlight-color:transparent] md:h-[90px] md:max-w-[13.5rem]"
         draggable={false}
         style={{ aspectRatio: hasLogo ? ratio : undefined }}
-        title={org.focus ? `${org.name} · ${org.focus}` : org.name}
+        title={org.name}
       >
         <span className="relative flex size-full items-center justify-center">
           {hasLogo ? (
@@ -52,7 +48,7 @@ const OrgCell: React.FC<{ hidden?: boolean; org: Org }> = ({ hidden, org }) => {
           )}
         </span>
         <span className="sr-only">{org.name}</span>
-      </Wrapper>
+      </div>
     </li>
   )
 }
@@ -106,7 +102,7 @@ export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSeco
                 role="list"
               >
                 {list.map((org, i) => (
-                  <OrgCell hidden={copy} key={`${copy}-${org.id || i}`} org={org} />
+                  <OrgCell key={`${copy}-${org.id || i}`} org={org} />
                 ))}
               </ul>
             ))}

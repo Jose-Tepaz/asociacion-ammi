@@ -40,11 +40,11 @@ export const hero: Field = {
     },
     {
       name: 'dark',
-      label: 'Fondo corinto',
+      label: 'Foto a pantalla completa',
       type: 'checkbox',
       admin: {
         condition: (_, { type } = {}) => type === 'mediumImpact',
-        description: 'Cambia el fondo claro de la portada por corinto.',
+        description: 'La foto ocupa todo el fondo y el texto va encima. Sin marcar: fondo corinto con la foto a un lado.',
       },
     },
     {

@@ -296,7 +296,7 @@ const run = async () => {
         intro:
           'La Alianza articula 18 organizaciones de mujeres y mujeres indígenas. Este listado se completa desde el administrador del sitio.',
         organizations: [
-          { name: 'Asociación Política de Mujeres Mayas, Moloj', focus: 'Administra la Alianza' },
+          { name: 'Asociación Política de Mujeres Mayas, Moloj' },
           { name: 'Unión Nacional de Mujeres Guatemaltecas, UNAMG' },
           { name: 'Asociación de Mujeres Alas de Mariposas' },
           { name: "Ixoqib' Miriam" },
