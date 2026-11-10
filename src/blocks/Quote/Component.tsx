@@ -7,31 +7,8 @@ import { cn } from '@/utilities/ui'
 
 import { QuoteCards } from './Cards.client'
 
-const tones = {
-  corinto: 'bg-corinto text-besh-suave',
-  fucsia: 'bg-fucsia text-besh-suave',
-  ocre: 'bg-ocre text-texto-primario',
-}
-
-/**
- * Voz (cita): tarjeta de tres columnas, retrato | nombre y contexto | cita.
- *
- * `onBackdrop`: la cita va justo después de la línea de tiempo y comparte su foto de fondo fija,
- * así que no pinta fondo propio (ver RenderBlocks).
- */
-export const QuoteBlock: React.FC<QuoteBlockProps & { onBackdrop?: boolean }> = ({
-  author,
-  image,
-  onBackdrop,
-  quote,
-  role,
-  tone,
-}) => {
-  const hasImage = image && typeof image === 'object'
-  const toneClass = onBackdrop ? 'text-besh-suave' : tones[tone || 'corinto']
-  const accent = !onBackdrop && tone === 'ocre' ? 'text-corinto' : 'text-ocre'
-
-  const portrait = hasImage ? (
+const portraitOf = (image: QuoteBlockProps['image']) =>
+  image && typeof image === 'object' ? (
     <Media
       fill
       imgClassName="object-cover grayscale contrast-[1.05] transition-transform duration-500 group-hover:scale-[1.04]"
@@ -40,6 +17,34 @@ export const QuoteBlock: React.FC<QuoteBlockProps & { onBackdrop?: boolean }> = 
     />
   ) : null
 
+/**
+ * Voz (cita): tarjeta de tres columnas, retrato | nombre, cargo y fuente | cita.
+ *
+ * Con «Más voces» la tarjeta pasa a ser un carrusel con contador y flechas.
+ *
+ * `onBackdrop`: la cita va justo después de la línea de tiempo y comparte su foto de fondo fija,
+ * así que no pinta fondo propio (ver RenderBlocks).
+ */
+export const QuoteBlock: React.FC<QuoteBlockProps & { onBackdrop?: boolean }> = ({
+  author,
+  image,
+  moreVoices,
+  onBackdrop,
+  quote,
+  role,
+  source,
+}) => {
+  // Siempre corinto con acento ocre (el campo «Color de fondo» quedó oculto en el admin)
+  const toneClass = onBackdrop ? 'text-besh-suave' : 'bg-corinto text-besh-suave'
+  const accent = 'text-ocre'
+  const slides = [{ author, image, quote, role, source }, ...(moreVoices || [])].map((voice) => ({
+    author: voice.author,
+    portrait: portraitOf(voice.image),
+    quote: voice.quote,
+    role: voice.role,
+    source: voice.source,
+  }))
+
   return (
     <section className={cn(toneClass, 'py-[var(--section-y)]')}>
       <div className="container" data-reveal>
@@ -47,7 +52,7 @@ export const QuoteBlock: React.FC<QuoteBlockProps & { onBackdrop?: boolean }> = 
           accent={accent}
           // Sobre la foto de la historia, la tarjeta lleva fondo corinto oscuro para leerse como un bloque
           cardClassName={onBackdrop ? 'bg-corinto-terciario' : ''}
-          slides={[{ quote, author, role, portrait }]}
+          slides={slides}
         />
       </div>
     </section>

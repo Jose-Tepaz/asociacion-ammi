@@ -1,15 +1,20 @@
 import {
   BookOpen,
+  CalendarDays,
+  FileText,
   Flag,
+  Globe,
   Handshake,
   Laptop,
   type LucideIcon,
   Megaphone,
   Network,
   Scale,
+  ShieldCheck,
   Sprout,
   UserRound,
   UsersRound,
+  Vote,
 } from 'lucide-react'
 import React from 'react'
 
@@ -21,7 +26,12 @@ import { StepsProgress } from './StepsProgress.client'
 
 const icons: Record<string, LucideIcon> = {
   book: BookOpen,
+  calendar: CalendarDays,
+  document: FileText,
   flag: Flag,
+  globe: Globe,
+  shield: ShieldCheck,
+  vote: Vote,
   handshake: Handshake,
   laptop: Laptop,
   megaphone: Megaphone,
