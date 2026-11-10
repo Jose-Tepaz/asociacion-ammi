@@ -20,26 +20,17 @@ export const Members: Block = {
       type: 'array',
       admin: {
         description:
-          'Se agrupan por «Categoría», en el orden en que aparece cada categoría por primera vez. Sin logo, se muestran las siglas.',
+          'Se muestran en un carrusel de logos. Si una organización no tiene logo, se muestra su nombre corto (lo que va después de la última coma).',
       },
       fields: [
-        { name: 'name', label: 'Nombre', type: 'text', required: true },
         {
-          type: 'row',
-          fields: [
-            {
-              name: 'acronym',
-              label: 'Siglas o nombre corto',
-              type: 'text',
-              admin: { description: 'Se muestran si no hay logo. Ej.: UNAMG, Moloj.' },
-            },
-            {
-              name: 'category',
-              label: 'Categoría',
-              type: 'text',
-              admin: { description: 'Ej.: Participación política. Escríbela igual en cada organización del grupo.' },
-            },
-          ],
+          name: 'name',
+          label: 'Nombre',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'Ej.: Asociación Política de Mujeres Mayas, Moloj. Sin logo se muestra «Moloj».',
+          },
         },
         {
           name: 'logo',
@@ -48,14 +39,6 @@ export const Members: Block = {
           relationTo: 'media',
           admin: { description: 'PNG con fondo transparente, de preferencia horizontal.' },
         },
-        {
-          type: 'row',
-          fields: [
-            { name: 'focus', label: 'Enfoque o pueblo', type: 'text' },
-            { name: 'place', label: 'Territorio', type: 'text' },
-          ],
-        },
-        { name: 'url', label: 'Sitio web o red', type: 'text' },
       ],
     },
   ],

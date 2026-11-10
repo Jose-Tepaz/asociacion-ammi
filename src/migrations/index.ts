@@ -5,6 +5,7 @@ import * as migration_20261105_120000_logo_encabezado from './20261105_120000_lo
 import * as migration_20261105_130000_logo_pie from './20261105_130000_logo_pie';
 import * as migration_20261105_140000_quienes_somos from './20261105_140000_quienes_somos';
 import * as migration_20261106_120000_frase_pueblos from './20261106_120000_frase_pueblos';
+import * as migration_20261110_144805_quitar_campos_organizaciones from './20261110_144805_quitar_campos_organizaciones';
 import * as migration_20261110_162917_varias_voces_fuente_e_iconos from './20261110_162917_varias_voces_fuente_e_iconos';
 
 export const migrations = [
@@ -42,6 +43,11 @@ export const migrations = [
     up: migration_20261106_120000_frase_pueblos.up,
     down: migration_20261106_120000_frase_pueblos.down,
     name: '20261106_120000_frase_pueblos',
+  },
+  {
+    up: migration_20261110_144805_quitar_campos_organizaciones.up,
+    down: migration_20261110_144805_quitar_campos_organizaciones.down,
+    name: '20261110_144805_quitar_campos_organizaciones',
   },
   {
     up: migration_20261110_162917_varias_voces_fuente_e_iconos.up,
