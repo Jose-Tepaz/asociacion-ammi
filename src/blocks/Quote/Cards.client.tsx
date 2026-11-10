@@ -6,6 +6,8 @@ export type QuoteSlide = {
   quote: string
   author: string
   role?: string | null
+  /** De dónde salió la cita (actividad, lugar, entrevista…). */
+  source?: string | null
   /** Retrato ya preparado en el servidor (o un marcador si no hay foto). */
   portrait: React.ReactNode
 }
@@ -49,7 +51,7 @@ export const QuoteCards: React.FC<{
               {slide.portrait}
             </div>
 
-            {/* Nombre y contexto; con varias voces, también el contador y las flechas */}
+            {/* Arriba nombre y cargo; abajo la fuente y, con varias voces, el contador y las flechas */}
             <figcaption className="order-last flex flex-col justify-between gap-6 border-current/15 p-6 md:order-none md:p-8 lg:border-r">
               <div>
                 {many && (
@@ -60,9 +62,15 @@ export const QuoteCards: React.FC<{
                 <span className="block font-[family-name:var(--font-display)] text-xl font-semibold leading-tight md:text-2xl">
                   {slide.author}
                 </span>
+                {slide.role && <span className="mt-2 block text-step-small opacity-70">{slide.role}</span>}
               </div>
               <div>
-                {slide.role && <span className="block text-step-body opacity-80">{slide.role}</span>}
+                {slide.source && (
+                  <p>
+                    <span className="block text-step-small opacity-60">Fuente</span>
+                    <span className="mt-2 block text-step-body">{slide.source}</span>
+                  </p>
+                )}
                 {many && (
                   <div className="mt-6 flex gap-2">
                     <button

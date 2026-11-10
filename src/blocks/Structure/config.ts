@@ -12,6 +12,11 @@ export const structureIcons = [
   { label: 'Megáfono', value: 'megaphone' },
   { label: 'Libro', value: 'book' },
   { label: 'Brote', value: 'sprout' },
+  { label: 'Calendario', value: 'calendar' },
+  { label: 'Mundo', value: 'globe' },
+  { label: 'Documento', value: 'document' },
+  { label: 'Voto', value: 'vote' },
+  { label: 'Escudo (protección)', value: 'shield' },
 ] as const
 
 export const Structure: Block = {
