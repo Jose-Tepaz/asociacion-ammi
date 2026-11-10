@@ -1,15 +1,20 @@
 import {
   BookOpen,
+  CalendarDays,
+  FileText,
   Flag,
+  Globe,
   Handshake,
   Laptop,
   type LucideIcon,
   Megaphone,
   Network,
   Scale,
+  ShieldCheck,
   Sprout,
   UserRound,
   UsersRound,
+  Vote,
 } from 'lucide-react'
 import React from 'react'
 
@@ -21,7 +26,12 @@ import { StepsProgress } from './StepsProgress.client'
 
 const icons: Record<string, LucideIcon> = {
   book: BookOpen,
+  calendar: CalendarDays,
+  document: FileText,
   flag: Flag,
+  globe: Globe,
+  shield: ShieldCheck,
+  vote: Vote,
   handshake: Handshake,
   laptop: Laptop,
   megaphone: Megaphone,
@@ -46,14 +56,15 @@ export const StructureBlock: React.FC<StructureBlockProps> = ({ heading, image, 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-10 lg:gap-16">
         {/* Encabezado y foto: en escritorio se quedan fijos mientras se recorre la lista */}
         <div className="md:col-span-5">
-          <div className="md:sticky md:top-8">
+          {/* top: deja libre el menú fijo (--header-h) más 2rem de aire, para que no tape la etiqueta */}
+          <div className="md:sticky md:top-[calc(var(--header-h)+2rem)]">
             <div data-reveal>
               {kicker && <p className="kicker mb-3 uppercase tracking-[0.18em] md:mb-4">{kicker}</p>}
               <h2 className="text-step-head text-corinto md:max-w-[14ch]">{heading}</h2>
               {intro && <p className="mt-4 text-step-body text-texto-secundario md:mt-5 md:max-w-[46ch]">{intro}</p>}
             </div>
             <figure
-              className="group relative mt-8 aspect-[16/10] overflow-hidden rounded-card bg-besh-fuerte md:mt-10 md:aspect-auto md:h-[calc(100svh-26rem)] md:min-h-[16rem] lg:h-[calc(100svh-24rem)] lg:min-h-[18rem]"
+              className="group relative mt-8 aspect-[16/10] overflow-hidden rounded-card bg-besh-fuerte md:mt-10 md:aspect-auto md:h-[calc(100svh-26rem-var(--header-h))] md:min-h-[16rem] lg:h-[calc(100svh-24rem-var(--header-h))] lg:min-h-[18rem]"
               data-reveal
               style={{ '--i': 1 } as React.CSSProperties}
             >
@@ -96,7 +107,7 @@ export const StructureBlock: React.FC<StructureBlockProps> = ({ heading, image, 
                         <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold leading-tight text-corinto md:text-2xl">
                           {item.title}
                         </h3>
-                        <p className="mt-2 text-step-body leading-relaxed text-texto-secundario md:max-w-[52ch]">
+                        <p className="mt-2 text-step-body leading-relaxed text-texto-secundario">
                           {item.description}
                         </p>
                       </div>

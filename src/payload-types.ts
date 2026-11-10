@@ -708,15 +708,47 @@ export interface AgendaBlock {
  */
 export interface QuoteBlock {
   /**
-   * Hasta unas 25 palabras.
+   * Máximo 25 palabras.
    */
   quote: string;
   author: string;
+  /**
+   * Cargo, profesión u organización de la persona. Ej.: Fundadora, Magistrada, Co-dirección.
+   */
   role?: string | null;
   /**
-   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   * Dónde o en qué ocasión se dijo la cita. Ej. Foro, conferencia, entrevista o informe.
+   */
+  source?: string | null;
+  /**
+   * Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Medios»: se cambiaría en todas las páginas que usan esa misma foto.
    */
   image?: (number | null) | Media;
+  /**
+   * Opcional. Con una o más, la tarjeta muestra el contador (01 / 02) y flechas para pasar de una voz a otra.
+   */
+  moreVoices?:
+    | {
+        /**
+         * Máximo 25 palabras.
+         */
+        quote: string;
+        author: string;
+        /**
+         * Cargo, profesión u organización de la persona. Ej.: Fundadora, Magistrada, Co-dirección.
+         */
+        role?: string | null;
+        /**
+         * Dónde o en qué ocasión se dijo la cita. Ej. Foro, conferencia, entrevista o informe.
+         */
+        source?: string | null;
+        /**
+         * Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Medios»: se cambiaría en todas las páginas que usan esa misma foto.
+         */
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
   tone?: ('corinto' | 'fucsia' | 'ocre') | null;
   id?: string | null;
   blockName?: string | null;
@@ -761,7 +793,21 @@ export interface StructureBlock {
   items?:
     | {
         icon:
-          'users' | 'flag' | 'network' | 'laptop' | 'handshake' | 'user' | 'scale' | 'megaphone' | 'book' | 'sprout';
+          | 'users'
+          | 'flag'
+          | 'network'
+          | 'laptop'
+          | 'handshake'
+          | 'user'
+          | 'scale'
+          | 'megaphone'
+          | 'book'
+          | 'sprout'
+          | 'calendar'
+          | 'globe'
+          | 'document'
+          | 'vote'
+          | 'shield';
         title: string;
         /**
          * Una sola frase, unas 15 palabras.
@@ -1685,7 +1731,18 @@ export interface QuoteBlockSelect<T extends boolean = true> {
   quote?: T;
   author?: T;
   role?: T;
+  source?: T;
   image?: T;
+  moreVoices?:
+    | T
+    | {
+        quote?: T;
+        author?: T;
+        role?: T;
+        source?: T;
+        image?: T;
+        id?: T;
+      };
   tone?: T;
   id?: T;
   blockName?: T;

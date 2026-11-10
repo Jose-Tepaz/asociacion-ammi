@@ -284,7 +284,8 @@ const run = async () => {
         quote:
           'Las mujeres deben ocupar liderazgos a la par, en igualdad de condiciones y sin conformarse con impulsar solo a otros.',
         author: 'Magistrada Astrid Lemus Rodríguez',
-        role: 'VI Encuentro Virtual Mujeres y Poder',
+        role: 'Abogada y magistrada',
+        source: 'VI Encuentro Virtual Mujeres y Poder',
         image: img.magistrada.id,
         tone: 'corinto',
       },
