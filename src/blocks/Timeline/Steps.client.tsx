@@ -4,14 +4,15 @@ import React, { useEffect, useRef, useState } from 'react'
 
 type Event = { id?: string | null; year: string; title: string; text: string }
 
-/** Altura de la pantalla (0 a 1) donde se alinean el año fijo y el hito activo. */
-const LINE = 0.4
+/** Altura de la pantalla (0 a 1) donde se alinean el año y el hito activo en celular, donde no hay año fijo. */
+const MOBILE_LINE = 0.4
 
 /**
  * Hitos con el año fijo (sticky) a la derecha.
  * - Entrada: al aparecer la línea de tiempo, el año sube y el texto aparece con un fundido (una sola vez).
- * - El hito activo es el que tiene su texto más cerca de la línea de lectura (40 % de la pantalla);
- *   el año fijo está a esa misma altura, así que título y año siempre quedan alineados.
+ * - El año fijo queda centrado en el área libre bajo el menú fijo (de --header-h al final de la pantalla).
+ * - El hito activo es el que tiene su texto más cerca de la línea de lectura, que es ese mismo centro,
+ *   así que título y año siempre quedan alineados.
  * - El año cambia con un fundido corto, sin pasar por los años intermedios.
  * - Debajo del año, una barra de progreso con un punto por hito y el contador «02 / 05».
  * En celular no hay columna fija: cada hito lleva su año arriba.
@@ -23,6 +24,7 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
   const [progress, setProgress] = useState(0)
   const root = useRef<HTMLDivElement | null>(null)
   const blocks = useRef<(HTMLDivElement | null)[]>([])
+  const sticky = useRef<HTMLDivElement | null>(null)
 
   // Entrada: se activa una vez, cuando la línea de tiempo empieza a verse
   useEffect(() => {
@@ -46,7 +48,13 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
     let frame = 0
     const update = () => {
       frame = 0
-      const line = window.innerHeight * LINE
+      // Centro del área libre bajo el menú: el `top` del año fijo (alto del menú) más la mitad del resto.
+      // En celular el año no es fijo y su `top` es «auto»: se usa la línea de siempre.
+      // El relleno de abajo del año fijo sube el centro para compensar la barra que cuelga debajo del año
+      const style = sticky.current ? getComputedStyle(sticky.current) : null
+      const top = style ? parseFloat(style.top) : NaN
+      const bottom = style ? parseFloat(style.paddingBottom) || 0 : 0
+      const line = Number.isNaN(top) ? window.innerHeight * MOBILE_LINE : top + (window.innerHeight - top - bottom) / 2
       const centers = blocks.current.map((el) => {
         if (!el) return 0
         const rect = el.getBoundingClientRect()
@@ -99,8 +107,11 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
 
   return (
     <div className="relative grid grid-cols-1 md:grid-cols-2 md:gap-10" ref={root}>
-      {/* El primer y el último hito llegan a la línea de lectura con el año ya fijo */}
-      <ol className={'relative md:pb-[5svh] md:pt-[5svh] ' + enter} role="list" style={{ transitionDelay: '150ms' }}>
+      {/* El primer y el último hito llegan a la línea de lectura con el año ya fijo: el centro del primer hito
+          (relleno + 35svh) debe quedar en la mitad del área libre bajo el menú, (100svh − menú − 3rem) / 2,
+          donde 3rem es el relleno de abajo del año fijo. Arriba se resta 1.5rem y abajo se suma, porque la columna
+          fija termina 3rem por debajo del centro al llegar al final */}
+      <ol className={'relative md:pb-[calc(15svh_-_var(--header-h)_/_2_+_1.5rem)] md:pt-[calc(15svh_-_var(--header-h)_/_2_-_1.5rem)] ' + enter} role="list" style={{ transitionDelay: '150ms' }}>
         {events.map((event, i) => {
           const isActive = i === active
           return (
@@ -130,7 +141,10 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
 
       {/* Año fijo a la altura de la línea de lectura, con la barra de progreso debajo (desde tablet) */}
       <div aria-hidden="true" className="hidden md:block">
-        <div className="sticky top-0 flex h-[80svh] flex-col justify-center">
+        <div
+          className="sticky top-[var(--header-h)] flex h-[calc(100svh-var(--header-h))] flex-col justify-center pb-12"
+          ref={sticky}
+        >
           {/* relative: la barra cuelga debajo del año sin mover su centro */}
           <div className={'relative ' + enter}>
             <div className="relative h-[1em] font-[family-name:var(--font-display)] text-[clamp(7rem,3rem+10vw,15rem)] font-semibold leading-none tracking-[-0.04em] text-ocre">
@@ -139,7 +153,7 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
                 const offset = i < active ? '-0.2em' : i > active ? '0.2em' : '0'
                 return (
                   <p
-                    className="absolute inset-x-0 top-0 text-left transition-[opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+                    className="absolute inset-x-0 top-0 text-right transition-[opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
                     key={event.id || i}
                     style={{
                       opacity: isActive ? 1 : 0,
@@ -158,7 +172,7 @@ export const TimelineSteps: React.FC<{ events: Event[] }> = ({ events }) => {
 
             {/* Progreso: la línea ocre avanza con el scroll y va pasando por el punto de cada hito */}
             {total > 1 && (
-              <div className="absolute left-0 top-full mt-8 flex w-full max-w-[26rem] items-center gap-5">
+              <div className="absolute right-0 top-full mt-8 flex w-full max-w-[26rem] items-center gap-5">
                 <div className="relative h-3 flex-1">
                   <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-besh-suave/25" />
                   <span
