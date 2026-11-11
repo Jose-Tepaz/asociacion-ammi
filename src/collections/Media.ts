@@ -47,6 +47,12 @@ export const Media: CollectionConfig = {
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
+    // Sin esto cada visita vuelve a pedir el archivo al almacenamiento. El navegador lo guarda
+    // un día y la red de Vercel 30 días; al reemplazar una imagen su URL cambia (?updatedAt).
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('Cache-Control', 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400')
+      return headers
+    },
     adminThumbnail: 'thumbnail',
     focalPoint: true,
     imageSizes: [

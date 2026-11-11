@@ -6,7 +6,7 @@ import RichText from '@/components/RichText'
 
 import type { MediaBlock as MediaBlockProps } from '@/payload-types'
 
-import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getOptimizedImageUrl } from '@/utilities/getOptimizedImageUrl'
 
 import { Media } from '../../components/Media'
 
@@ -45,7 +45,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
           aria-label={media.alt || undefined}
           className="h-[60svh] min-h-[22rem] bg-besh-oscuro bg-cover bg-center md:h-[40rem] md:bg-fixed"
           role="img"
-          style={{ backgroundImage: `url("${getMediaUrl(media.url, media.updatedAt)}")` }}
+          style={{ backgroundImage: `url("${getOptimizedImageUrl(media.url, media.updatedAt, 1920)}")` }}
         />
         <span aria-hidden="true" className="tejido" />
       </figure>
