@@ -1,0 +1,24 @@
+
+/* Logo e icono de AMMI (src/components/AdminGraphics) */
+.ammi-admin-logo img {
+  display: block;
+  width: 100%;
+  max-width: 15rem;
+  height: auto;
+}
+.ammi-admin-icon img {
+  display: block;
+  width: auto;
+  height: 1.5rem;
+}
+.ammi-admin-tone-white {
+  display: none !important;
+}
+html[data-theme='dark'] {
+  .ammi-admin-tone-ink {
+    display: none !important;
+  }
+  .ammi-admin-tone-white {
+    display: block !important;
+  }
+}
