@@ -43,6 +43,7 @@ export const SocialGalleryBlock: React.FC<SocialGalleryBlockProps> = ({
     <section className="overflow-hidden bg-besh-fuerte py-[var(--section-y)]">
       <SocialCarousel header={header}>
         {list.map((post, i) => {
+          const href = post.url || profileUrl
           const tile = (
             <span className="relative block aspect-square overflow-hidden rounded-card bg-besh-oscuro">
               <Media
@@ -54,9 +55,15 @@ export const SocialGalleryBlock: React.FC<SocialGalleryBlockProps> = ({
               <span className="absolute inset-0 grid place-items-center bg-corinto-secundario/0 text-besh-suave opacity-0 transition-all duration-300 group-hover:bg-corinto-secundario/55 group-hover:opacity-100 group-focus-within:bg-corinto-secundario/55 group-focus-within:opacity-100">
                 <FaInstagram aria-hidden="true" className="size-10" />
               </span>
+              {/* En pantallas táctiles no hay hover: una etiqueta fija avisa que es un enlace a Instagram */}
+              {href && (
+                <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-step-small font-medium text-corinto shadow-[0_6px_16px_-8px_rgb(36_15_22/0.45)] [@media(hover:hover)]:hidden">
+                  <FaInstagram aria-hidden="true" className="size-4" />
+                  Ver en Instagram
+                </span>
+              )}
             </span>
           )
-          const href = post.url || profileUrl
           return (
             <li className="group w-[80%] shrink-0 snap-start sm:w-[22rem] xl:w-[24rem]" key={post.id || i}>
               {href ? (
