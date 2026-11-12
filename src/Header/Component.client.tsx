@@ -8,7 +8,7 @@ import type { Header } from '@/payload-types'
 
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
-import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getOptimizedImageUrl } from '@/utilities/getOptimizedImageUrl'
 import { cn } from '@/utilities/ui'
 
 interface HeaderClientProps {
@@ -63,7 +63,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               <img
                 alt={logo.alt || 'AMMI, ir al inicio'}
                 className="header-logo block h-9 w-auto max-w-[10rem] object-contain md:h-10 md:max-w-[12rem]"
-                src={getMediaUrl(logo.url, logo.updatedAt)}
+                src={getOptimizedImageUrl(logo.url, logo.updatedAt, 384)}
               />
             ) : (
               <Logo className="header-logo w-[6.5rem] md:w-[7.5rem]" loading="eager" priority="high" variant="mark" />

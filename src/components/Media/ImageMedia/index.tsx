@@ -10,6 +10,7 @@ import type { Props as MediaProps } from '../types'
 
 import { cssVariables } from '@/cssVariables'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { IMAGE_QUALITY } from '@/utilities/getOptimizedImageUrl'
 
 const { breakpoints } = cssVariables
 
@@ -94,7 +95,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         placeholder="blur"
         blurDataURL={placeholderBlur}
         priority={priority}
-        quality={100}
+        quality={IMAGE_QUALITY}
         loading={loading}
         sizes={sizes}
         src={src}
