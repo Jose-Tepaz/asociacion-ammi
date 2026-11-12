@@ -4,6 +4,7 @@ import { s3Storage } from '@payloadcms/storage-s3'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
+import { es } from '@payloadcms/translations/languages/es'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
@@ -28,6 +29,11 @@ const databaseUrl = process.env.DATABASE_URL || ''
 const usePostgres = databaseUrl.startsWith('postgres')
 
 export default buildConfig({
+  // El admin en español
+  i18n: {
+    supportedLanguages: { es },
+    fallbackLanguage: 'es',
+  },
   admin: {
     components: {
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
@@ -36,6 +42,15 @@ export default buildConfig({
       // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
       beforeDashboard: ['@/components/BeforeDashboard'],
+      // Logo de AMMI en el login y su marca en el menú del admin
+      graphics: {
+        Icon: '@/components/AdminGraphics#AdminIcon',
+        Logo: '@/components/AdminGraphics#AdminLogo',
+      },
+    },
+    meta: {
+      titleSuffix: ' · AMMI',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' }],
     },
     importMap: {
       baseDir: path.resolve(dirname),
