@@ -30,7 +30,7 @@ export const Timeline: Block = {
       label: 'Momentos',
       type: 'array',
       minRows: 1,
-      admin: { description: 'En orden, del más antiguo al más reciente. Se alternan a izquierda y derecha.' },
+      admin: { description: 'En orden, del más antiguo al más reciente. En el sitio el año queda fijo a la derecha y el texto a la izquierda.' },
       defaultValue: [
         {
           year: '2013',

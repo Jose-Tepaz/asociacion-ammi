@@ -312,6 +312,9 @@ export interface Post {
         id?: string | null;
       }[]
     | null;
+  /**
+   * El sitio muestra solo las 3 primeras, al final de la publicación, en «También te puede interesar». Si no eliges ninguna, muestra las más recientes de la misma categoría.
+   */
   relatedPosts?: (number | Post)[] | null;
   categories?: (number | Category)[] | null;
   meta?: {
@@ -537,7 +540,7 @@ export interface IntroBlock {
       }[]
     | null;
   /**
-   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Imágenes y archivos»: cambiaría en todas las secciones que usen esa misma imagen.
    */
   image?: (number | null) | Media;
   id?: string | null;
@@ -646,7 +649,7 @@ export interface WorkAreasBlock {
         title: string;
         summary: string;
         /**
-         * Solo se muestra en la primera línea. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+         * Solo se muestra en la primera línea. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Imágenes y archivos»: cambiaría en todas las secciones que usen esa misma imagen.
          */
         image?: (number | null) | Media;
         linkLabel?: string | null;
@@ -721,7 +724,7 @@ export interface QuoteBlock {
    */
   source?: string | null;
   /**
-   * Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Medios»: se cambiaría en todas las páginas que usan esa misma foto.
+   * Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Imágenes y archivos»: se cambiaría en todas las páginas que usan esa misma foto.
    */
   image?: (number | null) | Media;
   /**
@@ -743,7 +746,7 @@ export interface QuoteBlock {
          */
         source?: string | null;
         /**
-         * Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Medios»: se cambiaría en todas las páginas que usan esa misma foto.
+         * Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Imágenes y archivos»: se cambiaría en todas las páginas que usan esa misma foto.
          */
         image?: (number | null) | Media;
         id?: string | null;
@@ -860,7 +863,7 @@ export interface TimelineBlock {
    */
   background?: (number | null) | Media;
   /**
-   * En orden, del más antiguo al más reciente. Se alternan a izquierda y derecha.
+   * En orden, del más antiguo al más reciente. En el sitio el año queda fijo a la derecha y el texto a la izquierda.
    */
   events?:
     | {
@@ -962,7 +965,7 @@ export interface ArchiveBlock {
  */
 export interface MediaBlock {
   /**
-   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   * Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Imágenes y archivos»: cambiaría en todas las secciones que usen esa misma imagen.
    */
   media: number | Media;
   /**
@@ -1198,7 +1201,7 @@ export interface Form {
  */
 export interface CallToActionBlock {
   /**
-   * Opcional. Se muestra a la derecha del texto. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.
+   * Opcional. Se muestra a la derecha del texto. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Imágenes y archivos»: cambiaría en todas las secciones que usen esa misma imagen.
    */
   backgroundImage?: (number | null) | Media;
   note?: string | null;
@@ -2471,7 +2474,7 @@ export interface Footer {
     | {
         label: string;
         /**
-         * Por ejemplo tel:+50200000000 o https://wa.me/50200000000. Déjalo vacío si es una dirección.
+         * El enlace define el ícono. Teléfono: tel:+50200000000. WhatsApp: https://wa.me/50200000000. Correo: mailto:correo@ejemplo.org. Déjalo vacío si es una dirección: sale debajo del logo y al tocarla abre el mapa.
          */
         href?: string | null;
         id?: string | null;

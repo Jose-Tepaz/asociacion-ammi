@@ -25,7 +25,7 @@ const voiceFields = (): Field[] => [
     relationTo: 'media',
     admin: {
       description:
-        'Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Medios»: se cambiaría en todas las páginas que usan esa misma foto.',
+        'Para cambiar la foto, quítala con la ✕ y sube o elige otra aquí. No la cambies desde «Imágenes y archivos»: se cambiaría en todas las páginas que usan esa misma foto.',
     },
   },
 ]
