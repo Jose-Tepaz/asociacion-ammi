@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 
 import type { Media, Page, Post, Config } from '../payload-types'
 
-import { mergeOpenGraph } from './mergeOpenGraph'
+import { defaultDescription, mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
 
-  let url = serverUrl + '/website-template-OG.webp'
+  let url = serverUrl + '/ammi-og.jpg'
 
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = image.sizes?.og?.url
@@ -31,9 +31,9 @@ export const generateMeta = async (args: {
     : 'AMMI · Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia'
 
   return {
-    description: doc?.meta?.description,
+    description: doc?.meta?.description || defaultDescription,
     openGraph: mergeOpenGraph({
-      description: doc?.meta?.description || '',
+      description: doc?.meta?.description || defaultDescription,
       images: ogImage
         ? [
             {

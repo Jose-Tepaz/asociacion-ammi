@@ -159,7 +159,6 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
     /**
      * La foto ocupa todo el fondo y el texto va encima. Sin marcar: fondo corinto con la foto a un lado.
      */
@@ -208,7 +207,7 @@ export interface Page {
             url?: string | null;
             label: string;
             /**
-             * Choose how the link should be rendered.
+             * Cómo se ve el enlace.
              */
             appearance?: ('default' | 'outline') | null;
           };
@@ -232,6 +231,10 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    /**
+     * Cambia el diseño de la portada. Los campos de arriba cambian según el tipo.
+     */
+    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
   };
   layout: (
     | IntroBlock
@@ -276,6 +279,7 @@ export interface Page {
 export interface Post {
   id: number;
   title: string;
+  subtitle?: string | null;
   heroImage?: (number | null) | Media;
   content: {
     root: {
@@ -306,7 +310,7 @@ export interface Post {
     | {
         file: number | Media;
         /**
-         * Si lo dejas vacío se usa el nombre del archivo.
+         * Es el nombre que se ve en la página. Si lo dejas vacío se usa el nombre del archivo.
          */
         title?: string | null;
         id?: string | null;
@@ -347,6 +351,9 @@ export interface Post {
  */
 export interface Media {
   id: number;
+  /**
+   * Describe la imagen en pocas palabras, para personas que usan lector de pantalla.
+   */
   alt?: string | null;
   caption?: {
     root: {
@@ -605,7 +612,7 @@ export interface ContentBlock {
           url?: string | null;
           label: string;
           /**
-           * Choose how the link should be rendered.
+           * Cómo se ve el enlace.
            */
           appearance?: ('default' | 'outline') | null;
         };
@@ -908,6 +915,14 @@ export interface MembersBlock {
  * via the `definition` "ArchiveBlock".
  */
 export interface ArchiveBlock {
+  heading?: string | null;
+  /**
+   * Una frase corta debajo del título. Es opcional.
+   */
+  description?: string | null;
+  /**
+   * Ya no hace falta: usa Título y Descripción. Cuando los llenes, esto deja de mostrarse.
+   */
   introContent?: {
     root: {
       type: string;
@@ -1234,7 +1249,7 @@ export interface CallToActionBlock {
           url?: string | null;
           label: string;
           /**
-           * Choose how the link should be rendered.
+           * Cómo se ve el enlace.
            */
           appearance?: ('default' | 'outline') | null;
         };
@@ -1252,7 +1267,7 @@ export interface CallToActionBlock {
 export interface Redirect {
   id: number;
   /**
-   * You will need to rebuild the website when changing this field.
+   * Dirección vieja que debe llevar a otra página.
    */
   from: string;
   to?: {
@@ -1289,7 +1304,7 @@ export interface FormSubmission {
   createdAt: string;
 }
 /**
- * This is a collection of automatically created search results. These results are used by the global site search and will be updated automatically as documents in the CMS are created or updated.
+ * Esta lista se llena sola para el buscador del sitio. No hace falta editarla.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "search".
@@ -1526,7 +1541,6 @@ export interface PagesSelect<T extends boolean = true> {
   hero?:
     | T
     | {
-        type?: T;
         dark?: T;
         kicker?: T;
         tone?: T;
@@ -1560,6 +1574,7 @@ export interface PagesSelect<T extends boolean = true> {
               image?: T;
               id?: T;
             };
+        type?: T;
       };
   layout?:
     | T
@@ -1845,6 +1860,8 @@ export interface MembersBlockSelect<T extends boolean = true> {
  * via the `definition` "ArchiveBlock_select".
  */
 export interface ArchiveBlockSelect<T extends boolean = true> {
+  heading?: T;
+  description?: T;
   introContent?: T;
   display?: T;
   allLink?:
@@ -1943,6 +1960,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
+  subtitle?: T;
   heroImage?: T;
   content?: T;
   gallery?:

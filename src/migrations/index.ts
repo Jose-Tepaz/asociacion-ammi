@@ -8,6 +8,8 @@ import * as migration_20261106_120000_frase_pueblos from './20261106_120000_fras
 import * as migration_20261110_144805_quitar_campos_organizaciones from './20261110_144805_quitar_campos_organizaciones';
 import * as migration_20261110_162917_varias_voces_fuente_e_iconos from './20261110_162917_varias_voces_fuente_e_iconos';
 import * as migration_20261110_205558_sincronizar_snapshot from './20261110_205558_sincronizar_snapshot';
+import * as migration_20261117_181723_titulo_secundario_publicaciones from './20261117_181723_titulo_secundario_publicaciones';
+import * as migration_20261117_182710_titulo_descripcion_bloque_publicaciones from './20261117_182710_titulo_descripcion_bloque_publicaciones';
 
 export const migrations = [
   {
@@ -53,11 +55,21 @@ export const migrations = [
   {
     up: migration_20261110_162917_varias_voces_fuente_e_iconos.up,
     down: migration_20261110_162917_varias_voces_fuente_e_iconos.down,
-    name: '20261110_162917_varias_voces_fuente_e_iconos'
+    name: '20261110_162917_varias_voces_fuente_e_iconos',
   },
   {
     up: migration_20261110_205558_sincronizar_snapshot.up,
     down: migration_20261110_205558_sincronizar_snapshot.down,
-    name: '20261110_205558_sincronizar_snapshot'
+    name: '20261110_205558_sincronizar_snapshot',
+  },
+  {
+    up: migration_20261117_181723_titulo_secundario_publicaciones.up,
+    down: migration_20261117_181723_titulo_secundario_publicaciones.down,
+    name: '20261117_181723_titulo_secundario_publicaciones',
+  },
+  {
+    up: migration_20261117_182710_titulo_descripcion_bloque_publicaciones.up,
+    down: migration_20261117_182710_titulo_descripcion_bloque_publicaciones.down,
+    name: '20261117_182710_titulo_descripcion_bloque_publicaciones'
   },
 ];

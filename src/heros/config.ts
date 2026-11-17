@@ -14,31 +14,6 @@ export const hero: Field = {
   type: 'group',
   fields: [
     {
-      name: 'type',
-      type: 'select',
-      defaultValue: 'lowImpact',
-      label: 'Tipo de portada',
-      options: [
-        {
-          label: 'Ninguna',
-          value: 'none',
-        },
-        {
-          label: 'Pantalla completa con foto o video (inicio)',
-          value: 'highImpact',
-        },
-        {
-          label: 'Título con foto al lado',
-          value: 'mediumImpact',
-        },
-        {
-          label: 'Solo título',
-          value: 'lowImpact',
-        },
-      ],
-      required: true,
-    },
-    {
       name: 'dark',
       label: 'Foto a pantalla completa',
       type: 'checkbox',
@@ -92,7 +67,7 @@ export const hero: Field = {
     },
     {
       name: 'standfirst',
-      label: 'Entradilla',
+      label: 'Descripción',
       type: 'textarea',
       admin: {
         description: 'Una frase que explica qué es esta página. Se muestra junto al título.',
@@ -162,6 +137,34 @@ export const hero: Field = {
           required: true,
         },
       ],
+    },
+    {
+      name: 'type',
+      type: 'select',
+      defaultValue: 'lowImpact',
+      label: 'Tipo de portada',
+      admin: {
+        description: 'Cambia el diseño de la portada. Los campos de arriba cambian según el tipo.',
+      },
+      options: [
+        {
+          label: 'Ninguna',
+          value: 'none',
+        },
+        {
+          label: 'Pantalla completa con foto o video (inicio)',
+          value: 'highImpact',
+        },
+        {
+          label: 'Título con foto al lado',
+          value: 'mediumImpact',
+        },
+        {
+          label: 'Solo título',
+          value: 'lowImpact',
+        },
+      ],
+      required: true,
     },
   ],
   label: false,

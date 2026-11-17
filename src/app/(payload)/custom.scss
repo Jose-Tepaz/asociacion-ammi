@@ -1,0 +1,48 @@
+
+/* Logo e icono de AMMI (src/components/AdminGraphics) */
+.ammi-admin-logo img {
+  display: block;
+  width: 100%;
+  max-width: 15rem;
+  height: auto;
+}
+.ammi-admin-icon img {
+  display: block;
+  width: auto;
+  height: 1.5rem;
+}
+.ammi-admin-tone-white {
+  display: none !important;
+}
+html[data-theme='dark'] {
+  .ammi-admin-tone-ink {
+    display: none !important;
+  }
+  .ammi-admin-tone-white {
+    display: block !important;
+  }
+}
+
+/* Encabezado de cada sección en el admin (src/components/AdminSectionLabel) */
+.ammi-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  pointer-events: none;
+}
+.ammi-section-label__number {
+  color: var(--theme-elevation-500);
+}
+.ammi-section-label__tipo {
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--style-radius-s, 4px);
+  background: var(--theme-elevation-100);
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+.ammi-section-label__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

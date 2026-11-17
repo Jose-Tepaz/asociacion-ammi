@@ -31,11 +31,14 @@ export const Media: CollectionConfig = {
   fields: [
     {
       name: 'alt',
+      label: 'Texto alternativo',
       type: 'text',
+      admin: { description: 'Describe la imagen en pocas palabras, para personas que usan lector de pantalla.' },
       //required: true,
     },
     {
       name: 'caption',
+      label: 'Pie de foto',
       type: 'richText',
       editor: lexicalEditor({
         features: ({ rootFeatures }) => {

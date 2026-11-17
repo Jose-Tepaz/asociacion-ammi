@@ -29,6 +29,7 @@ import { slugField } from 'payload'
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
+  labels: { singular: 'Publicación', plural: 'Publicaciones' },
   access: {
     create: authenticated,
     delete: authenticated,
@@ -68,6 +69,7 @@ export const Posts: CollectionConfig<'posts'> = {
   fields: [
     {
       name: 'title',
+      label: 'Título principal',
       type: 'text',
       required: true,
     },
@@ -77,7 +79,13 @@ export const Posts: CollectionConfig<'posts'> = {
         {
           fields: [
             {
+              name: 'subtitle',
+              label: 'Título secundario',
+              type: 'text',
+            },
+            {
               name: 'heroImage',
+              label: 'Imagen de portada',
               type: 'upload',
               relationTo: 'media',
             },
@@ -100,7 +108,7 @@ export const Posts: CollectionConfig<'posts'> = {
               required: true,
             },
           ],
-          label: 'Content',
+          label: 'Contenido',
         },
         {
           label: 'Galería y documentos',
@@ -127,9 +135,9 @@ export const Posts: CollectionConfig<'posts'> = {
                 { name: 'file', label: 'Archivo', type: 'upload', relationTo: 'media', required: true },
                 {
                   name: 'title',
-                  label: 'Nombre visible',
+                  label: 'Nombre del documento',
                   type: 'text',
-                  admin: { description: 'Si lo dejas vacío se usa el nombre del archivo.' },
+                  admin: { description: 'Es el nombre que se ve en la página. Si lo dejas vacío se usa el nombre del archivo.' },
                 },
               ],
             },
@@ -139,6 +147,7 @@ export const Posts: CollectionConfig<'posts'> = {
           fields: [
             {
               name: 'relatedPosts',
+              label: 'Publicaciones relacionadas',
               type: 'relationship',
               admin: {
                 position: 'sidebar',
@@ -155,6 +164,7 @@ export const Posts: CollectionConfig<'posts'> = {
             },
             {
               name: 'categories',
+              label: 'Categorías',
               type: 'relationship',
               admin: {
                 position: 'sidebar',
@@ -163,7 +173,7 @@ export const Posts: CollectionConfig<'posts'> = {
               relationTo: 'categories',
             },
           ],
-          label: 'Meta',
+          label: 'Clasificación',
         },
         {
           name: 'meta',
@@ -196,6 +206,7 @@ export const Posts: CollectionConfig<'posts'> = {
     },
     {
       name: 'publishedAt',
+      label: 'Fecha de publicación',
       type: 'date',
       admin: {
         date: {
@@ -216,6 +227,7 @@ export const Posts: CollectionConfig<'posts'> = {
     },
     {
       name: 'authors',
+      label: 'Autoras',
       type: 'relationship',
       admin: {
         position: 'sidebar',
