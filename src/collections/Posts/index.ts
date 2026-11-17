@@ -151,6 +151,7 @@ export const Posts: CollectionConfig<'posts'> = {
               type: 'relationship',
               admin: {
                 position: 'sidebar',
+                description: 'El sitio muestra solo las 3 primeras, al final de la publicación, en «También te puede interesar». Si no eliges ninguna, muestra las más recientes de la misma categoría.',
               },
               filterOptions: ({ id }) => {
                 return {

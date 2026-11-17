@@ -40,7 +40,10 @@ export const Footer: GlobalConfig = {
           name: 'href',
           label: 'Enlace',
           type: 'text',
-          admin: { description: 'Por ejemplo tel:+50200000000 o https://wa.me/50200000000. Déjalo vacío si es una dirección.' },
+          admin: {
+            description:
+              'El enlace define el ícono. Teléfono: tel:+50200000000. WhatsApp: https://wa.me/50200000000. Correo: mailto:correo@ejemplo.org. Déjalo vacío si es una dirección: sale debajo del logo y al tocarla abre el mapa.',
+          },
         },
       ],
     },

@@ -24,7 +24,7 @@ export const WorkAreas: Block = {
           label: 'Imagen',
           type: 'upload',
           relationTo: 'media',
-          admin: { description: 'Solo se muestra en la primera línea. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.' },
+          admin: { description: 'Solo se muestra en la primera línea. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Imágenes y archivos»: cambiaría en todas las secciones que usen esa misma imagen.' },
         },
         { name: 'linkLabel', label: 'Texto del enlace', type: 'text', defaultValue: 'Conocer más' },
         { name: 'url', label: 'Enlace', type: 'text', admin: { placeholder: '/lineas/participacion' } },

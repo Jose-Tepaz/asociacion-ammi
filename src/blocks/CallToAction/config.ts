@@ -18,7 +18,7 @@ export const CallToAction: Block = {
       label: 'Foto de fondo',
       type: 'upload',
       relationTo: 'media',
-      admin: { description: 'Opcional. Se muestra a la derecha del texto. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.' },
+      admin: { description: 'Opcional. Se muestra a la derecha del texto. Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Imágenes y archivos»: cambiaría en todas las secciones que usen esa misma imagen.' },
     },
     {
       name: 'note',

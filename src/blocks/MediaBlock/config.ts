@@ -11,7 +11,7 @@ export const MediaBlock: Block = {
       type: 'upload',
       relationTo: 'media',
       required: true,
-      admin: { description: 'Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Medios»: cambiaría en todas las secciones que usen esa misma imagen.' },
+      admin: { description: 'Para cambiar solo esta sección, elige o sube otra imagen aquí. No reemplaces el archivo desde «Imágenes y archivos»: cambiaría en todas las secciones que usen esa misma imagen.' },
     },
     {
       name: 'fullBleed',
