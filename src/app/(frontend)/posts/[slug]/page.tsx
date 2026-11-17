@@ -105,13 +105,21 @@ export default async function Post({ params: paramsPromise }: Args) {
         </aside>
 
         <div className="order-1 md:col-span-7">
-          {post.meta?.description && (
+          {/* El título secundario; las publicaciones viejas sin él siguen mostrando la descripción SEO */}
+          {(post.subtitle || post.meta?.description) && (
             <p className="mb-10 font-[family-name:var(--font-display)] text-step-title text-corinto max-w-[34ch]">
-              {post.meta.description}
+              {post.subtitle || post.meta?.description}
             </p>
           )}
           <RichText className="mx-0 max-w-[68ch]" data={post.content} enableGutter={false} />
-          {gallery.length > 0 && <PostGallery items={gallery} />}
+          {gallery.length > 0 && (
+            <PostGallery
+              hideHeading={
+                (post.subtitle || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').trim().toLowerCase() === 'galeria'
+              }
+              items={gallery}
+            />
+          )}
           <Link
             className="mt-12 inline-flex items-center gap-2 text-step-small font-medium text-corinto underline-offset-4 hover:underline"
             href="/posts"

@@ -8,16 +8,18 @@ import {
 
 export const Banner: Block = {
   slug: 'banner',
+  labels: { singular: 'Aviso destacado', plural: 'Avisos destacados' },
   fields: [
     {
       name: 'style',
+      label: 'Tipo de aviso',
       type: 'select',
       defaultValue: 'info',
       options: [
-        { label: 'Info', value: 'info' },
-        { label: 'Warning', value: 'warning' },
-        { label: 'Error', value: 'error' },
-        { label: 'Success', value: 'success' },
+        { label: 'Información', value: 'info' },
+        { label: 'Advertencia', value: 'warning' },
+        { label: 'Importante', value: 'error' },
+        { label: 'Logro', value: 'success' },
       ],
       required: true,
     },

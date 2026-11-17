@@ -34,6 +34,7 @@ import {
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
+  labels: { singular: 'Página', plural: 'Páginas' },
   access: {
     create: authenticated,
     delete: authenticated,
@@ -68,6 +69,7 @@ export const Pages: CollectionConfig<'pages'> = {
   fields: [
     {
       name: 'title',
+      label: 'Título',
       type: 'text',
       required: true,
     },
@@ -82,7 +84,9 @@ export const Pages: CollectionConfig<'pages'> = {
           fields: [
             {
               name: 'layout',
+              label: 'Secciones',
               type: 'blocks',
+              // Cada sección muestra en su encabezado el tipo y su nombre (en lugar de «Untitled»)
               blocks: [
                 Intro,
                 Statement,
@@ -100,7 +104,21 @@ export const Pages: CollectionConfig<'pages'> = {
                 SocialGallery,
                 FormBlock,
                 CallToAction,
-              ],
+              ].map((block) => ({
+                ...block,
+                admin: {
+                  ...block.admin,
+                  components: {
+                    ...block.admin?.components,
+                    Label: {
+                      path: '@/components/AdminSectionLabel#SectionLabel',
+                      clientProps: {
+                        tipo: typeof block.labels?.singular === 'string' ? block.labels.singular : block.slug,
+                      },
+                    },
+                  },
+                },
+              })),
               required: true,
               admin: {
                 initCollapsed: true,
@@ -140,6 +158,7 @@ export const Pages: CollectionConfig<'pages'> = {
     },
     {
       name: 'publishedAt',
+      label: 'Fecha de publicación',
       type: 'date',
       admin: {
         position: 'sidebar',

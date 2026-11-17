@@ -13,7 +13,11 @@ export type GalleryItem = { caption?: string | null; image: MediaType; src: stri
 const VISIBLE = 9
 
 /** Mosaico de fotos con un visor a pantalla completa: flechas, teclado, contador y deslizar. */
-export const PostGallery: React.FC<{ items: GalleryItem[] }> = ({ items }) => {
+/** `hideHeading`: no repite «Galería» cuando la publicación ya lo usa como título secundario. */
+export const PostGallery: React.FC<{ items: GalleryItem[]; hideHeading?: boolean }> = ({
+  hideHeading = false,
+  items,
+}) => {
   const [index, setIndex] = useState<number | null>(null)
   const dialog = useRef<HTMLDialogElement>(null)
   const touchX = useRef<number | null>(null)
@@ -52,8 +56,8 @@ export const PostGallery: React.FC<{ items: GalleryItem[] }> = ({ items }) => {
 
   return (
     <section aria-label="Galería de fotos" className="mt-14">
-      <div className="mb-6 flex items-baseline justify-between gap-4">
-        <h2 className="text-step-title">Galería</h2>
+      <div className={`mb-6 flex items-baseline gap-4 ${hideHeading ? 'justify-end' : 'justify-between'}`}>
+        {!hideHeading && <h2 className="text-step-title">Galería</h2>}
         <p className="text-step-small text-texto-secundario">
           {total} {total === 1 ? 'foto' : 'fotos'}
         </p>

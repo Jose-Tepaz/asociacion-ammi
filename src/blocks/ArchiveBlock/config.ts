@@ -15,6 +15,18 @@ export const Archive: Block = {
   labels: { singular: 'Publicaciones', plural: 'Publicaciones' },
   fields: [
     {
+      name: 'heading',
+      label: 'Título',
+      type: 'text',
+    },
+    {
+      name: 'description',
+      label: 'Descripción',
+      type: 'textarea',
+      admin: { description: 'Una frase corta debajo del título. Es opcional.' },
+    },
+    {
+      // Texto de antes, cuando título y descripción iban juntos. Se oculta en cuanto se llena el título o la descripción.
       name: 'introContent',
       type: 'richText',
       editor: lexicalEditor({
@@ -27,7 +39,11 @@ export const Archive: Block = {
           ]
         },
       }),
-      label: 'Introducción',
+      label: 'Introducción (versión anterior)',
+      admin: {
+        condition: (_, siblingData) => !siblingData?.heading && !siblingData?.description,
+        description: 'Ya no hace falta: usa Título y Descripción. Cuando los llenes, esto deja de mostrarse.',
+      },
     },
     {
       name: 'display',
@@ -42,15 +58,16 @@ export const Archive: Block = {
     optionalLink('allLink', 'Botón «ver todas»'),
     {
       name: 'populateBy',
+      label: 'Cómo elegir las publicaciones',
       type: 'select',
       defaultValue: 'collection',
       options: [
         {
-          label: 'Collection',
+          label: 'Las más recientes',
           value: 'collection',
         },
         {
-          label: 'Individual Selection',
+          label: 'Elegirlas una por una',
           value: 'selection',
         },
       ],
@@ -62,10 +79,10 @@ export const Archive: Block = {
         condition: (_, siblingData) => siblingData.populateBy === 'collection',
       },
       defaultValue: 'posts',
-      label: 'Collections To Show',
+      label: 'Qué mostrar',
       options: [
         {
-          label: 'Posts',
+          label: 'Publicaciones',
           value: 'posts',
         },
       ],
@@ -77,7 +94,7 @@ export const Archive: Block = {
         condition: (_, siblingData) => siblingData.populateBy === 'collection',
       },
       hasMany: true,
-      label: 'Categories To Show',
+      label: 'Solo de estas categorías',
       relationTo: 'categories',
     },
     {
@@ -88,7 +105,7 @@ export const Archive: Block = {
         step: 1,
       },
       defaultValue: 10,
-      label: 'Limit',
+      label: 'Cuántas mostrar',
     },
     {
       name: 'selectedDocs',
@@ -97,7 +114,7 @@ export const Archive: Block = {
         condition: (_, siblingData) => siblingData.populateBy === 'selection',
       },
       hasMany: true,
-      label: 'Selection',
+      label: 'Publicaciones elegidas',
       relationTo: ['posts'],
     },
   ],
