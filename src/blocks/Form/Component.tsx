@@ -1,6 +1,7 @@
 'use client'
 import type { FormFieldBlock, Form as FormType } from '@payloadcms/plugin-form-builder/types'
 
+import { Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
@@ -107,7 +108,7 @@ export const FormBlock: React.FC<
           console.warn(err)
           setIsLoading(false)
           setError({
-            message: 'Something went wrong.',
+            message: 'No se pudo enviar. Intenta de nuevo.',
           })
         }
       }
@@ -131,9 +132,34 @@ export const FormBlock: React.FC<
       >
         <FormProvider {...formMethods}>
           {!isLoading && hasSubmitted && confirmationType === 'message' && (
-            <RichText data={confirmationMessage} />
+            <div
+              aria-live="polite"
+              className="flex flex-1 flex-col items-center justify-center gap-5 px-2 py-12 text-center"
+              role="status"
+            >
+              <span className="grid size-14 place-items-center rounded-full bg-besh-fuerte text-corinto ring-8 ring-besh-fuerte/40">
+                <Check aria-hidden="true" className="size-7" strokeWidth={2.5} />
+              </span>
+              <RichText
+                className="mx-auto max-w-[26rem] [&_*]:m-0 [&_*]:text-center [&_*]:text-balance [&_:is(h1,h2,h3,h4,p):first-child]:font-[family-name:var(--font-display)] [&_:is(h1,h2,h3,h4,p):first-child]:text-step-title [&_:is(h1,h2,h3,h4,p):first-child]:leading-snug [&_:is(h1,h2,h3,h4,p):first-child]:text-corinto [&_*+*]:mt-3 [&_*+*]:text-step-body [&_*+*]:text-texto-secundario"
+                data={confirmationMessage}
+                enableGutter={false}
+                enableProse={false}
+              />
+              <Button
+                className="mt-2"
+                onClick={() => {
+                  formMethods.reset()
+                  setHasSubmitted(false)
+                }}
+                type="button"
+                variant="default"
+              >
+                Enviar otro mensaje
+              </Button>
+            </div>
           )}
-          {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
+          {isLoading && !hasSubmitted && <p>Enviando…</p>}
           {error && <div>{`${error.status || '500'}: ${error.message || ''}`}</div>}
           {!hasSubmitted && (
             <form

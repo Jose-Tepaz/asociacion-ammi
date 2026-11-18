@@ -1,6 +1,7 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { resendAdapter } from '@payloadcms/email-resend'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
@@ -29,6 +30,18 @@ const databaseUrl = process.env.DATABASE_URL || ''
 const usePostgres = databaseUrl.startsWith('postgres')
 
 export default buildConfig({
+  // Correos (recuperar contraseña, avisos de formularios) con Resend.
+  // Sin RESEND_API_KEY, Payload no envía correos y solo los muestra en la consola.
+  ...(process.env.RESEND_API_KEY
+    ? {
+        email: resendAdapter({
+          apiKey: process.env.RESEND_API_KEY,
+          // Debe ser de un dominio verificado en Resend; onboarding@resend.dev solo sirve para pruebas
+          defaultFromAddress: process.env.EMAIL_FROM_ADDRESS || 'onboarding@resend.dev',
+          defaultFromName: process.env.EMAIL_FROM_NAME || 'AMMI',
+        }),
+      }
+    : {}),
   // El admin en español
   i18n: {
     supportedLanguages: { es },
