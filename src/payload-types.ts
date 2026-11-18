@@ -69,12 +69,12 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
-    media: Media;
     categories: Category;
+    media: Media;
+    'form-submissions': FormSubmission;
+    forms: Form;
     users: User;
     redirects: Redirect;
-    forms: Form;
-    'form-submissions': FormSubmission;
     search: Search;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -91,12 +91,12 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -159,17 +159,13 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    /**
-     * La foto ocupa todo el fondo y el texto va encima. Sin marcar: fondo corinto con la foto a un lado.
-     */
-    dark?: boolean | null;
     kicker?: string | null;
     /**
      * Cada página interna puede tener su propio diseño de portada.
      */
     tone?: ('corinto' | 'calendario' | 'contacto') | null;
     /**
-     * Usa un Encabezado 1 y, si quieres, un párrafo.
+     * El título grande de la portada.
      */
     richText?: {
       root: {
@@ -231,6 +227,10 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    /**
+     * La foto ocupa todo el fondo y el texto va encima. Sin marcar: fondo corinto con la foto a un lado.
+     */
+    dark?: boolean | null;
     /**
      * Cambia el diseño de la portada. Los campos de arriba cambian según el tipo.
      */
@@ -316,9 +316,6 @@ export interface Post {
         id?: string | null;
       }[]
     | null;
-  /**
-   * El sitio muestra solo las 3 primeras, al final de la publicación, en «También te puede interesar». Si no eliges ninguna, muestra las más recientes de la misma categoría.
-   */
   relatedPosts?: (number | Post)[] | null;
   categories?: (number | Category)[] | null;
   meta?: {
@@ -1274,6 +1271,23 @@ export interface CallToActionBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: number;
+  form: number | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1295,23 +1309,6 @@ export interface Redirect {
         } | null);
     url?: string | null;
   };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
- */
-export interface FormSubmission {
-  id: number;
-  form: number | Form;
-  submissionData?:
-    | {
-        field: string;
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1471,12 +1468,20 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'categories';
-        value: number | Category;
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: number | Form;
       } | null)
     | ({
         relationTo: 'users';
@@ -1485,14 +1490,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'redirects';
         value: number | Redirect;
-      } | null)
-    | ({
-        relationTo: 'forms';
-        value: number | Form;
-      } | null)
-    | ({
-        relationTo: 'form-submissions';
-        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
@@ -1553,7 +1550,6 @@ export interface PagesSelect<T extends boolean = true> {
   hero?:
     | T
     | {
-        dark?: T;
         kicker?: T;
         tone?: T;
         richText?: T;
@@ -1586,6 +1582,7 @@ export interface PagesSelect<T extends boolean = true> {
               image?: T;
               id?: T;
             };
+        dark?: T;
         type?: T;
       };
   layout?:
@@ -2014,6 +2011,26 @@ export interface PostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -2109,60 +2126,16 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
+ * via the `definition` "form-submissions_select".
  */
-export interface CategoriesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  parent?: T;
-  breadcrumbs?:
+export interface FormSubmissionsSelect<T extends boolean = true> {
+  form?: T;
+  submissionData?:
     | T
     | {
-        doc?: T;
-        url?: T;
-        label?: T;
+        field?: T;
+        value?: T;
         id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects_select".
- */
-export interface RedirectsSelect<T extends boolean = true> {
-  from?: T;
-  to?:
-    | T
-    | {
-        type?: T;
-        reference?: T;
-        url?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2302,16 +2275,40 @@ export interface FormsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions_select".
+ * via the `definition` "users_select".
  */
-export interface FormSubmissionsSelect<T extends boolean = true> {
-  form?: T;
-  submissionData?:
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
     | T
     | {
-        field?: T;
-        value?: T;
         id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -2653,42 +2650,6 @@ export interface TaskSchedulePublish {
     } | null;
   };
   output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerBlock".
- */
-export interface BannerBlock {
-  style: 'info' | 'warning' | 'error' | 'success';
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'banner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CodeBlock".
- */
-export interface CodeBlock {
-  language?: ('typescript' | 'javascript' | 'css') | null;
-  code: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

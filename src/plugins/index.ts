@@ -25,6 +25,55 @@ const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
   return doc?.slug ? `${url}/${doc.slug}` : url
 }
 
+/**
+ * Menú del admin agrupado por temas, en este orden:
+ * Contenido del sitio, Mensajes, Partes fijas del sitio (Encabezado y Pie de página) y Ajustes avanzados.
+ * «Ajustes avanzados» se dibuja aparte al final (src/components/AdminNavAjustes), porque Payload
+ * pone los grupos de los globals después de todas las colecciones.
+ */
+const MENU: { slug: string; group: string | false }[] = [
+  { slug: 'pages', group: 'Contenido del sitio' },
+  { slug: 'posts', group: 'Contenido del sitio' },
+  { slug: 'categories', group: 'Contenido del sitio' },
+  { slug: 'media', group: 'Contenido del sitio' },
+  { slug: 'form-submissions', group: 'Mensajes' },
+  { slug: 'forms', group: 'Mensajes' },
+  { slug: 'users', group: false },
+  { slug: 'redirects', group: false },
+  { slug: 'search', group: false },
+]
+const GRUPO_GLOBALES = 'Partes fijas del sitio'
+
+const ordenarMenu: Plugin = (config) => {
+  const pos = (slug: string) => {
+    const i = MENU.findIndex((m) => m.slug === slug)
+    return i === -1 ? MENU.length : i
+  }
+  return {
+    ...config,
+    admin: {
+      ...config.admin,
+      components: {
+        ...config.admin?.components,
+        afterNavLinks: [
+          ...(config.admin?.components?.afterNavLinks || []),
+          '@/components/AdminNavAjustes#NavAjustes',
+        ],
+      },
+    },
+    collections: [...(config.collections || [])]
+      .sort((a, b) => pos(a.slug) - pos(b.slug))
+      .map((collection) => {
+        const item = MENU.find((m) => m.slug === collection.slug)
+        return item ? { ...collection, admin: { ...collection.admin, group: item.group } } : collection
+      }),
+    globals: (config.globals || []).map((global) => ({
+      ...global,
+      admin: { ...global.admin, group: GRUPO_GLOBALES },
+    })),
+  }
+}
+
 export const plugins: Plugin[] = [
   redirectsPlugin({
     collections: ['pages', 'posts'],
@@ -106,4 +155,6 @@ export const plugins: Plugin[] = [
       },
     },
   }),
+  // Va al final: ordena el menú del admin cuando ya están todas las colecciones de los plugins
+  ordenarMenu,
 ]

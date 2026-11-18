@@ -1,19 +1,16 @@
 import type { CollectionConfig } from 'payload'
 
 import {
-  BlocksFeature,
   FixedToolbarFeature,
   HeadingFeature,
-  HorizontalRuleFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  OrderedListFeature,
+  UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Banner } from '../../blocks/Banner/config'
-import { Code } from '../../blocks/Code/config'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
@@ -92,19 +89,23 @@ export const Posts: CollectionConfig<'posts'> = {
             {
               name: 'content',
               type: 'richText',
+              // Editor simple: negrita, cursiva, subrayado, enlaces y listas (viñetas y numeradas). El tamaño y el estilo
+              // del texto los pone el diseño del sitio, así que no se pueden cambiar aquí.
+              // HeadingFeature sin tamaños solo sirve para que abran bien las publicaciones viejas
+              // que ya tienen títulos; ya no deja crear ni cambiar títulos.
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => {
                   return [
                     ...rootFeatures,
-                    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
+                    HeadingFeature({ enabledHeadingSizes: [] }),
+                    UnorderedListFeature(),
+                    OrderedListFeature(),
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),
-                    HorizontalRuleFeature(),
                   ]
                 },
               }),
-              label: false,
+              label: 'Texto de la publicación',
               required: true,
             },
           ],
@@ -149,9 +150,13 @@ export const Posts: CollectionConfig<'posts'> = {
               name: 'relatedPosts',
               label: 'Publicaciones relacionadas',
               type: 'relationship',
+              // Oculto: el sitio elige solo las relacionadas (más recientes de la misma categoría).
+              // El campo se queda en la base de datos.
               admin: {
                 position: 'sidebar',
-                description: 'El sitio muestra solo las 3 primeras, al final de la publicación, en «También te puede interesar». Si no eliges ninguna, muestra las más recientes de la misma categoría.',
+                hidden: true,
+                disableListColumn: true,
+                disableListFilter: true,
               },
               filterOptions: ({ id }) => {
                 return {

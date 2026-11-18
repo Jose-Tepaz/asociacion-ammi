@@ -140,11 +140,8 @@ export default async function Post({ params: paramsPromise }: Args) {
   )
 }
 
-/** Las relacionadas elegidas en el admin o, si no hay, las más recientes de la misma categoría. */
+/** Las 3 más recientes de la misma categoría, sin repetir la publicación que se está leyendo. */
 const relatedPostsFor = async (post: Post): Promise<Post[]> => {
-  const chosen = (post.relatedPosts || []).filter((p): p is Post => typeof p === 'object' && p !== null)
-  if (chosen.length > 0) return chosen.slice(0, 3)
-
   const categoryIds = (post.categories || []).map((c) => (typeof c === 'object' ? c.id : c))
   const payload = await getPayload({ config: configPromise })
   const find = (exclude: number[], sameCategory: boolean, limit: number) =>
