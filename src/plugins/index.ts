@@ -8,6 +8,8 @@ import { revalidateRedirects } from '@/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
+import { beforeFormEmail } from '@/utilities/formEmail'
+import { arrangeFormFields, arrangeSubmissionFields } from './formFields'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post } from '@/payload-types'
@@ -59,10 +61,12 @@ export const plugins: Plugin[] = [
     fields: {
       payment: false,
     },
+    // Remitente del sistema y diseño de AMMI en los correos (src/utilities/formEmail.ts)
+    beforeEmail: beforeFormEmail,
     formOverrides: {
       labels: { singular: 'Formulario', plural: 'Formularios' },
       fields: ({ defaultFields }) => {
-        return defaultFields.map((field) => {
+        const withEditor = defaultFields.map((field) => {
           if ('name' in field && field.name === 'confirmationMessage') {
             return {
               ...field,
@@ -79,10 +83,16 @@ export const plugins: Plugin[] = [
           }
           return field
         })
+        return arrangeFormFields(withEditor)
       },
     },
     formSubmissionOverrides: {
       labels: { singular: 'Respuesta de formulario', plural: 'Respuestas de formularios' },
+      admin: {
+        defaultColumns: ['createdAt', 'nombre', 'correo', 'mensaje', 'form'],
+        components: { beforeListTable: ['@/components/AdminFormRecipients#FormRecipients'] },
+      },
+      fields: ({ defaultFields }) => arrangeSubmissionFields(defaultFields),
     },
   }),
   searchPlugin({

@@ -46,3 +46,46 @@ html[data-theme='dark'] {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Respuestas de formularios: las crea el sitio, no se crean a mano desde el admin */
+.collection-list--form-submissions .list-create-new-doc__create-new-button {
+  display: none !important;
+}
+
+/* Caja «a qué correo llegan los avisos» en Respuestas de formularios (src/components/AdminFormRecipients) */
+.ammi-recipients {
+  margin: 0 var(--gutter-h) 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-m, 8px);
+  background: var(--theme-elevation-50);
+}
+.ammi-recipients__intro {
+  margin: 0 0 0.75rem;
+  color: var(--theme-elevation-600);
+}
+.ammi-recipients__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ammi-recipients__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--theme-elevation-100);
+}
+.ammi-recipients__form {
+  font-weight: 600;
+}
+.ammi-recipients__to {
+  margin-top: 0.15rem;
+  color: var(--theme-elevation-700);
+  word-break: break-word;
+}
+.ammi-recipients .btn {
+  margin: 0;
+}

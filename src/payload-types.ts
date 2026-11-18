@@ -1052,6 +1052,41 @@ export interface FormBlock {
 export interface Form {
   id: number;
   title: string;
+  /**
+   * Cuando alguien envía este formulario, llega un aviso con sus datos a estos correos. Para varios correos, sepáralos con comas.
+   */
+  emails?:
+    | {
+        /**
+         * A qué correo llegan los mensajes.
+         */
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        /**
+         * Déjalo en {{email}}: así, al responder el aviso, le contestas a la persona que escribió.
+         */
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
   fields?:
     | (
         | {
@@ -1181,32 +1216,6 @@ export interface Form {
   redirect?: {
     url: string;
   };
-  emails?:
-    | {
-        emailTo?: string | null;
-        cc?: string | null;
-        bcc?: string | null;
-        replyTo?: string | null;
-        emailFrom?: string | null;
-        subject: string;
-        message?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2164,6 +2173,18 @@ export interface RedirectsSelect<T extends boolean = true> {
  */
 export interface FormsSelect<T extends boolean = true> {
   title?: T;
+  emails?:
+    | T
+    | {
+        emailTo?: T;
+        cc?: T;
+        bcc?: T;
+        replyTo?: T;
+        emailFrom?: T;
+        subject?: T;
+        message?: T;
+        id?: T;
+      };
   fields?:
     | T
     | {
@@ -2275,18 +2296,6 @@ export interface FormsSelect<T extends boolean = true> {
     | T
     | {
         url?: T;
-      };
-  emails?:
-    | T
-    | {
-        emailTo?: T;
-        cc?: T;
-        bcc?: T;
-        replyTo?: T;
-        emailFrom?: T;
-        subject?: T;
-        message?: T;
-        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
