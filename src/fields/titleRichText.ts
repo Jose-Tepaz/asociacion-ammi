@@ -22,3 +22,25 @@ export const firstLineAsTitle: FieldHook = ({ value }) => {
 
   return { ...data, root: { ...data!.root, children: [heading, ...children.slice(1)] } }
 }
+
+/**
+ * Texto de las publicaciones: el editor ya no tiene tamaños de texto, así que los títulos que
+ * quedaron de antes se guardan como texto normal (si no, Payload no deja guardar).
+ */
+export const headingsAsParagraphs: FieldHook = ({ value }) => {
+  const data = value as LexicalValue
+  const children = data?.root?.children
+  if (!children?.some((node) => node.type === 'heading')) return value
+
+  return {
+    ...data,
+    root: {
+      ...data!.root,
+      children: children.map((node) => {
+        if (node.type !== 'heading') return node
+        const { tag: _tag, ...rest } = node
+        return { ...rest, type: 'paragraph', textFormat: 0, textStyle: '' }
+      }),
+    },
+  }
+}
