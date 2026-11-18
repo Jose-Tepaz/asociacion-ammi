@@ -37,20 +37,20 @@ export const hero: Field = {
     {
       name: 'richText',
       type: 'richText',
-      // Sin tipos de texto: el tamaño del título lo pone el diseño. HeadingFeature sin tamaños
-      // solo sirve para que el título (Encabezado 1) se guarde y se abra bien.
+      // Sin tipos de texto: el tamaño del título lo pone el diseño.
       editor: lexicalEditor({
         features: ({ rootFeatures }) => {
           return [
             // Sin barra de botones: se ve como un campo de texto normal.
             // La cursiva se sigue pudiendo poner con Cmd + I (sale en ocre en el sitio).
             ...rootFeatures.filter((feature) => !['paragraph', 'link'].includes(feature.key)),
-            HeadingFeature({ enabledHeadingSizes: [] }),
+            // Solo Encabezado 1: es como se guarda el título (ver firstLineAsTitle)
+            HeadingFeature({ enabledHeadingSizes: ['h1'] }),
           ]
         },
       }),
       hooks: {
-        beforeChange: [firstLineAsTitle],
+        beforeValidate: [firstLineAsTitle],
       },
       label: 'Título',
       admin: {

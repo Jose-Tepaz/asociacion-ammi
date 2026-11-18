@@ -12,6 +12,7 @@ import {
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { headingsAsParagraphs } from '@/fields/titleRichText'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
 
@@ -92,7 +93,7 @@ export const Posts: CollectionConfig<'posts'> = {
               // Editor simple: negrita, cursiva, subrayado, enlaces y listas (viñetas y numeradas). El tamaño y el estilo
               // del texto los pone el diseño del sitio, así que no se pueden cambiar aquí.
               // HeadingFeature sin tamaños solo sirve para que abran bien las publicaciones viejas
-              // que ya tienen títulos; ya no deja crear ni cambiar títulos.
+              // que ya tienen títulos; al guardar, esos títulos pasan a texto normal (headingsAsParagraphs).
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => {
                   return [
@@ -105,6 +106,9 @@ export const Posts: CollectionConfig<'posts'> = {
                   ]
                 },
               }),
+              hooks: {
+                beforeValidate: [headingsAsParagraphs],
+              },
               label: 'Texto de la publicación',
               required: true,
             },
