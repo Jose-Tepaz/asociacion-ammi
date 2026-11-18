@@ -1,4 +1,17 @@
-import type { BannerBlock as BannerBlockProps } from 'src/payload-types'
+import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
+
+/**
+ * Datos del bloque «Aviso destacado». Se define aquí porque el bloque ya no está en el editor
+ * de publicaciones (y por eso no sale en payload-types), pero el sitio todavía sabe mostrarlo
+ * si alguna publicación vieja lo tiene.
+ */
+export type BannerBlockProps = {
+  style: 'info' | 'warning' | 'error' | 'success'
+  content: DefaultTypedEditorState
+  id?: string | null
+  blockName?: string | null
+  blockType: 'banner'
+}
 
 import { cn } from '@/utilities/ui'
 import React from 'react'

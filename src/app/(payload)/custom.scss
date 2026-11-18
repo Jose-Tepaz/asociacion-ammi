@@ -89,3 +89,51 @@ html[data-theme='dark'] {
 .ammi-recipients .btn {
   margin: 0;
 }
+
+/* Título de las portadas: se ve igual que un campo de texto normal (src/heros/config.ts).
+   Mismas medidas que los campos de Payload (mixin formInput). */
+.ammi-campo-titulo {
+  .add-block-menu,
+  .draggable-block-menu {
+    display: none !important;
+  }
+  .editor-container,
+  .editor,
+  .editor-scroller {
+    min-height: 0 !important;
+    padding: 0 !important;
+  }
+  .ContentEditable__root {
+    min-height: 40px !important;
+    padding: 8px 15px !important;
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: var(--style-radius-s);
+    background: var(--theme-input-bg);
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    color: var(--theme-elevation-800);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 20px;
+    transition: border-color 100ms cubic-bezier(0, 0.2, 0.2, 1);
+  }
+  .ContentEditable__root:hover {
+    border-color: var(--theme-elevation-250);
+  }
+  .ContentEditable__root:focus {
+    border-color: var(--theme-elevation-400);
+    outline: none;
+  }
+  .ContentEditable__root * {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: 400 !important;
+    line-height: inherit !important;
+    letter-spacing: normal !important;
+  }
+  .ContentEditable__root em,
+  .ContentEditable__root i {
+    font-style: italic;
+  }
+}

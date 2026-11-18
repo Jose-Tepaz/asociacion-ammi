@@ -1,27 +1,14 @@
 import type { Field } from 'payload'
 
-import {
-  FixedToolbarFeature,
-  HeadingFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-} from '@payloadcms/richtext-lexical'
+import { HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '@/fields/linkGroup'
+import { firstLineAsTitle } from '@/fields/titleRichText'
 
 export const hero: Field = {
   name: 'hero',
   type: 'group',
   fields: [
-    {
-      name: 'dark',
-      label: 'Foto a pantalla completa',
-      type: 'checkbox',
-      admin: {
-        condition: (_, { type } = {}) => type === 'mediumImpact',
-        description: 'La foto ocupa todo el fondo y el texto va encima. Sin marcar: fondo corinto con la foto a un lado.',
-      },
-    },
     {
       name: 'kicker',
       label: 'Etiqueta sobre el título',
@@ -50,19 +37,25 @@ export const hero: Field = {
     {
       name: 'richText',
       type: 'richText',
+      // Sin tipos de texto: el tamaño del título lo pone el diseño. HeadingFeature sin tamaños
+      // solo sirve para que el título (Encabezado 1) se guarde y se abra bien.
       editor: lexicalEditor({
         features: ({ rootFeatures }) => {
           return [
-            ...rootFeatures,
-            HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-            FixedToolbarFeature(),
-            InlineToolbarFeature(),
+            // Sin barra de botones: se ve como un campo de texto normal.
+            // La cursiva se sigue pudiendo poner con Cmd + I (sale en ocre en el sitio).
+            ...rootFeatures.filter((feature) => !['paragraph', 'link'].includes(feature.key)),
+            HeadingFeature({ enabledHeadingSizes: [] }),
           ]
         },
       }),
+      hooks: {
+        beforeChange: [firstLineAsTitle],
+      },
       label: 'Título',
       admin: {
-        description: 'Usa un Encabezado 1 y, si quieres, un párrafo.',
+        className: 'ammi-campo-titulo',
+        description: 'El título grande de la portada.',
       },
     },
     {
@@ -137,6 +130,15 @@ export const hero: Field = {
           required: true,
         },
       ],
+    },
+    {
+      name: 'dark',
+      label: 'Foto a pantalla completa',
+      type: 'checkbox',
+      admin: {
+        condition: (_, { type } = {}) => type === 'mediumImpact',
+        description: 'La foto ocupa todo el fondo y el texto va encima. Sin marcar: fondo corinto con la foto a un lado.',
+      },
     },
     {
       name: 'type',
