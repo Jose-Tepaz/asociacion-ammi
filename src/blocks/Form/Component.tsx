@@ -13,6 +13,23 @@ import { fields } from './fields'
 import { getClientSideURL } from '@/utilities/getURL'
 import { cn } from '@/utilities/ui'
 
+type LexicalNode = { type?: string; text?: string; children?: LexicalNode[] }
+
+const nodeText = (node: LexicalNode): string => node.text ?? (node.children || []).map(nodeText).join('')
+
+/**
+ * Texto del mensaje de confirmación sin el título: si la primera línea ya dice
+ * «¡Mensaje enviado!», se quita para no repetirlo (el título lo pone el diseño).
+ */
+const confirmationBody = (message?: DefaultTypedEditorState): DefaultTypedEditorState | null => {
+  const children = (message?.root?.children || []) as LexicalNode[]
+  const rest = children.filter(
+    (node, i) => !(i === 0 && /^¡?mensaje enviado!?$/i.test(nodeText(node).trim())),
+  )
+  if (!rest.some((node) => nodeText(node).trim())) return null
+  return { ...message!, root: { ...message!.root, children: rest } } as DefaultTypedEditorState
+}
+
 export type FormBlockType = {
   blockName?: string
   blockType?: 'formBlock'
@@ -140,12 +157,18 @@ export const FormBlock: React.FC<
               <span className="grid size-14 place-items-center rounded-full bg-besh-fuerte text-corinto ring-8 ring-besh-fuerte/40">
                 <Check aria-hidden="true" className="size-7" strokeWidth={2.5} />
               </span>
-              <RichText
-                className="mx-auto max-w-[26rem] [&_*]:m-0 [&_*]:text-center [&_*]:text-balance [&_:is(h1,h2,h3,h4,p):first-child]:font-[family-name:var(--font-display)] [&_:is(h1,h2,h3,h4,p):first-child]:text-step-title [&_:is(h1,h2,h3,h4,p):first-child]:leading-snug [&_:is(h1,h2,h3,h4,p):first-child]:text-corinto [&_*+*]:mt-3 [&_*+*]:text-step-body [&_*+*]:text-texto-secundario"
-                data={confirmationMessage}
-                enableGutter={false}
-                enableProse={false}
-              />
+              {/* El título es fijo; el texto del admin (Formularios → Mensaje de confirmación) va debajo */}
+              <h3 className="m-0 font-[family-name:var(--font-display)] text-step-title leading-snug text-corinto">
+                ¡Mensaje enviado!
+              </h3>
+              {confirmationBody(confirmationMessage) && (
+                <RichText
+                  className="mx-auto max-w-[26rem] [&_*]:m-0 [&_*]:text-center [&_*]:text-balance [&_*]:font-sans [&_*]:text-step-body [&_*]:font-normal [&_*]:text-texto-secundario [&_*+*]:mt-2"
+                  data={confirmationBody(confirmationMessage)!}
+                  enableGutter={false}
+                  enableProse={false}
+                />
+              )}
               <Button
                 className="mt-2"
                 onClick={() => {
