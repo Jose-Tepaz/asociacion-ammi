@@ -10,6 +10,7 @@ import * as migration_20261110_162917_varias_voces_fuente_e_iconos from './20261
 import * as migration_20261110_205558_sincronizar_snapshot from './20261110_205558_sincronizar_snapshot';
 import * as migration_20261117_181723_titulo_secundario_publicaciones from './20261117_181723_titulo_secundario_publicaciones';
 import * as migration_20261117_182710_titulo_descripcion_bloque_publicaciones from './20261117_182710_titulo_descripcion_bloque_publicaciones';
+import * as migration_20261124_200133_tipo_formas_de_contacto from './20261124_200133_tipo_formas_de_contacto';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20261117_182710_titulo_descripcion_bloque_publicaciones.up,
     down: migration_20261117_182710_titulo_descripcion_bloque_publicaciones.down,
-    name: '20261117_182710_titulo_descripcion_bloque_publicaciones'
+    name: '20261117_182710_titulo_descripcion_bloque_publicaciones',
+  },
+  {
+    up: migration_20261124_200133_tipo_formas_de_contacto.up,
+    down: migration_20261124_200133_tipo_formas_de_contacto.down,
+    name: '20261124_200133_tipo_formas_de_contacto'
   },
 ];

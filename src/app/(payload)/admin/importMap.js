@@ -29,7 +29,10 @@ import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloa
 import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { RowLabel as RowLabel_ec255a65fa6fa8d1faeb09cf35284224 } from '@/Header/RowLabel'
+import { ContactRowLabel as ContactRowLabel_006f23125eb712f7ab6263b2eb3ce0bf } from '@/Footer/ContactRowLabel'
 import { RowLabel as RowLabel_1f6ff6ff633e3695d348f4f3c58f1466 } from '@/Footer/RowLabel'
+import { SocialPicker as SocialPicker_a7dcb00444a0bc9965b41369df2cde7a } from '@/components/AdminSocialPicker'
+import { SocialRowLabel as SocialRowLabel_7301750c868361ace60ca144eb5a30e1 } from '@/Footer/SocialRowLabel'
 import { AdminIcon as AdminIcon_e00be77569adc7e0875792737886662b } from '@/components/AdminGraphics'
 import { AdminLogo as AdminLogo_e00be77569adc7e0875792737886662b } from '@/components/AdminGraphics'
 import { NavAjustes as NavAjustes_30ca9f76109aca1a891e9aa1a541f0ee } from '@/components/AdminNavAjustes'
@@ -71,7 +74,10 @@ export const importMap = {
   "@payloadcms/plugin-search/client#ReindexButton": ReindexButton_aead06e4cbf6b2620c5c51c9ab283634,
   "@payloadcms/next/client#FolderTypeField": FolderTypeField_2b8867833a34864a02ddf429b0728a40,
   "@/Header/RowLabel#RowLabel": RowLabel_ec255a65fa6fa8d1faeb09cf35284224,
+  "@/Footer/ContactRowLabel#ContactRowLabel": ContactRowLabel_006f23125eb712f7ab6263b2eb3ce0bf,
   "@/Footer/RowLabel#RowLabel": RowLabel_1f6ff6ff633e3695d348f4f3c58f1466,
+  "@/components/AdminSocialPicker#SocialPicker": SocialPicker_a7dcb00444a0bc9965b41369df2cde7a,
+  "@/Footer/SocialRowLabel#SocialRowLabel": SocialRowLabel_7301750c868361ace60ca144eb5a30e1,
   "@/components/AdminGraphics#AdminIcon": AdminIcon_e00be77569adc7e0875792737886662b,
   "@/components/AdminGraphics#AdminLogo": AdminLogo_e00be77569adc7e0875792737886662b,
   "@/components/AdminNavAjustes#NavAjustes": NavAjustes_30ca9f76109aca1a891e9aa1a541f0ee,

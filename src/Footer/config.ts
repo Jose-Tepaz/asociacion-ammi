@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
 import { link } from '@/fields/link'
+import { contactTypeOptions } from '@/utilities/contactLink'
 import { revalidateFooter } from './hooks/revalidateFooter'
 
 export const Footer: GlobalConfig = {
@@ -30,19 +31,33 @@ export const Footer: GlobalConfig = {
       label: 'Formas de contacto',
       type: 'array',
       maxRows: 4,
+      labels: { singular: 'Forma de contacto', plural: 'Formas de contacto' },
       admin: {
         description:
-          'Con enlace aparece en Contáctanos con su ícono (tel:, https://wa.me/ o mailto:). Sin enlace aparece como dirección debajo del logo.',
+          'Correo, teléfono, WhatsApp y otros enlaces aparecen en Contáctanos con su ícono. La dirección aparece debajo del logo.',
+        components: {
+          RowLabel: '@/Footer/ContactRowLabel#ContactRowLabel',
+        },
       },
       fields: [
+        {
+          name: 'type',
+          label: 'Tipo (ícono)',
+          type: 'select',
+          options: contactTypeOptions,
+          admin: {
+            description: 'Elige qué ícono se muestra. Si lo dejas vacío, se adivina por el enlace.',
+          },
+        },
         { name: 'label', label: 'Texto visible', type: 'text', required: true },
         {
           name: 'href',
-          label: 'Enlace',
+          label: 'Correo, número o enlace',
           type: 'text',
           admin: {
             description:
-              'El enlace define el ícono. Teléfono: tel:+50200000000. WhatsApp: https://wa.me/50200000000. Correo: mailto:correo@ejemplo.org. Déjalo vacío si es una dirección: sale debajo del logo y al tocarla abre el mapa.',
+              'Escribe solo el correo (alianza@ejemplo.org) o el número con código de país (+502 1234 5678): el sitio arma el enlace. En Dirección déjalo vacío: al tocarla abre el mapa.',
+            condition: (_, siblingData) => siblingData?.type !== 'address',
           },
         },
       ],
@@ -68,9 +83,25 @@ export const Footer: GlobalConfig = {
       name: 'socialLinks',
       label: 'Redes sociales',
       type: 'array',
-      maxRows: 6,
+      maxRows: 10,
+      labels: { singular: 'Red social', plural: 'Redes sociales' },
+      admin: {
+        description:
+          'Toca el ícono de la red y pega su URL. Si la red no está, escribe su nombre: sale con un globo.',
+        components: {
+          RowLabel: '@/Footer/SocialRowLabel#SocialRowLabel',
+        },
+      },
       fields: [
-        { name: 'label', label: 'Red', type: 'text', required: true },
+        {
+          name: 'label',
+          label: 'Red',
+          type: 'text',
+          required: true,
+          admin: {
+            components: { Field: '@/components/AdminSocialPicker#SocialPicker' },
+          },
+        },
         { name: 'url', label: 'URL', type: 'text', required: true },
       ],
     },
