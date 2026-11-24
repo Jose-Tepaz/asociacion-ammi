@@ -34,8 +34,10 @@ export const TimelineBackdrop: React.FC<{ background: TimelineBlockProps['backgr
   const hasBg = background && typeof background === 'object'
   return (
     <div aria-hidden="true" className="absolute inset-0 -z-10">
-      {/* lvh: la altura con la barra del navegador escondida; con svh quedaba una franja sin fondo al bajar en celular */}
-      <div className="sticky top-0 h-lvh overflow-hidden">
+      {/* lvh: la altura con la barra del navegador escondida; con svh quedaba una franja sin fondo al bajar en celular.
+          +4rem: en Safari de iPhone la barra de abajo flota sobre la página y la pantalla visible llega más abajo que
+          cualquier unidad vh, así que la foto se alarga 64 px de más para que nunca quede una franja sin fondo */}
+      <div className="sticky top-0 h-[calc(100lvh+4rem)] overflow-hidden">
         {hasBg && <Media fill imgClassName="object-cover opacity-[0.16] grayscale" resource={background} size="100vw" />}
         {/* Un solo nawal (Tz'i'), grande y recortado por la derecha, detrás del año: con la foto ya basta */}
         <Glyph
