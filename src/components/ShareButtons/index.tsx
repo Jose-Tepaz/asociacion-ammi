@@ -31,11 +31,12 @@ export const ShareButtons: React.FC<{ title: string }> = ({ title }) => {
   }
 
   return (
-    // En celular con espacio (de 416 a 767 px, p. ej. horizontal) el título va a la izquierda y los botones a la derecha;
-    // en celular angosto, tablet y escritorio, el título arriba y los botones debajo, sin quedar apretados
-    <div className="flex flex-col gap-3 min-[26rem]:max-md:flex-row min-[26rem]:max-md:items-center min-[26rem]:max-md:justify-between min-[26rem]:max-md:gap-6">
+    // Hasta tablet el título va a la izquierda y los botones a la derecha en una sola fila; cuando no queda al menos
+    // 20 px entre los dos (gap-x-5), los botones bajan solos a la línea de abajo (flex-wrap), sin importar el ancho exacto.
+    // Desde tablet, donde la tarjeta es angosta, siempre en columna como antes.
+    <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-3 md:flex-col md:items-start md:justify-start md:gap-3">
       <p className="text-step-small font-medium">Compartir</p>
-      <ul className="flex gap-2">
+      <ul className="flex shrink-0 gap-2">
         {links.map(({ href, Icon, label }) => (
           <li key={label}>
             <a aria-label={label} className={buttonClasses} href={href} rel="noopener noreferrer" target="_blank">
