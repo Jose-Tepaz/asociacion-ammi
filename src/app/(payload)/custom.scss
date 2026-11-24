@@ -137,3 +137,40 @@ html[data-theme='dark'] {
     font-style: italic;
   }
 }
+
+/* Redes sociales del pie: íconos en fila para elegir la red */
+.ammi-redes__fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.ammi-redes__boton {
+  align-items: center;
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 999px;
+  color: var(--theme-elevation-800);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.8125rem;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+
+  &:hover {
+    border-color: var(--theme-elevation-400);
+  }
+
+  &.is-active {
+    background: var(--theme-elevation-800);
+    border-color: var(--theme-elevation-800);
+    color: var(--theme-elevation-0);
+  }
+}

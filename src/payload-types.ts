@@ -2492,13 +2492,17 @@ export interface Footer {
    */
   statement?: string | null;
   /**
-   * Con enlace aparece en Contáctanos con su ícono (tel:, https://wa.me/ o mailto:). Sin enlace aparece como dirección debajo del logo.
+   * Correo, teléfono, WhatsApp y otros enlaces aparecen en Contáctanos con su ícono. La dirección aparece debajo del logo.
    */
   contacts?:
     | {
+        /**
+         * Elige qué ícono se muestra. Si lo dejas vacío, se adivina por el enlace.
+         */
+        type?: ('email' | 'phone' | 'whatsapp' | 'address' | 'contact' | 'link') | null;
         label: string;
         /**
-         * El enlace define el ícono. Teléfono: tel:+50200000000. WhatsApp: https://wa.me/50200000000. Correo: mailto:correo@ejemplo.org. Déjalo vacío si es una dirección: sale debajo del logo y al tocarla abre el mapa.
+         * Escribe solo el correo (alianza@ejemplo.org) o el número con código de país (+502 1234 5678): el sitio arma el enlace. En Dirección déjalo vacío: al tocarla abre el mapa.
          */
         href?: string | null;
         id?: string | null;
@@ -2524,6 +2528,9 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Toca el ícono de la red y pega su URL. Si la red no está, escribe su nombre: sale con un globo.
+   */
   socialLinks?:
     | {
         label: string;
@@ -2586,6 +2593,7 @@ export interface FooterSelect<T extends boolean = true> {
   contacts?:
     | T
     | {
+        type?: T;
         label?: T;
         href?: T;
         id?: T;

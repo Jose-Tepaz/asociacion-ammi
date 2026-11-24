@@ -6,6 +6,7 @@ import React from 'react'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { ContactIcon, SocialIcon } from '@/components/SocialIcon'
+import { contactHref, contactType } from '@/utilities/contactLink'
 import { getOptimizedImageUrl } from '@/utilities/getOptimizedImageUrl'
 
 const columnTitle = 'font-sans text-step-body font-medium tracking-normal text-ocre'
@@ -16,10 +17,12 @@ export async function Footer() {
   const footerData = await getCachedGlobal('footer', 1)()
 
   const navItems = footerData?.navItems || []
-  // Las formas de contacto sin enlace son direcciones y van debajo del logo
+  // Las direcciones van debajo del logo; lo demás (correo, teléfono, WhatsApp, enlaces) en Contáctanos
   const allContacts = footerData?.contacts || []
-  const contacts = allContacts.filter(({ href }) => href)
-  const addresses = allContacts.filter(({ href }) => !href)
+  const addresses = allContacts.filter((contact) => contactType(contact) === 'address')
+  const contacts = allContacts.filter(
+    (contact) => contactType(contact) !== 'address' && contactHref(contact),
+  )
   const socialLinks = footerData?.socialLinks || []
   const logo = footerData?.logo && typeof footerData.logo === 'object' ? footerData.logo : null
 
@@ -79,12 +82,13 @@ export async function Footer() {
           </nav>
         )}
 
-        <div className="lg:col-span-3 lg:col-start-8">
-          <h2 className={columnTitle}>Contáctanos</h2>
-          {contacts.length > 0 && (
+        {contacts.length > 0 && (
+          <div className="lg:col-span-3 lg:col-start-8">
+            <h2 className={columnTitle}>Contáctanos</h2>
             <ul className="mt-5 flex flex-col gap-3">
-              {contacts.map(({ href, label, id }) => {
-                const url = href || ''
+              {contacts.map((contact) => {
+                const { id, label, type } = contact
+                const url = contactHref(contact)
                 const external = url.startsWith('http')
                 return (
                   <li key={id}>
@@ -93,15 +97,20 @@ export async function Footer() {
                       href={url}
                       {...(external ? { rel: 'noopener noreferrer', target: '_blank' } : {})}
                     >
-                      <ContactIcon className="size-5 shrink-0 text-ocre" href={url} />
+                      <ContactIcon
+                        className="size-5 shrink-0 text-ocre"
+                        href={url}
+                        label={label}
+                        type={type}
+                      />
                       {label}
                     </a>
                   </li>
                 )
               })}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
 
         {socialLinks.length > 0 && (
           <div className="lg:col-span-2 lg:col-start-11">
