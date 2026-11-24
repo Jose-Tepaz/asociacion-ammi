@@ -35,8 +35,10 @@ export const ShareButtons: React.FC<{ title: string }> = ({ title }) => {
     // 20 px entre los dos (gap-x-5), los botones bajan solos a la línea de abajo (flex-wrap), sin importar el ancho exacto.
     // Desde tablet, donde la tarjeta es angosta, siempre en columna como antes.
     <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-3 md:flex-col md:items-start md:justify-start md:gap-3">
-      <p className="text-step-small font-medium">Compartir</p>
-      <ul className="flex shrink-0 gap-2">
+      <p className="text-step-body font-medium">Compartir</p>
+      {/* Los botones ocupan el espacio libre (hasta 18 rem) y se reparten en él; al bajar a su propia línea
+          quedan repartidos de lado a lado, sin hueco a la derecha. Desde tablet, a todo el ancho de la tarjeta */}
+      <ul className="flex shrink-0 grow justify-between gap-2 max-w-[18rem] md:w-full md:max-w-none">
         {links.map(({ href, Icon, label }) => (
           <li key={label}>
             <a aria-label={label} className={buttonClasses} href={href} rel="noopener noreferrer" target="_blank">

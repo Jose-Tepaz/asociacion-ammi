@@ -28,7 +28,7 @@ const typeOf = (file: Media) => {
 /** Archivos de una publicación como tarjetas: tipo, nombre, peso y botones para ver o descargar. */
 export const PostDocuments: React.FC<{ items: DocumentItem[] }> = ({ items }) => (
   <div className="rounded-card bg-besh-fuerte p-5">
-    <p className="text-step-small font-medium">
+    <p className="text-step-body font-medium">
       {items.length === 1 ? 'Documento para descargar' : `Documentos para descargar (${items.length})`}
     </p>
     <ul className="mt-4 flex flex-col gap-3" role="list">
