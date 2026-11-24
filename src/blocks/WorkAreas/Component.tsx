@@ -40,7 +40,7 @@ const Number_: React.FC<{ n: number }> = ({ n }) => (
 const CardBody: React.FC<{ item: Item }> = ({ item }) => (
   <>
     <h3 className="text-step-title max-w-[22ch] pe-14">{item.title}</h3>
-    <p className="mt-3 text-step-body opacity-90 max-w-[48ch]">{item.summary}</p>
+    <p className="mt-3 text-step-body opacity-90 md:max-w-[48ch]">{item.summary}</p>
     {item.url && (
       <span className="mt-6 inline-flex items-center gap-2 text-step-small font-medium">
         {item.linkLabel || 'Conocer más'}
