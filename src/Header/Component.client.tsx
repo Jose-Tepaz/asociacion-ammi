@@ -1,5 +1,4 @@
 'use client'
-import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -111,7 +110,27 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               onClick={() => setOpen((v) => !v)}
               type="button"
             >
-              {open ? <X aria-hidden="true" className="size-6" /> : <Menu aria-hidden="true" className="size-6" />}
+              {/* Tres barras que se convierten en una X: la de arriba y la de abajo giran, la del medio se desvanece */}
+              <span aria-hidden="true" className="relative block size-6">
+                <span
+                  className={cn(
+                    'absolute left-1 top-[5px] block h-0.5 w-4 rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+                    open && 'translate-y-[6px] rotate-45',
+                  )}
+                />
+                <span
+                  className={cn(
+                    'absolute left-1 top-[11px] block h-0.5 w-4 rounded-full bg-current transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
+                    open && 'scale-x-0 opacity-0',
+                  )}
+                />
+                <span
+                  className={cn(
+                    'absolute left-1 top-[17px] block h-0.5 w-4 rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+                    open && '-translate-y-[6px] -rotate-45',
+                  )}
+                />
+              </span>
             </button>
           </div>
 
@@ -119,11 +138,15 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
       </div>
 
       {/* Panel del menú: fuera de la barra para cubrir todo el ancho, pegado al borde inferior del encabezado.
-          Sin redondeo arriba; con la altura limitada y scroll para que en horizontal no se corte */}
+          Sin redondeo arriba; con la altura limitada y scroll para que en horizontal no se corte.
+          Se despliega hacia abajo desde el encabezado (recorte + fundido): entra en 300 ms y sale más rápido, en 200 ms.
+          Cerrado queda invisible, así no recibe foco ni lo lee el lector de pantalla */}
       <div
         className={cn(
-          'lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain rounded-b-[var(--radius-card)] bg-besh-suave px-[var(--margin)] pb-5 pt-2 text-texto-primario shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)]',
-          open ? 'block' : 'hidden',
+          'lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain rounded-b-[var(--radius-card)] bg-besh-suave px-[var(--margin)] pb-5 pt-2 text-texto-primario shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)] transition-[clip-path,opacity,visibility] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+          open
+            ? 'visible opacity-100 duration-300 [clip-path:inset(0_0_-3rem_0)]'
+            : 'invisible opacity-0 duration-200 [clip-path:inset(0_0_100%_0)]',
         )}
         id="menu-movil"
       >
