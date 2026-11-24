@@ -84,7 +84,8 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <div className="container grid gap-12 py-[var(--section-y)] md:grid-cols-12 md:gap-8 lg:gap-10">
         <aside className="order-2 md:col-span-5 lg:col-span-4 lg:col-start-9">
-          <div className="flex flex-col gap-6 md:sticky md:top-6">
+          {/* top: deja libre el menú fijo (--header-h) más 2rem de aire */}
+          <div className="flex flex-col gap-6 md:sticky md:top-[calc(var(--header-h)+2rem)]">
             {image && (
               <figure className="rounded-card bg-besh-fuerte p-3">
                 <Lightbox alt={image.alt || 'Pieza de la publicación'} src={getMediaUrl(image.url, image.updatedAt)}>
