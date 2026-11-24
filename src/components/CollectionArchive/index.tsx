@@ -19,7 +19,7 @@ export const CollectionArchive: React.FC<Props> = (props) => {
           className={cn(
             'gap-6 sm:grid sm:grid-cols-8 lg:grid-cols-12',
             slideOnMobile
-              ? '-mx-[var(--margin)] -my-2 flex snap-x snap-mandatory scroll-px-[var(--margin)] gap-4 overflow-x-auto px-[var(--margin)] py-2 [scrollbar-width:none] sm:mx-0 sm:my-0 sm:gap-6 sm:overflow-visible sm:px-0 sm:py-0 [&::-webkit-scrollbar]:hidden'
+              ? '-mx-[var(--margin)] -my-2 flex snap-x snap-mandatory scroll-px-[var(--margin)] gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-[var(--margin)] py-2 [scrollbar-width:none] sm:mx-0 sm:my-0 sm:gap-6 sm:overflow-visible sm:px-0 sm:py-0 [&::-webkit-scrollbar]:hidden'
               : 'grid grid-cols-4',
           )}
         >

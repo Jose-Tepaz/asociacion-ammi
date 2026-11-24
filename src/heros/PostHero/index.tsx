@@ -49,7 +49,7 @@ export const PostHero: React.FC<{ post: Post }> = ({ post }) => {
         </nav>
 
         <div className="mask-line mt-8">
-          <h1 className="text-step-display max-w-[30ch]">{title}</h1>
+          <h1 className="text-step-display md:max-w-[30ch]">{title}</h1>
         </div>
 
         <dl className="fade-up mt-10 flex flex-wrap items-center gap-2 text-step-small whitespace-nowrap md:gap-x-8 md:gap-y-4">

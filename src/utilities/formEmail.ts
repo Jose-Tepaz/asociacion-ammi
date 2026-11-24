@@ -27,7 +27,7 @@ const isEmail = (text: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)
 const logoURL = (): string => {
   const site = getServerSideURL()
   if (/localhost|127\.0\.0\.1/.test(site)) {
-    return 'https://asociacion-ammi.vercel.app/brand/ammi-logo-white.png'
+    return 'https://alianzaammi.org/brand/ammi-logo-white.png'
   }
   return `${site}/brand/ammi-logo-correo.png`
 }

@@ -60,12 +60,19 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
   const words = headingWords(richText)
 
   return (
+    // - Tablet y computadora: la foto queda fija y el texto sube (115lvh; la foto usa lvh, la altura con la barra del
+    //   navegador escondida, para no dejar una franja sin foto).
+    // - Celular vertical (menos de 48 rem de ancho): la portada mide exactamente una pantalla (100svh) y la foto cubre todo
+    //   el fondo; no hay deslizamiento extra ni efecto de foto fija. El texto está centrado en la pantalla; el relleno de
+    //   abajo (6.25 rem contra 7 rem arriba) lo deja unos 30 px más arriba que antes, siempre centrado según la altura.
+    // - Pantallas bajas (celular horizontal, menos de 34 rem de alto): el contenido ya no cabe en una pantalla, así que la
+    //   portada crece con él: la foto cubre todo el fondo y el texto y la tarjeta van uno debajo del otro sin taparse.
     <section
-      className="relative isolate h-[115svh] bg-corinto-terciario text-besh-suave"
+      className="relative isolate h-[115lvh] bg-corinto-terciario text-besh-suave [@media(max-height:34rem)]:h-auto [@media(max-width:47.99rem)_and_(min-height:34rem)]:h-[100svh]"
       data-hero="overlay"
       data-theme="dark"
     >
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
+      <div className="sticky top-0 h-lvh overflow-hidden [@media(max-height:34rem)]:absolute [@media(max-height:34rem)]:inset-0 [@media(max-height:34rem)]:h-auto [@media(max-width:47.99rem)_and_(min-height:34rem)]:absolute [@media(max-width:47.99rem)_and_(min-height:34rem)]:inset-0 [@media(max-width:47.99rem)_and_(min-height:34rem)]:h-auto">
         <div className="absolute inset-0">
           {resource &&
             (isVideo ? (
@@ -98,8 +105,8 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
         <span aria-hidden="true" className="hero-intro absolute inset-0 bg-white" />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[100svh] flex-col justify-end max-lg:justify-center">
-        <div className="container flex flex-col items-start pb-10 pt-28 md:pt-32 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10 lg:pb-36">
+      <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[100svh] flex-col justify-end max-lg:justify-center [@media(max-height:34rem)]:relative [@media(max-height:34rem)]:h-auto [@media(max-height:34rem)]:min-h-[100svh]">
+        <div className="container flex flex-col items-start pb-10 pt-28 md:pt-32 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10 lg:pb-36 [@media(max-height:34rem)]:pb-6 [@media(max-height:34rem)]:pt-24 [@media(max-width:47.99rem)_and_(min-height:34rem)]:pb-[6.25rem]">
           <div className="lg:col-span-8">
             {words.length > 0 ? (
               <h1 className="text-step-display font-normal leading-[1.04] text-besh-suave md:max-w-[20ch] lg:max-w-[24ch] lg:text-step-hero">
@@ -138,10 +145,10 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
 
       {/* Va fijo con la foto. A la derecha deja libre la esquina donde flota el calendario */}
       {post && (
-        <div className="pointer-events-none absolute inset-0">
-          <div className="sticky top-0 h-[100svh]">
+        <div className="pointer-events-none absolute inset-0 [@media(max-height:34rem)]:relative [@media(max-height:34rem)]:inset-auto [@media(max-height:34rem)]:pb-8">
+          <div className="sticky top-0 h-[100svh] [@media(max-height:34rem)]:static [@media(max-height:34rem)]:h-auto">
             <Link
-              className="hero-rise group pointer-events-auto absolute bottom-5 left-[var(--margin)] z-10 flex w-[calc(100%-var(--margin)-6rem)] max-w-[20rem] items-center gap-3 rounded-xl bg-besh-suave p-2 pe-3 text-left text-texto-primario shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-1 lg:left-auto lg:right-[calc(var(--margin)+5rem)] lg:w-full lg:max-w-[17rem]"
+              className="hero-rise group pointer-events-auto absolute bottom-5 left-[var(--margin)] z-10 flex [@media(max-height:34rem)]:relative [@media(max-height:34rem)]:bottom-auto [@media(max-height:34rem)]:left-auto [@media(max-height:34rem)]:ml-[var(--margin)] w-[calc(100%-var(--margin)-6rem)] max-w-[20rem] items-center gap-3 rounded-xl bg-besh-suave p-2 pe-3 text-left text-texto-primario shadow-[0_24px_48px_-20px_rgb(0_0_0/0.55)] transition-transform hover:-translate-y-1 lg:left-auto lg:right-[calc(var(--margin)+5rem)] lg:w-full lg:max-w-[17rem]"
               href={`/posts/${post.slug}`}
             >
               {thumb && (

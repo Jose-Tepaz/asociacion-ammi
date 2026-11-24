@@ -90,7 +90,7 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
                 <Link
                   aria-current={tab.active ? 'page' : undefined}
                   className={cn(
-                    'inline-flex h-14 items-center gap-2 rounded-full px-7 text-step-lead font-medium whitespace-nowrap transition-colors',
+                    'inline-flex h-10 items-center gap-1.5 rounded-full px-4 text-step-body font-medium whitespace-nowrap transition-colors md:h-14 md:gap-2 md:px-7 md:text-step-lead',
                     tab.active
                       ? 'bg-corinto text-besh-suave'
                       : 'bg-white text-texto-secundario ring-1 ring-texto-primario/5 hover:bg-besh-fuerte hover:text-corinto',

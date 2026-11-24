@@ -1,5 +1,4 @@
 'use client'
-import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -50,9 +49,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   }
 
   return (
-    <header className="site-header relative z-30 pt-4 md:pt-5" data-scrolled={scrolled || undefined}>
+    // Con el menú abierto el encabezado se ve como al bajar: blanco de lado a lado, y el panel queda pegado debajo
+    <header className="site-header relative z-30 pt-4 md:pt-5" data-scrolled={scrolled || open || undefined}>
       <div className="container">
-        <div className="site-header-bar relative flex h-16 w-full items-center justify-between gap-2 rounded-full bg-white/95 p-2 ps-5 text-texto-primario shadow-[0_20px_40px_-20px_rgb(36_15_22/0.45)] ring-1 ring-texto-primario/8 backdrop-blur-md md:h-[4.5rem] md:ps-7">
+        {/* Sin relleno lateral hasta escritorio: el logo y la hamburguesa quedan a ras del margen del contenido */}
+        <div className="site-header-bar relative flex h-16 w-full items-center justify-between gap-2 rounded-full bg-white/95 py-2 ps-0 pe-0 text-texto-primario shadow-[0_20px_40px_-20px_rgb(36_15_22/0.45)] ring-1 ring-texto-primario/8 backdrop-blur-md md:h-[4.5rem] lg:pe-2 lg:ps-7">
           <Link
             aria-label="AMMI, ir al inicio"
             className="shrink-0"
@@ -109,34 +110,62 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               onClick={() => setOpen((v) => !v)}
               type="button"
             >
-              {open ? <X aria-hidden="true" className="size-6" /> : <Menu aria-hidden="true" className="size-6" />}
+              {/* Tres barras que se convierten en una X: la de arriba y la de abajo giran, la del medio se desvanece */}
+              <span aria-hidden="true" className="relative block size-6">
+                <span
+                  className={cn(
+                    'absolute left-1 top-[5px] block h-0.5 w-4 rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+                    open && 'translate-y-[6px] rotate-45',
+                  )}
+                />
+                <span
+                  className={cn(
+                    'absolute left-1 top-[11px] block h-0.5 w-4 rounded-full bg-current transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
+                    open && 'scale-x-0 opacity-0',
+                  )}
+                />
+                <span
+                  className={cn(
+                    'absolute left-1 top-[17px] block h-0.5 w-4 rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+                    open && '-translate-y-[6px] -rotate-45',
+                  )}
+                />
+              </span>
             </button>
           </div>
 
-          <div
-            className={cn(
-              'lg:hidden absolute inset-x-0 top-[calc(100%+0.5rem)] rounded-card bg-besh-suave p-3 text-texto-primario shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)]',
-              open ? 'block' : 'hidden',
-            )}
-            id="menu-movil"
-          >
-            <nav aria-label="Menú móvil" className="flex flex-col">
-              {navItems.map(({ link }, i) => (
-                <CMSLink
-                  className={cn(
-                    'rounded-xl px-4 py-3 text-step-lead transition-colors hover:bg-besh-fuerte',
-                    isActive(link) && 'text-fucsia',
-                  )}
-                  key={i}
-                  {...link}
-                />
-              ))}
-              {action?.label && (
-                <CMSLink appearance="default" className="mt-3 w-full" size="lg" {...action} />
-              )}
-            </nav>
-          </div>
         </div>
+      </div>
+
+      {/* Panel del menú: fuera de la barra para cubrir todo el ancho, pegado al borde inferior del encabezado.
+          Sin redondeo arriba; con la altura limitada y scroll para que en horizontal no se corte.
+          Se despliega hacia abajo desde el encabezado (recorte + fundido): entra en 300 ms y sale más rápido, en 200 ms.
+          Cerrado queda invisible, así no recibe foco ni lo lee el lector de pantalla.
+          La sombra es corta (llega a unos 20 px) para que el recorte de abajo (-3rem) no la corte en seco */}
+      <div
+        className={cn(
+          'lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain rounded-b-[var(--radius-card)] bg-besh-suave px-[var(--margin)] pb-5 pt-2 text-texto-primario shadow-[0_10px_20px_-10px_rgb(36_15_22/0.22)] transition-[clip-path,opacity,visibility] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+          open
+            ? 'visible opacity-100 duration-300 [clip-path:inset(0_0_-3rem_0)]'
+            : 'invisible opacity-0 duration-200 [clip-path:inset(0_0_100%_0)]',
+        )}
+        id="menu-movil"
+      >
+        <nav aria-label="Menú móvil" className="flex flex-col">
+          {navItems.map(({ link }, i) => (
+            <CMSLink
+              className={cn(
+                '-mx-4 rounded-xl px-4 py-3 text-step-lead transition-colors hover:bg-besh-fuerte',
+                isActive(link) && 'text-fucsia',
+              )}
+              key={i}
+              {...link}
+            />
+          ))}
+          {action?.label && (
+            <CMSLink appearance="default" className="mt-3 w-full" size="lg" {...action} />
+          )}
+        </nav>
       </div>
     </header>
   )

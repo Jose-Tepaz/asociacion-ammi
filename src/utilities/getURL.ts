@@ -3,9 +3,12 @@ import canUseDOM from './canUseDOM'
 export const getServerSideURL = () => {
   return (
     process.env.NEXT_PUBLIC_SERVER_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'http://localhost:3000')
+    // En producción siempre el dominio final, no el de Vercel (VERCEL_PROJECT_PRODUCTION_URL)
+    (process.env.VERCEL_ENV === 'production'
+      ? 'https://alianzaammi.org'
+      : process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : 'http://localhost:3000')
   )
 }
 

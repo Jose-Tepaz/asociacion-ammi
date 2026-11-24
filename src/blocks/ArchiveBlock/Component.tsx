@@ -81,7 +81,7 @@ export const ArchiveBlock: React.FC<
             <div>
               {heading && <h2 className="m-0 text-step-head">{heading}</h2>}
               {description && (
-                <p className="mt-4 md:mt-3 lg:mt-4 text-step-body text-muted-foreground max-w-[52ch]">
+                <p className="mt-4 md:mt-3 lg:mt-4 text-step-body text-muted-foreground md:max-w-[52ch]">
                   {description}
                 </p>
               )}
@@ -89,7 +89,7 @@ export const ArchiveBlock: React.FC<
           ) : (
             introContent && (
               <RichText
-                className="[&_h2]:text-step-head [&_h2]:m-0 [&_h3]:text-step-title [&_h3]:m-0 [&_p]:mt-4 md:[&_p]:mt-3 lg:[&_p]:mt-4 [&_p]:text-step-body [&_p]:text-muted-foreground [&_p]:max-w-[52ch]"
+                className="[&_h2]:text-step-head [&_h2]:m-0 [&_h3]:text-step-title [&_h3]:m-0 [&_p]:mt-4 md:[&_p]:mt-3 lg:[&_p]:mt-4 [&_p]:text-step-body [&_p]:text-muted-foreground md:[&_p]:max-w-[52ch]"
                 data={introContent}
                 enableGutter={false}
                 enableProse={false}
