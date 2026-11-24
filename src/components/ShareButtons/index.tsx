@@ -1,7 +1,7 @@
 'use client'
 
-import { Check, Facebook, Link2, MessageCircle, Twitter } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { TbBrandFacebook, TbBrandWhatsapp, TbBrandX, TbCheck, TbLink } from 'react-icons/tb'
 
 const buttonClasses =
   'grid size-11 place-items-center rounded-full bg-besh-suave text-corinto transition-colors hover:bg-corinto hover:text-besh-suave'
@@ -15,9 +15,9 @@ export const ShareButtons: React.FC<{ title: string }> = ({ title }) => {
 
   const enc = encodeURIComponent
   const links = [
-    { label: 'Compartir en WhatsApp', href: `https://wa.me/?text=${enc(`${title} ${url}`)}`, Icon: MessageCircle },
-    { label: 'Compartir en Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, Icon: Facebook },
-    { label: 'Compartir en X', href: `https://x.com/intent/post?text=${enc(title)}&url=${enc(url)}`, Icon: Twitter },
+    { label: 'Compartir en WhatsApp', href: `https://wa.me/?text=${enc(`${title} ${url}`)}`, Icon: TbBrandWhatsapp },
+    { label: 'Compartir en Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, Icon: TbBrandFacebook },
+    { label: 'Compartir en X', href: `https://x.com/intent/post?text=${enc(title)}&url=${enc(url)}`, Icon: TbBrandX },
   ]
 
   const copy = async () => {
@@ -31,9 +31,11 @@ export const ShareButtons: React.FC<{ title: string }> = ({ title }) => {
   }
 
   return (
-    <div>
+    // En celular con espacio (de 416 a 767 px, p. ej. horizontal) el título va a la izquierda y los botones a la derecha;
+    // en celular angosto, tablet y escritorio, el título arriba y los botones debajo, sin quedar apretados
+    <div className="flex flex-col gap-3 min-[26rem]:max-md:flex-row min-[26rem]:max-md:items-center min-[26rem]:max-md:justify-between min-[26rem]:max-md:gap-6">
       <p className="text-step-small font-medium">Compartir</p>
-      <ul className="mt-3 flex gap-2">
+      <ul className="flex gap-2">
         {links.map(({ href, Icon, label }) => (
           <li key={label}>
             <a aria-label={label} className={buttonClasses} href={href} rel="noopener noreferrer" target="_blank">
@@ -43,7 +45,7 @@ export const ShareButtons: React.FC<{ title: string }> = ({ title }) => {
         ))}
         <li>
           <button aria-label={copied ? 'Enlace copiado' : 'Copiar enlace'} className={buttonClasses} onClick={copy} type="button">
-            {copied ? <Check aria-hidden="true" className="size-5" /> : <Link2 aria-hidden="true" className="size-5" />}
+            {copied ? <TbCheck aria-hidden="true" className="size-5" /> : <TbLink aria-hidden="true" className="size-5" />}
           </button>
         </li>
       </ul>
