@@ -55,7 +55,7 @@ const DarkHero: React.FC<Page['hero']> = ({ kicker, links, media, richText, stan
             </div>
           </div>
         )}
-        {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-besh-fuerte max-w-[40ch]">{standfirst}</p>}
+        {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-besh-fuerte md:max-w-[40ch]">{standfirst}</p>}
         <HeroLinks className="fade-up mt-6 md:mt-8" links={links} onDark />
       </div>
     </div>
@@ -95,7 +95,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
               </div>
             </div>
           )}
-          {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-white/90 max-w-[40ch]">{standfirst}</p>}
+          {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-white/90 md:max-w-[40ch]">{standfirst}</p>}
           <HeroLinks className="fade-up mt-6 md:mt-8" links={links} onDark />
         </div>
 

@@ -108,11 +108,11 @@ export default async function Post({ params: paramsPromise }: Args) {
         <div className="order-1 md:col-span-7">
           {/* El título secundario; las publicaciones viejas sin él siguen mostrando la descripción SEO */}
           {(post.subtitle || post.meta?.description) && (
-            <p className="mb-10 font-[family-name:var(--font-display)] text-step-title text-corinto max-w-[34ch]">
+            <p className="mb-10 font-[family-name:var(--font-display)] text-step-title text-corinto md:max-w-[34ch]">
               {post.subtitle || post.meta?.description}
             </p>
           )}
-          <RichText className="mx-0 max-w-[68ch]" data={post.content} enableGutter={false} />
+          <RichText className="mx-0 md:max-w-[68ch]" data={post.content} enableGutter={false} />
           {gallery.length > 0 && (
             <PostGallery
               hideHeading={

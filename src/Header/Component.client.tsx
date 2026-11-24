@@ -50,9 +50,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   }
 
   return (
-    <header className="site-header relative z-30 pt-4 md:pt-5" data-scrolled={scrolled || undefined}>
+    // Con el menú abierto el encabezado se ve como al bajar: blanco de lado a lado, y el panel queda pegado debajo
+    <header className="site-header relative z-30 pt-4 md:pt-5" data-scrolled={scrolled || open || undefined}>
       <div className="container">
-        <div className="site-header-bar relative flex h-16 w-full items-center justify-between gap-2 rounded-full bg-white/95 p-2 ps-5 text-texto-primario shadow-[0_20px_40px_-20px_rgb(36_15_22/0.45)] ring-1 ring-texto-primario/8 backdrop-blur-md md:h-[4.5rem] md:ps-7">
+        {/* Sin relleno lateral hasta escritorio: el logo y la hamburguesa quedan a ras del margen del contenido */}
+        <div className="site-header-bar relative flex h-16 w-full items-center justify-between gap-2 rounded-full bg-white/95 py-2 ps-0 pe-0 text-texto-primario shadow-[0_20px_40px_-20px_rgb(36_15_22/0.45)] ring-1 ring-texto-primario/8 backdrop-blur-md md:h-[4.5rem] lg:pe-2 lg:ps-7">
           <Link
             aria-label="AMMI, ir al inicio"
             className="shrink-0"
@@ -113,30 +115,33 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             </button>
           </div>
 
-          <div
-            className={cn(
-              'lg:hidden absolute inset-x-0 top-[calc(100%+0.5rem)] rounded-card bg-besh-suave p-3 text-texto-primario shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)]',
-              open ? 'block' : 'hidden',
-            )}
-            id="menu-movil"
-          >
-            <nav aria-label="Menú móvil" className="flex flex-col">
-              {navItems.map(({ link }, i) => (
-                <CMSLink
-                  className={cn(
-                    'rounded-xl px-4 py-3 text-step-lead transition-colors hover:bg-besh-fuerte',
-                    isActive(link) && 'text-fucsia',
-                  )}
-                  key={i}
-                  {...link}
-                />
-              ))}
-              {action?.label && (
-                <CMSLink appearance="default" className="mt-3 w-full" size="lg" {...action} />
-              )}
-            </nav>
-          </div>
         </div>
+      </div>
+
+      {/* Panel del menú: fuera de la barra para cubrir todo el ancho, pegado al borde inferior del encabezado.
+          Sin redondeo arriba; con la altura limitada y scroll para que en horizontal no se corte */}
+      <div
+        className={cn(
+          'lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain rounded-b-[var(--radius-card)] bg-besh-suave px-[var(--margin)] pb-5 pt-2 text-texto-primario shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)]',
+          open ? 'block' : 'hidden',
+        )}
+        id="menu-movil"
+      >
+        <nav aria-label="Menú móvil" className="flex flex-col">
+          {navItems.map(({ link }, i) => (
+            <CMSLink
+              className={cn(
+                '-mx-4 rounded-xl px-4 py-3 text-step-lead transition-colors hover:bg-besh-fuerte',
+                isActive(link) && 'text-fucsia',
+              )}
+              key={i}
+              {...link}
+            />
+          ))}
+          {action?.label && (
+            <CMSLink appearance="default" className="mt-3 w-full" size="lg" {...action} />
+          )}
+        </nav>
       </div>
     </header>
   )

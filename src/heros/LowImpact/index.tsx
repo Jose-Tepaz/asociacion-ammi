@@ -50,9 +50,10 @@ const ContactCard = async () => {
   const social = footer?.socialLinks || []
 
   return (
-    <div className="fade-up w-full max-w-[28rem] rounded-[2rem] bg-background p-6 ring-1 ring-texto-primario/8 md:p-8">
+    <div className="fade-up w-full rounded-[2rem] bg-background p-6 ring-1 ring-texto-primario/8 md:p-8 lg:max-w-[28rem]">
       <p className="text-step-small font-medium text-fucsia">Otras formas de encontrarnos</p>
-      <ul className="mt-5 flex flex-col gap-4">
+      {/* Hasta escritorio la tarjeta ocupa todo el ancho y los contactos van en dos columnas, así al sumar más crece en filas */}
+      <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:flex lg:flex-col">
         {contacts.map(({ href: link, id, label }) => {
           // Una dirección sin enlace abre su ubicación en Google Maps
           const href =
@@ -130,20 +131,21 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
   if (tone === 'contacto') {
     return (
       <section className="overflow-hidden bg-besh-fuerte" data-hero="beige">
-        <div className="container grid items-stretch gap-8 py-[var(--section-y)] md:grid-cols-12 md:gap-10 lg:grid-rows-[auto_1fr] lg:gap-y-8">
-          <div className="md:col-span-6">
+        {/* Hasta escritorio todo va en una columna: título, tarjeta de contacto a todo el ancho y el formulario */}
+        <div className="container grid items-stretch gap-8 py-[var(--section-y)] md:gap-10 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-y-8">
+          <div className="lg:col-span-6">
             {kicker && <Kicker className="bg-corinto/10 text-fucsia" dot="bg-fucsia" text={kicker} />}
             <div className="mask-line">
-              <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
+              <div className={cn(heroTitleClasses, titleSize, 'md:[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
             </div>
-            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead max-w-[40ch]">{standfirst}</p>}
+            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead md:max-w-[40ch]">{standfirst}</p>}
             {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} />}
           </div>
-          <div className="md:col-span-6 lg:col-start-1">
+          <div className="lg:col-span-6 lg:col-start-1">
             <ContactCard />
           </div>
           {aside && (
-            <div className="flex flex-col md:col-span-12 lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1">
+            <div className="flex flex-col lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1">
               {aside}
             </div>
           )}
@@ -159,9 +161,9 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
           <div className="md:col-span-6 lg:col-span-7">
             {kicker && <Kicker className="bg-corinto/10 text-fucsia" dot="bg-fucsia" text={kicker} />}
             <div className="mask-line">
-              <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
+              <div className={cn(heroTitleClasses, titleSize, 'md:[&_h1]:max-w-[16ch] [&_h1]:text-corinto')}>{title}</div>
             </div>
-            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead max-w-[40ch]">{standfirst}</p>}
+            {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead md:max-w-[40ch]">{standfirst}</p>}
             {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} />}
           </div>
           <div className="flex justify-center md:col-span-6 md:justify-end lg:col-span-5">
@@ -185,9 +187,9 @@ export const LowImpactHero: React.FC<LowImpactHeroType> = ({
       <div className="container relative py-[var(--section-y)]">
         {kicker && <Kicker className="bg-besh-suave/10 text-ocre" dot="bg-ocre" text={kicker} />}
         <div className="mask-line">
-          <div className={cn(heroTitleClasses, titleSize, '[&_h1]:max-w-[22ch]')}>{title}</div>
+          <div className={cn(heroTitleClasses, titleSize, 'md:[&_h1]:max-w-[22ch]')}>{title}</div>
         </div>
-        {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-besh-fuerte max-w-[46ch]">{standfirst}</p>}
+        {standfirst && <p className="fade-up mt-4 md:mt-6 lg:mt-4 text-step-lead text-besh-fuerte md:max-w-[46ch]">{standfirst}</p>}
         {links && <HeroLinks className="fade-up mt-6 md:mt-8" links={links} onDark />}
       </div>
       <span aria-hidden="true" className="tejido relative" />

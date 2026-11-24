@@ -34,7 +34,8 @@ export const TimelineBackdrop: React.FC<{ background: TimelineBlockProps['backgr
   const hasBg = background && typeof background === 'object'
   return (
     <div aria-hidden="true" className="absolute inset-0 -z-10">
-      <div className="sticky top-0 h-svh overflow-hidden">
+      {/* lvh: la altura con la barra del navegador escondida; con svh quedaba una franja sin fondo al bajar en celular */}
+      <div className="sticky top-0 h-lvh overflow-hidden">
         {hasBg && <Media fill imgClassName="object-cover opacity-[0.16] grayscale" resource={background} size="100vw" />}
         {/* Un solo nawal (Tz'i'), grande y recortado por la derecha, detrás del año: con la foto ya basta */}
         <Glyph
