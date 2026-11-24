@@ -8,9 +8,10 @@ import React, { Fragment } from 'react'
 import type { Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
+import { postImage } from '@/utilities/postImage'
 
 export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title'> &
-  Partial<Pick<Post, 'gallery' | 'documents'>>
+  Partial<Pick<Post, 'gallery' | 'documents' | 'heroImage'>>
 
 export const Card: React.FC<{
   alignItems?: 'center'
@@ -36,7 +37,8 @@ export const Card: React.FC<{
         : files.length === 1
           ? 'Documento'
           : `${files.length} documentos`
-  const { description, image: metaImage } = meta || {}
+  const { description } = meta || {}
+  const image = postImage(doc)
 
   const hasCategories = categories && Array.isArray(categories) && categories.length > 0
   const titleToUse = titleFromProps || title
@@ -68,11 +70,11 @@ export const Card: React.FC<{
             )}
           </div>
         )}
-        {metaImage && typeof metaImage !== 'string' ? (
+        {image ? (
           <Media
             fill
             imgClassName="object-cover object-top transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-            resource={metaImage}
+            resource={image}
             size="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
