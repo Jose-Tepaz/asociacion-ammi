@@ -140,10 +140,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
       {/* Panel del menú: fuera de la barra para cubrir todo el ancho, pegado al borde inferior del encabezado.
           Sin redondeo arriba; con la altura limitada y scroll para que en horizontal no se corte.
           Se despliega hacia abajo desde el encabezado (recorte + fundido): entra en 300 ms y sale más rápido, en 200 ms.
-          Cerrado queda invisible, así no recibe foco ni lo lee el lector de pantalla */}
+          Cerrado queda invisible, así no recibe foco ni lo lee el lector de pantalla.
+          La sombra es corta (llega a unos 20 px) para que el recorte de abajo (-3rem) no la corte en seco */}
       <div
         className={cn(
-          'lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain rounded-b-[var(--radius-card)] bg-besh-suave px-[var(--margin)] pb-5 pt-2 text-texto-primario shadow-[0_24px_48px_-16px_rgb(36_15_22/0.35)] transition-[clip-path,opacity,visibility] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
+          'lg:hidden absolute inset-x-0 top-full max-h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain rounded-b-[var(--radius-card)] bg-besh-suave px-[var(--margin)] pb-5 pt-2 text-texto-primario shadow-[0_10px_20px_-10px_rgb(36_15_22/0.22)] transition-[clip-path,opacity,visibility] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none',
           open
             ? 'visible opacity-100 duration-300 [clip-path:inset(0_0_-3rem_0)]'
             : 'invisible opacity-0 duration-200 [clip-path:inset(0_0_100%_0)]',
