@@ -132,7 +132,7 @@ export default async function Post({ params: paramsPromise }: Args) {
       </div>
 
       {related.length > 0 && (
-        <section className="bg-besh-fuerte py-[var(--section-y)]">
+        <section className="overflow-x-clip bg-besh-fuerte py-[var(--section-y)]">
           <h2 className="container mb-10 text-step-head">También te puede interesar</h2>
           <CollectionArchive posts={related} slideOnMobile />
         </section>

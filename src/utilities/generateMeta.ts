@@ -26,9 +26,12 @@ export const generateMeta = async (args: {
 
   const ogImage = getImageURL(doc?.meta?.image)
 
-  const title = doc?.meta?.title
-    ? doc?.meta?.title + ' · AMMI'
-    : 'AMMI · Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia'
+  const siteTitle = 'AMMI · Alianza de Mujeres y Mujeres Indígenas por el Acceso a la Justicia'
+  // El inicio lleva el nombre completo; las demás páginas y publicaciones, su propio título.
+  // Si en el SEO del admin no se escribió título, se usa el de la página o publicación.
+  const isHome = doc?.slug === 'home'
+  const pageTitle = doc?.meta?.title || (isHome ? '' : doc?.title)
+  const title = pageTitle ? pageTitle + ' · AMMI' : siteTitle
 
   return {
     description: doc?.meta?.description || defaultDescription,
