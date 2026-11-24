@@ -63,7 +63,8 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
     // - Tablet y computadora: la foto queda fija y el texto sube (115lvh; la foto usa lvh, la altura con la barra del
     //   navegador escondida, para no dejar una franja sin foto).
     // - Celular vertical (menos de 48 rem de ancho): la portada mide exactamente una pantalla (100svh) y la foto cubre todo
-    //   el fondo; no hay deslizamiento extra ni efecto de foto fija.
+    //   el fondo; no hay deslizamiento extra ni efecto de foto fija. El texto está centrado en la pantalla; el relleno de
+    //   abajo (6.25 rem contra 7 rem arriba) lo deja unos 30 px más arriba que antes, siempre centrado según la altura.
     // - Pantallas bajas (celular horizontal, menos de 34 rem de alto): el contenido ya no cabe en una pantalla, así que la
     //   portada crece con él: la foto cubre todo el fondo y el texto y la tarjeta van uno debajo del otro sin taparse.
     <section
@@ -105,7 +106,7 @@ export const HighImpactHero: React.FC<Page['hero']> = async ({
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 top-0 flex h-[100svh] flex-col justify-end max-lg:justify-center [@media(max-height:34rem)]:relative [@media(max-height:34rem)]:h-auto [@media(max-height:34rem)]:min-h-[100svh]">
-        <div className="container flex flex-col items-start pb-10 pt-28 md:pt-32 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10 lg:pb-36 [@media(max-height:34rem)]:pb-6 [@media(max-height:34rem)]:pt-24">
+        <div className="container flex flex-col items-start pb-10 pt-28 md:pt-32 lg:grid lg:grid-cols-12 lg:items-end lg:gap-10 lg:pb-36 [@media(max-height:34rem)]:pb-6 [@media(max-height:34rem)]:pt-24 [@media(max-width:47.99rem)_and_(min-height:34rem)]:pb-[6.25rem]">
           <div className="lg:col-span-8">
             {words.length > 0 ? (
               <h1 className="text-step-display font-normal leading-[1.04] text-besh-suave md:max-w-[20ch] lg:max-w-[24ch] lg:text-step-hero">
