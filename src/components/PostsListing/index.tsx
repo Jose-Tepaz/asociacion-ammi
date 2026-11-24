@@ -48,7 +48,7 @@ export const PostsListing = async ({ category, page = 1 }: { category?: Category
       sort: '-publishedAt',
       overrideAccess: false,
       where,
-      select: { title: true, slug: true, categories: true, meta: true, publishedAt: true, gallery: true, documents: true },
+      select: { title: true, slug: true, categories: true, meta: true, heroImage: true, publishedAt: true, gallery: true, documents: true },
     }),
     getPostCategories(),
     payload.count({ collection: 'posts', overrideAccess: false }),

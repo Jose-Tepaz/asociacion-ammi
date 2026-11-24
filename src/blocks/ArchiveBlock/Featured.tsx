@@ -6,14 +6,15 @@ import type { Category, Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 import { formatDateLong } from '@/utilities/formatDateTime'
+import { postImage } from '@/utilities/postImage'
 
 const categoryOf = (post: Post) => {
   const first = post.categories?.[0]
   return first && typeof first === 'object' ? (first as Category).title : null
 }
 
-const imageOf = (post: Post) =>
-  post.meta?.image && typeof post.meta.image === 'object' ? post.meta.image : null
+// SEO, Imagen de portada o primera foto de la galería
+const imageOf = (post: Post) => postImage(post)
 
 /** Una publicación destacada grande y las siguientes en lista compacta. */
 export const FeaturedPosts: React.FC<{ posts: Post[] }> = ({ posts }) => {
