@@ -101,7 +101,7 @@ export const MediumImpactHero: React.FC<Page['hero']> = (props) => {
 
         {media && typeof media === 'object' && (
           <figure className="relative lg:col-span-6 lg:ps-6">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-corinto-terciario">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-corinto-terciario">
               <Media fill imgClassName="object-cover hero-drift" priority resource={media} size="(max-width: 1024px) 100vw, 50vw" />
               <span aria-hidden="true" className="tejido absolute inset-x-0 bottom-0" />
             </div>
