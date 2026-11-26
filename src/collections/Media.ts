@@ -29,7 +29,7 @@ const limitarPesoImagen: CollectionBeforeOperationHook = ({ operation, req }) =>
   if (file.size > MAX_MB_IMAGEN * 1024 * 1024) {
     const mb = (file.size / 1024 / 1024).toFixed(1)
     throw new APIError(
-      `La imagen pesa ${mb} MB y el máximo es ${MAX_MB_IMAGEN} MB. Redúcela antes de subirla (por ejemplo en squoosh.app, guardándola en WEBP o JPG) y vuelve a intentarlo.`,
+      `La imagen pesa ${mb} MB y el límite es ${MAX_MB_IMAGEN} MB. Reduce su peso y vuelve a intentarlo.`,
       400,
       undefined,
       true,
@@ -45,7 +45,7 @@ export const Media: CollectionConfig = {
   labels: { singular: 'Imagen o archivo', plural: 'Imágenes y archivos' },
   admin: {
     description:
-      'Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección. Las imágenes pueden pesar hasta 3 MB y se guardan en WEBP automáticamente.',
+      'Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección. Las imágenes pueden pesar hasta 3 MB.',
   },
   folders: true,
   hooks: {
