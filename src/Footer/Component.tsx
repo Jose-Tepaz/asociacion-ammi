@@ -7,7 +7,7 @@ import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { ContactIcon, SocialIcon } from '@/components/SocialIcon'
 import { contactHref, contactType } from '@/utilities/contactLink'
-import { getOptimizedImageUrl } from '@/utilities/getOptimizedImageUrl'
+import { getMediaSizeUrl } from '@/utilities/getOptimizedImageUrl'
 
 const columnTitle = 'font-sans text-step-body font-medium tracking-normal text-ocre'
 const columnLink =
@@ -37,7 +37,7 @@ export async function Footer() {
               <img
                 alt={logo.alt || 'AMMI'}
                 className="block h-auto max-h-32 w-auto max-w-[13rem] object-contain md:max-w-[15rem]"
-                src={getOptimizedImageUrl(logo.url, logo.updatedAt, 640)}
+                src={getMediaSizeUrl(logo, 640)}
               />
             ) : (
               <Logo className="w-[13rem] md:w-[15rem]" tone="white" variant="full" />
