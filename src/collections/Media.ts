@@ -24,6 +24,9 @@ const MAX_MB_IMAGEN = 3
 // las guarda en WEBP, así quien edita sabe desde el principio que debe reducirlas.
 const limitarPesoImagen: CollectionBeforeOperationHook = ({ operation, req }) => {
   if (operation !== 'create' && operation !== 'update') return
+  // Solo para lo que se sube desde el admin. Los scripts (como `pnpm imagenes:optimizar`) usan la
+  // API local y necesitan poder reemplazar las fotos pesadas que ya estaban subidas.
+  if (req.payloadAPI === 'local') return
   const file = req.file
   if (!file?.mimetype?.startsWith('image/')) return
   if (file.size > MAX_MB_IMAGEN * 1024 * 1024) {
