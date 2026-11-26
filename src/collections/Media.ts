@@ -11,6 +11,10 @@ import { fileURLToPath } from 'url'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 
+// Las fotos se guardan en WEBP (mucho más livianas que JPG o PNG) aunque se suban en otro formato.
+// Vale para el archivo original y para cada tamaño. Los logos PNG conservan la transparencia.
+const WEBP = { format: 'webp' as const, options: { quality: 80 } }
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -58,34 +62,45 @@ export const Media: CollectionConfig = {
     },
     adminThumbnail: 'thumbnail',
     focalPoint: true,
+    // El original se guarda como máximo a 2560 px de lado (sin agrandar las pequeñas) y en WEBP,
+    // para que ninguna foto pese varios MB. Solo aplica a imágenes: PDF, video y SVG no se tocan.
+    resizeOptions: { width: 2560, height: 2560, fit: 'inside', withoutEnlargement: true },
+    formatOptions: WEBP,
     imageSizes: [
       {
         name: 'thumbnail',
+        formatOptions: WEBP,
         width: 300,
       },
       {
         name: 'square',
+        formatOptions: WEBP,
         width: 500,
         height: 500,
       },
       {
         name: 'small',
+        formatOptions: WEBP,
         width: 600,
       },
       {
         name: 'medium',
+        formatOptions: WEBP,
         width: 900,
       },
       {
         name: 'large',
+        formatOptions: WEBP,
         width: 1400,
       },
       {
         name: 'xlarge',
+        formatOptions: WEBP,
         width: 1920,
       },
       {
         name: 'og',
+        formatOptions: WEBP,
         width: 1200,
         height: 630,
         crop: 'center',
