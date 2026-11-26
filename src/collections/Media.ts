@@ -1,4 +1,6 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionBeforeOperationHook, CollectionConfig } from 'payload'
+
+import { APIError } from 'payload'
 
 import {
   FixedToolbarFeature,
@@ -15,6 +17,26 @@ import { authenticated } from '../access/authenticated'
 // Vale para el archivo original y para cada tamaño. Los logos PNG conservan la transparencia.
 const WEBP = { format: 'webp' as const, options: { quality: 80 } }
 
+/** Peso máximo de una imagen al subirla. PDF, video y documentos no tienen este límite. */
+const MAX_MB_IMAGEN = 3
+
+// Evita que se suban fotos muy pesadas (por ejemplo PNG de cámara de 8 MB). Aunque el sitio
+// las guarda en WEBP, así quien edita sabe desde el principio que debe reducirlas.
+const limitarPesoImagen: CollectionBeforeOperationHook = ({ operation, req }) => {
+  if (operation !== 'create' && operation !== 'update') return
+  const file = req.file
+  if (!file?.mimetype?.startsWith('image/')) return
+  if (file.size > MAX_MB_IMAGEN * 1024 * 1024) {
+    const mb = (file.size / 1024 / 1024).toFixed(1)
+    throw new APIError(
+      `La imagen pesa ${mb} MB y el máximo es ${MAX_MB_IMAGEN} MB. Redúcela antes de subirla (por ejemplo en squoosh.app, guardándola en WEBP o JPG) y vuelve a intentarlo.`,
+      400,
+      undefined,
+      true,
+    )
+  }
+}
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -23,9 +45,12 @@ export const Media: CollectionConfig = {
   labels: { singular: 'Imagen o archivo', plural: 'Imágenes y archivos' },
   admin: {
     description:
-      'Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección.',
+      'Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección. Las imágenes pueden pesar hasta 3 MB y se guardan en WEBP automáticamente.',
   },
   folders: true,
+  hooks: {
+    beforeOperation: [limitarPesoImagen],
+  },
   access: {
     create: authenticated,
     delete: authenticated,
