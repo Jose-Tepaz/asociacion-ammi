@@ -1,6 +1,6 @@
 'use client'
 
-import type { StaticImageData } from 'next/image'
+import type { ImageLoader, StaticImageData } from 'next/image'
 
 import { cn } from '@/utilities/ui'
 import NextImage from 'next/image'
@@ -9,8 +9,7 @@ import React from 'react'
 import type { Props as MediaProps } from '../types'
 
 import { cssVariables } from '@/cssVariables'
-import { getMediaUrl } from '@/utilities/getMediaUrl'
-import { IMAGE_QUALITY } from '@/utilities/getOptimizedImageUrl'
+import { getMediaSizeUrl } from '@/utilities/getOptimizedImageUrl'
 
 const { breakpoints } = cssVariables
 
@@ -63,17 +62,19 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   let height: number | undefined
   let alt = altFromProps
   let src: StaticImageData | string = srcFromProps || ''
+  // Las fotos de Media usan los tamaños que Payload ya generó (no el optimizador de Vercel,
+  // que tiene cupo mensual y al agotarse deja el sitio sin fotos). Ver getMediaSizeUrl.
+  let loader: ImageLoader | undefined
 
   if (!src && resource && typeof resource === 'object') {
-    const { alt: altFromResource, height: fullHeight, url, width: fullWidth } = resource
+    const { alt: altFromResource, height: fullHeight, width: fullWidth } = resource
 
     width = fullWidth!
     height = fullHeight!
     alt = altFromResource || ''
 
-    const cacheTag = resource.updatedAt
-
-    src = getMediaUrl(url, cacheTag)
+    src = getMediaSizeUrl(resource, 0)
+    loader = ({ width: requested }) => getMediaSizeUrl(resource, requested)
   }
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
@@ -95,7 +96,8 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         placeholder="blur"
         blurDataURL={placeholderBlur}
         priority={priority}
-        quality={IMAGE_QUALITY}
+        loader={loader}
+        unoptimized={!loader}
         loading={loading}
         sizes={sizes}
         src={src}
