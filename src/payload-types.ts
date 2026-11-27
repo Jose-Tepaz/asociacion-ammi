@@ -344,7 +344,7 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección.
+ * Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección. Peso máximo: imágenes 3 MB, PDF 20 MB, videos 30 MB y otros documentos 10 MB.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".

@@ -8,8 +8,10 @@ type Org = NonNullable<MembersBlockProps['organizations']>[number]
 
 /** Nombre corto para cuando no hay logo: lo que va después de la última coma, o el nombre completo. */
 const shortName = (org: Org) => {
-  const parts = org.name.split(',')
-  return parts.length > 1 ? parts[parts.length - 1].trim() : org.name
+  // En un borrador el nombre puede estar vacío (los borradores guardan campos obligatorios sin llenar)
+  const name = org.name || ''
+  const parts = name.split(',')
+  return parts.length > 1 ? parts[parts.length - 1].trim() : name
 }
 
 /**
@@ -55,7 +57,8 @@ const OrgCell: React.FC<{ org: Org }> = ({ org }) => {
 
 /** Organizaciones: etiqueta, título corto y carrusel de logos en gris que se desliza hacia la derecha sin fin. */
 export const MembersBlock: React.FC<MembersBlockProps> = ({ heading, headingSecond, intro, kicker, organizations }) => {
-  const list = organizations || []
+  // Una organización a medio llenar en un borrador (sin nombre ni logo) no se muestra
+  const list = (organizations || []).filter((org) => org?.name || (org?.logo && typeof org.logo === 'object'))
   const title = [heading, headingSecond].filter(Boolean).join(' ')
   // Unos 3 segundos por logo: la velocidad se siente igual con pocas o muchas organizaciones
   const duration = `${Math.max(list.length * 3000, 20000)}ms`
