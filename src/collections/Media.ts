@@ -17,22 +17,33 @@ import { authenticated } from '../access/authenticated'
 // Vale para el archivo original y para cada tamaño. Los logos PNG conservan la transparencia.
 const WEBP = { format: 'webp' as const, options: { quality: 80 } }
 
-/** Peso máximo de una imagen al subirla. PDF, video y documentos no tienen este límite. */
-const MAX_MB_IMAGEN = 3
+/**
+ * Peso máximo (en MB) de cada tipo de archivo al subirlo. Si hay que cambiar un límite, se cambia
+ * aquí; la descripción de la colección lo toma de esta lista.
+ */
+const LIMITES_MB = { imagen: 3, pdf: 20, video: 30, otro: 10 } as const
 
-// Evita que se suban fotos muy pesadas (por ejemplo PNG de cámara de 8 MB). Aunque el sitio
-// las guarda en WEBP, así quien edita sabe desde el principio que debe reducirlas.
-const limitarPesoImagen: CollectionBeforeOperationHook = ({ operation, req }) => {
+const tipoDeArchivo = (mimetype: string) => {
+  if (mimetype.startsWith('image/')) return { limite: LIMITES_MB.imagen, nombre: 'La imagen' }
+  if (mimetype === 'application/pdf') return { limite: LIMITES_MB.pdf, nombre: 'El PDF' }
+  if (mimetype.startsWith('video/')) return { limite: LIMITES_MB.video, nombre: 'El video' }
+  return { limite: LIMITES_MB.otro, nombre: 'El archivo' }
+}
+
+// Evita archivos muy pesados (fotos de cámara de 8 MB, PDF escaneados, videos largos) que hacen
+// lento el sitio en celular y gastan transferencia del almacenamiento.
+const limitarPesoArchivo: CollectionBeforeOperationHook = ({ operation, req }) => {
   if (operation !== 'create' && operation !== 'update') return
   // Solo para lo que se sube desde el admin. Los scripts (como `pnpm imagenes:optimizar`) usan la
   // API local y necesitan poder reemplazar las fotos pesadas que ya estaban subidas.
   if (req.payloadAPI === 'local') return
   const file = req.file
-  if (!file?.mimetype?.startsWith('image/')) return
-  if (file.size > MAX_MB_IMAGEN * 1024 * 1024) {
+  if (!file) return
+  const { limite, nombre } = tipoDeArchivo(file.mimetype || '')
+  if (file.size > limite * 1024 * 1024) {
     const mb = (file.size / 1024 / 1024).toFixed(1)
     throw new APIError(
-      `La imagen pesa ${mb} MB y el límite es ${MAX_MB_IMAGEN} MB. Reduce su peso y vuelve a intentarlo.`,
+      `${nombre} pesa ${mb} MB y el límite es ${limite} MB. Reduce su peso y vuelve a intentarlo.`,
       400,
       undefined,
       true,
@@ -48,11 +59,12 @@ export const Media: CollectionConfig = {
   labels: { singular: 'Imagen o archivo', plural: 'Imágenes y archivos' },
   admin: {
     description:
-      'Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección. Las imágenes pueden pesar hasta 3 MB.',
+      'Si reemplazas el archivo de una imagen, cambia en todas las secciones que la usan. Para cambiar la foto de una sola sección, sube una imagen nueva desde esa sección. ' +
+      `Peso máximo: imágenes ${LIMITES_MB.imagen} MB, PDF ${LIMITES_MB.pdf} MB, videos ${LIMITES_MB.video} MB y otros documentos ${LIMITES_MB.otro} MB.`,
   },
   folders: true,
   hooks: {
-    beforeOperation: [limitarPesoImagen],
+    beforeOperation: [limitarPesoArchivo],
   },
   access: {
     create: authenticated,
