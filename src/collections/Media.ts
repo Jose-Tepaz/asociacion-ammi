@@ -12,6 +12,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
+import { MEDIA_CACHE_CONTROL } from '../utilities/directMediaFile'
 
 // Las fotos se guardan en WEBP (mucho más livianas que JPG o PNG) aunque se suban en otro formato.
 // Vale para el archivo original y para cada tamaño. Los logos PNG conservan la transparencia.
@@ -96,8 +97,9 @@ export const Media: CollectionConfig = {
     staticDir: path.resolve(dirname, '../../public/media'),
     // Sin esto cada visita vuelve a pedir el archivo al almacenamiento. El navegador lo guarda
     // un día y la red de Vercel 30 días; al reemplazar una imagen su URL cambia (?updatedAt).
+    // Las fotos del sitio público salen por /archivos con la misma caché (ver directMediaFile.ts).
     modifyResponseHeaders: ({ headers }) => {
-      headers.set('Cache-Control', 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400')
+      headers.set('Cache-Control', MEDIA_CACHE_CONTROL)
       return headers
     },
     adminThumbnail: 'thumbnail',
